@@ -12,6 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 public class UnknownCommand implements Command{
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-        return "index.jsp";
+        return "/index.jsp";
     }
 }

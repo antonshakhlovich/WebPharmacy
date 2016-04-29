@@ -1,6 +1,10 @@
 package by.epam.webpharmacy.controller;
 
 import by.epam.webpharmacy.command.Command;
+import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.command.CommandFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +19,7 @@ import java.io.IOException;
 @WebServlet("/controller")
 
 public class Controller extends HttpServlet {
-    private Command command;
+    private final static Logger LOG = LogManager.getLogger(Controller.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,9 +31,20 @@ public class Controller extends HttpServlet {
         processRequest(request, response);
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String page = null;
+        try {
+            Command command = CommandFactory.getInstance().getCommand(request);
+            LOG.debug("executing " + command);
+            page = command.execute(request);
+        } catch (CommandException e) {
+            LOG.error("Command execution failed", e);
+        }
+        if (page != null) {
+            getServletContext().getRequestDispatcher(page).forward(request,response);
 
-
+        } else {
+            page = "/index.jsp";
+        }
     }
-
 }
