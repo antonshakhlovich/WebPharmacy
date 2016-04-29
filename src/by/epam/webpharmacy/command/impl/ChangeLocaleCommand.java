@@ -6,7 +6,8 @@ import by.epam.webpharmacy.command.CommandException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by Anton on 27.04.2016.
+ * Class {@code ChangeLocaleCommand} is an implementation of {@see Command}
+ * for changing locale for the session
  */
 public class ChangeLocaleCommand implements Command {
     @Override

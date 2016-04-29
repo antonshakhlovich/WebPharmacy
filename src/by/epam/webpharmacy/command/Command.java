@@ -3,7 +3,7 @@ package by.epam.webpharmacy.command;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Class {@code Command} is an interface representing a command, handled by a servlet
+ * {@code Command} is an interface representing a command, handled by a servlet
  */
 public interface Command {
     /**
