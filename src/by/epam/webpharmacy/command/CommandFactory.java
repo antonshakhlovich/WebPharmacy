@@ -60,9 +60,8 @@ public class CommandFactory {
                     throw new CommandException("No such command in CommandFactory commands map");
                 }
             } catch (IllegalArgumentException e) {
-                throw new CommandException("command parameter is invalid.");
+                throw new CommandException("command parameter is invalid (can't find it in CommandName enum).");
             }
-
         }
     }
 

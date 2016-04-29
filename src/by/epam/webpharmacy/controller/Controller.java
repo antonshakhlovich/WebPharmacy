@@ -23,28 +23,29 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
+        String page = processRequest(request, response);
+        if (page != null) {
+            getServletContext().getRequestDispatcher(page).forward(request, response);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
+        String page = processRequest(request, response);
+        if (page != null) {
+            response.sendRedirect(request.getContextPath() + page);
+        }
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String page = null;
+    private String processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             Command command = CommandFactory.getInstance().getCommand(request);
             LOG.debug("executing " + command);
-            page = command.execute(request);
+            return command.execute(request);
         } catch (CommandException e) {
             LOG.error("Command execution failed", e);
-        }
-        if (page != null) {
-            getServletContext().getRequestDispatcher(page).forward(request,response);
-
-        } else {
-            page = "/index.jsp";
+            response.sendError(500);
+            return null;
         }
     }
 }
