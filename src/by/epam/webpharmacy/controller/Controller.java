@@ -25,6 +25,7 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = processRequest(request, response);
         if (page != null) {
+            LOG.debug("Command was requested from " +  request.getParameter("from"));
             getServletContext().getRequestDispatcher(page).forward(request, response);
         }
     }
@@ -33,7 +34,8 @@ public class Controller extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = processRequest(request, response);
         if (page != null) {
-            response.sendRedirect(request.getContextPath() + page);
+            LOG.debug("Command was requested from " +  request.getParameter("from"));
+            response.sendRedirect(request.getParameter("from") + page);
         }
     }
 
