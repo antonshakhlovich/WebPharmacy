@@ -56,8 +56,6 @@ public class ConnectionPool {
         int currentConnectionSize = connections.size();
         for (int i = 0; i < poolSize - currentConnectionSize; i++) {
             connections.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/webpharmacy","root","123456"));
-            LOG.debug("connection added");
-            LOG.debug(connections.size());
         }
     }
 
@@ -66,7 +64,7 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() throws ConnectionPoolException {
-        LOG.debug("size before getting connection" + connections.size());
+        LOG.debug("size before getting connection = " + connections.size());
         Connection con;
         try {
             con = connections.poll(10, TimeUnit.SECONDS);
@@ -78,19 +76,19 @@ public class ConnectionPool {
         } else {
             LOG.debug("Connection receiving timeout");
         }
-        LOG.debug("size after getting connection" + connections.size());
+        LOG.debug("size after getting connection = " + connections.size());
         return con;
     }
 
     public boolean releaseConnection(Connection con) {
-        LOG.debug("size before returning connection" + connections.size());
+        LOG.debug("size before returning connection = " + connections.size());
         boolean b = connections.add(con);
         if (b) {
             LOG.debug("Connection was returned.");
         } else {
             LOG.debug("Connection wasn't returned.");
         }
-        LOG.debug("size after getting connection" + connections.size());
+        LOG.debug("size after returning connection = " + connections.size());
         return b;
     }
 

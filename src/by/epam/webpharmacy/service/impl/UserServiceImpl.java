@@ -9,10 +9,32 @@ import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.UserService;
 import by.epam.webpharmacy.service.util.Hasher;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Represents a class implementation of a {@see UserService} interface.
  */
 public class UserServiceImpl implements UserService {
+    private static UserServiceImpl instance;
+    private static AtomicBoolean isNull = new AtomicBoolean(true);
+    private static ReentrantLock lock = new ReentrantLock();
+
+    private UserServiceImpl () {
+
+    }
+
+    public static UserService getInstance() {
+        if (isNull.get()) {
+            lock.lock();
+            if (isNull.get()) {
+                instance = new UserServiceImpl();
+                isNull.set(false);
+            }
+            lock.unlock();
+        }
+        return instance;
+    }
 
     @Override
     public User loginUser(String login, String password) throws ServiceException {

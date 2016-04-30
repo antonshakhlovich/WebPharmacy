@@ -25,8 +25,9 @@ public class UserDaoSQLImpl implements UserDao{
     @Override
     public User selectUserByLogin(String login) throws DaoException {
         User user = new User();
+        Connection cn = null;
         try {
-            Connection cn = ConnectionPool.getInstance().getConnection();
+            cn = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = cn.prepareStatement(SELECT_USER_BY_LOGIN);
             preparedStatement.setString(1,login);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -46,11 +47,18 @@ public class UserDaoSQLImpl implements UserDao{
             user.setPhoneNumber(resultSet.getString("phone_number"));
             user.setCity(resultSet.getString("city"));
             user.setAddress(resultSet.getString("address"));
-            ConnectionPool.getInstance().releaseConnection(cn);
         } catch (ConnectionPoolException e) {
             throw new DaoException("Can't get connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DaoException("Can't make prepared statement", e);
+        } finally {
+            if (cn != null) {
+                try {
+                    ConnectionPool.getInstance().releaseConnection(cn);
+                } catch (ConnectionPoolException e) {
+                    throw new DaoException("Can't release connection to connection pool", e);
+                }
+            }
         }
         return user;
     }
