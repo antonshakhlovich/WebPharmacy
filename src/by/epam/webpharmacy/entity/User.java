@@ -8,35 +8,42 @@ package by.epam.webpharmacy.entity;
  */
 public class User {
     private long id;
-    private String login;
-    private String password;
     private String email;
+    private String login;
+    private String salt;
+    private String password;
+    private String hashedPassword;
     private UserRole role;
     private Boolean banned;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String city;
+    private String address;
 
-    public User() {}
-
-    public User(long id) {
-        this.id = id;
+    public User() {
     }
 
-    public User(long id, String login) {
-        this.id = id;
-        this.login = login;
-    }
-
-    public User(long id, String login, String email) {
-        this.id = id;
-        this.login = login;
+    public User(String email, String login, String password) {
         this.email = email;
-    }
-
-    public User(long id, String login, String password, String email, UserRole role) {
-        this.id = id;
         this.login = login;
         this.password = password;
+    }
+
+    public User(long id, String email, String login, String salt, UserRole role, Boolean banned, String firstName,
+                String lastName, String phoneNumber, String city, String address, String hashedPassword) {
+        this.id = id;
         this.email = email;
+        this.login = login;
+        this.salt = salt;
         this.role = role;
+        this.banned = banned;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.city = city;
+        this.address = address;
+        this.hashedPassword = hashedPassword;
     }
 
     public long getId() {
@@ -45,6 +52,15 @@ public class User {
 
     public User setId(long id) {
         this.id = id;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public User setEmail(String email) {
+        this.email = email;
         return this;
     }
 
@@ -57,6 +73,15 @@ public class User {
         return this;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public User setSalt(String salt) {
+        this.salt = salt;
+        return this;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -66,12 +91,12 @@ public class User {
         return this;
     }
 
-    public String getEmail() {
-        return email;
+    public String getHashedPassword() {
+        return hashedPassword;
     }
 
-    public User setEmail(String email) {
-        this.email = email;
+    public User setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
         return this;
     }
 
@@ -93,6 +118,51 @@ public class User {
         return this;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public User setFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public User setLastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public User setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+        return this;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public User setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public User setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,22 +171,39 @@ public class User {
         User user = (User) o;
 
         if (id != user.id) return false;
-        if (login != null ? !login.equals(user.login) : user.login != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (login != null ? !login.equals(user.login) : user.login != null) return false;
+        if (salt != null ? !salt.equals(user.salt) : user.salt != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (hashedPassword != null ? !hashedPassword.equals(user.hashedPassword) : user.hashedPassword != null)
+            return false;
         if (role != user.role) return false;
-        return banned != null ? banned.equals(user.banned) : user.banned == null;
+        if (banned != null ? !banned.equals(user.banned) : user.banned != null) return false;
+        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
+        if (phoneNumber != null ? !phoneNumber.equals(user.phoneNumber) : user.phoneNumber != null) return false;
+        if (city != null ? !city.equals(user.city) : user.city != null) return false;
+        return address != null ? address.equals(user.address) : user.address == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + (salt != null ? salt.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (hashedPassword != null ? hashedPassword.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         result = 31 * result + (banned != null ? banned.hashCode() : 0);
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
         return result;
     }
 }
+
+
