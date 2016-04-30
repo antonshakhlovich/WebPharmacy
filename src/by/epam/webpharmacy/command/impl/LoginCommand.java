@@ -43,6 +43,6 @@ public class LoginCommand implements Command {
             session.setAttribute(PARAM_NAME_USER, user);
 
         }
-        return "/login";
+        return "/index.jsp";
     }
 }
