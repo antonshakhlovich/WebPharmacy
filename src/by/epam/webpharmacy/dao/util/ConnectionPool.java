@@ -16,25 +16,49 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
 
-    public static ConnectionPool instance;
-
     private static final Logger LOG = LogManager.getLogger(ConnectionPool.class);
-    private static AtomicBoolean isInitialized = new AtomicBoolean(false);
+
+    private static ConnectionPool instance;
+    private static AtomicBoolean isNull = new AtomicBoolean(true);
     private static ReentrantLock lock = new ReentrantLock();
-
-
-    private int poolSize = 5;
-    private BlockingQueue<Connection> connections;
+    private static int poolSize = 5;
+    private static BlockingQueue<Connection> connections;
 
     private ConnectionPool() {
     }
 
     public static ConnectionPool getInstance() throws ConnectionPoolException {
 
-        if (!isInitialized.get()) {
-            instance.initialize();
+        if (isNull.get()) {
+            ConnectionPool.initialize();
         }
         return instance;
+    }
+
+    private static void initialize() throws ConnectionPoolException {
+        lock.lock();
+        if (isNull.get()) {
+            instance = new ConnectionPool();
+            connections = new ArrayBlockingQueue<Connection>(poolSize);
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                makeConnections();
+                isNull.set(false);
+            } catch (ClassNotFoundException | SQLException e) {
+                throw new ConnectionPoolException("Initialize error", e);
+            }
+            LOG.debug("Connection pool - ready.");
+        }
+        lock.unlock();
+    }
+
+    private static void makeConnections() throws SQLException {
+        int currentConnectionSize = connections.size();
+        for (int i = 0; i < poolSize - currentConnectionSize; i++) {
+            connections.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/webpharmacy","root","123456"));
+            LOG.debug("connection added");
+            LOG.debug(connections.size());
+        }
     }
 
     public int getPoolSize() {
@@ -45,7 +69,7 @@ public class ConnectionPool {
         LOG.debug("size before getting connection" + connections.size());
         Connection con;
         try {
-            con = connections.poll(5, TimeUnit.SECONDS);
+            con = connections.poll(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new ConnectionPoolException(e.getMessage());
         }
@@ -70,28 +94,6 @@ public class ConnectionPool {
         return b;
     }
 
-    private void initialize() throws ConnectionPoolException {
-        lock.lock();
-        if (!isInitialized.get()) {
-            connections = new ArrayBlockingQueue<Connection>(poolSize);
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                makeConnections();
-                isInitialized.set(true);
-            } catch (ClassNotFoundException | SQLException e) {
-                throw new ConnectionPoolException("Initialize error", e);
-            }
-            LOG.debug("Connection pool - ready.");
-        }
-        lock.unlock();
-    }
-
-    private void makeConnections() throws SQLException {
-        int currentConnectionSize = connections.size();
-        for (int i = 0; i < poolSize - currentConnectionSize; i++) {
-            connections.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/webpharmacy","root","123456"));
-        }
-    }
 }
 
 

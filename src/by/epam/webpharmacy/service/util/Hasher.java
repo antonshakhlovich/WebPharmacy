@@ -1,4 +1,4 @@
-package by.epam.webpharmacy.dao.util;
+package by.epam.webpharmacy.service.util;
 
 import by.epam.webpharmacy.service.ServiceException;
 
