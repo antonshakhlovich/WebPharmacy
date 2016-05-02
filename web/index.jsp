@@ -36,7 +36,7 @@
         <span><c:out value="${login_message} : ${sessionScope.user.login}"/></span>
     </c:if>
     <c:if test="${sessionScope.user == null}">
-        <form role="form" action="/controller" method="post">
+        <form role="form" action="Controller" method="post">
             <input type="hidden" name="command" value="login"/>
             <input type="hidden" name="from" value="${pageContext.request.requestURI}"/>
             <div class="row">
@@ -48,7 +48,7 @@
                     <input type="password" class="form-control" placeholder="Password" name="password">
                 </div>
                 <div class="col-sm-1">
-                    <input class="btn btn-secondary" type="submit" value="${login_button}">
+                    <input class="btn btn-default" type="submit" value="${login_button}">
                 </div>
             </div>
         </form>

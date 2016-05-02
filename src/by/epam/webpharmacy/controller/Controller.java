@@ -3,10 +3,10 @@ package by.epam.webpharmacy.controller;
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.command.CommandFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,10 +16,11 @@ import java.io.IOException;
 /**
  * Handles all requests, using command pattern.
  */
-@WebServlet("/controller")
+//@WebServlet("/controller")
+//@MultipartConfig
 
 public class Controller extends HttpServlet {
-    private final static Logger LOG = LogManager.getLogger(Controller.class);
+    private final static Logger LOG = Logger.getLogger(Controller.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,7 +36,7 @@ public class Controller extends HttpServlet {
         String page = processRequest(request, response);
         if (page != null) {
             LOG.debug("Command was requested from " +  request.getParameter("from"));
-            response.sendRedirect(request.getParameter("from") + page);
+            response.sendRedirect(page);
         }
     }
 

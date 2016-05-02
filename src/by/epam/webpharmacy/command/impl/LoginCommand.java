@@ -43,6 +43,7 @@ public class LoginCommand implements Command {
             session.setAttribute(PARAM_NAME_USER, user);
 
         }
-        return "";
+        return request.getParameter("from");
+
     }
 }

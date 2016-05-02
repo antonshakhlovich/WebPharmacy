@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="WebPharmacy:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/WebPharmacy_war</output-path>
+    <root id="archive" name="WebPharmacy_war.war">
+      <element id="artifact" artifact-name="WebPharmacy:war exploded" />
+    </root>
+  </artifact>
+</component>

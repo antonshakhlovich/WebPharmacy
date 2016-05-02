@@ -25,6 +25,6 @@ public class ChangeLocaleCommand implements Command {
         System.out.println(locale);
         HttpSession session = request.getSession();
         session.setAttribute(PARAM_LOCALE,locale);
-        return "";
+        return request.getParameter("from");
     }
 }

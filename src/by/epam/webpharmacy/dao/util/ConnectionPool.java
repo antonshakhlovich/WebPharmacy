@@ -1,8 +1,9 @@
 package by.epam.webpharmacy.dao.util;
 
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import by.epam.webpharmacy.dao.DaoName;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,7 +17,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
 
-    private static final Logger LOG = LogManager.getLogger(ConnectionPool.class);
+    private static final Logger LOG = Logger.getLogger(ConnectionPool.class);
+    private static final DaoName DAO_NAME = DaoName.MYSQL;
 
     private static ConnectionPool instance;
     private static AtomicBoolean isNull = new AtomicBoolean(true);
@@ -41,7 +43,7 @@ public class ConnectionPool {
             instance = new ConnectionPool();
             connections = new ArrayBlockingQueue<Connection>(poolSize);
             try {
-                Class.forName("com.mysql.jdbc.Driver");
+                Class.forName(DAO_NAME.getClassDriver());
                 makeConnections();
                 isNull.set(false);
             } catch (ClassNotFoundException | SQLException e) {
@@ -55,7 +57,8 @@ public class ConnectionPool {
     private static void makeConnections() throws SQLException {
         int currentConnectionSize = connections.size();
         for (int i = 0; i < poolSize - currentConnectionSize; i++) {
-            connections.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/webpharmacy","root","123456"));
+            connections.add(DriverManager.getConnection(DAO_NAME.getConnectionURI(),
+                    DAO_NAME.getUsername(),DAO_NAME.getPassword()));
         }
     }
 

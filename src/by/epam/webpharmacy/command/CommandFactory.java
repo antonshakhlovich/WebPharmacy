@@ -51,7 +51,7 @@ public class CommandFactory {
         if (commandRequest == null || commandRequest.isEmpty()) {
             return command;
         } else {
-            CommandName commandName = null;
+            CommandName commandName;
             try {
                 commandName = CommandName.valueOf(commandRequest.replace("-", "_").toUpperCase());
                 if (commands.containsKey(commandName)) {
