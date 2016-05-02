@@ -22,7 +22,6 @@ public class ChangeLocaleCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         String locale = request.getParameter(PARAM_LOCALE);
-        System.out.println(locale);
         HttpSession session = request.getSession();
         session.setAttribute(PARAM_LOCALE,locale);
         return request.getParameter("from");

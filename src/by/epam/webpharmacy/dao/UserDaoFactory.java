@@ -17,8 +17,8 @@ public class UserDaoFactory {
 
 
     private UserDaoFactory() {
-        userDaoHashMap.put(DaoName.MYSQL, new UserDaoSQLImpl(DaoName.MYSQL));
-        userDaoHashMap.put(DaoName.MYSQL_LOCAL, new UserDaoSQLImpl(DaoName.MYSQL_LOCAL));
+        userDaoHashMap.put(DaoName.MYSQL, new UserDaoSQLImpl());
+        userDaoHashMap.put(DaoName.MYSQL_LOCAL, new UserDaoSQLImpl());
     }
 
     public static UserDaoFactory getInstance() {

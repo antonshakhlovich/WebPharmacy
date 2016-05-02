@@ -22,10 +22,7 @@ public class UserDaoSQLImpl implements UserDao {
             "email, ban_status, first_name, last_name, phone_number, city, address" +
             " FROM users WHERE login = ?";
 
-    private DaoName daoName;
-
-    public UserDaoSQLImpl(DaoName daoName) {
-        this.daoName = daoName;
+    public UserDaoSQLImpl() {
     }
 
     @Override
