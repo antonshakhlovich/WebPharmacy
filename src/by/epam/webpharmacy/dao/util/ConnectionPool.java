@@ -17,7 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
 
-    private static final Logger LOG = Logger.getLogger(ConnectionPool.class);
     private static final DaoName DAO_NAME = DaoName.MYSQL;
 
     private static ConnectionPool instance;
@@ -44,22 +43,17 @@ public class ConnectionPool {
             connections = new ArrayBlockingQueue<Connection>(poolSize);
             try {
                 Class.forName(DAO_NAME.getClassDriver());
-                makeConnections();
+                int currentConnectionSize = connections.size();
+                for (int i = 0; i < poolSize - currentConnectionSize; i++) {
+                    connections.add(DriverManager.getConnection(DAO_NAME.getConnectionURI(),
+                            DAO_NAME.getUsername(),DAO_NAME.getPassword()));
+                }
                 isNull.set(false);
             } catch (ClassNotFoundException | SQLException e) {
                 throw new ConnectionPoolException("Initialize error", e);
             }
-            LOG.debug("Connection pool - ready.");
         }
         lock.unlock();
-    }
-
-    private static void makeConnections() throws SQLException {
-        int currentConnectionSize = connections.size();
-        for (int i = 0; i < poolSize - currentConnectionSize; i++) {
-            connections.add(DriverManager.getConnection(DAO_NAME.getConnectionURI(),
-                    DAO_NAME.getUsername(),DAO_NAME.getPassword()));
-        }
     }
 
     public int getPoolSize() {
@@ -67,34 +61,22 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() throws ConnectionPoolException {
-        LOG.debug("size before getting connection = " + connections.size());
         Connection con;
         try {
             con = connections.poll(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new ConnectionPoolException(e.getMessage());
         }
-        if (con != null) {
-            LOG.debug("Connection was received.");
-        } else {
-            LOG.debug("Connection receiving timeout");
-        }
-        LOG.debug("size after getting connection = " + connections.size());
         return con;
     }
 
-    public boolean releaseConnection(Connection con) {
-        LOG.debug("size before returning connection = " + connections.size());
+    public boolean releaseConnection(Connection con) throws ConnectionPoolException {
         boolean b = connections.add(con);
-        if (b) {
-            LOG.debug("Connection was returned.");
-        } else {
-            LOG.debug("Connection wasn't returned.");
+        if (!b){
+            throw new ConnectionPoolException("Can't release connection");
         }
-        LOG.debug("size after returning connection = " + connections.size());
         return b;
     }
-
 }
 
 
