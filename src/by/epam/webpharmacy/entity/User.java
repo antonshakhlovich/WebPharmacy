@@ -7,6 +7,7 @@ package by.epam.webpharmacy.entity;
  * be authorized.
  */
 public class User {
+
     private long id;
     private String email;
     private String login;

@@ -13,25 +13,33 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This is an implementation of the {@see UserDao} interface.
  */
 public class UserDaoSQLImpl implements UserDao {
+
     private final static String SELECT_USER_BY_LOGIN = "SELECT id, login, password_md5, role, salt, " +
             "email, ban_status, first_name, last_name, phone_number, city, address" +
             " FROM users WHERE login = ?";
 
-    public UserDaoSQLImpl() {
+    private static UserDao instance = new UserDaoSQLImpl();
+
+    public static UserDao getInstance () {
+        return instance;
     }
+
+    private UserDaoSQLImpl() {}
 
     @Override
     public User selectUserByLogin(String login) throws DaoException {
         User user = new User();
         Connection cn = null;
+        PreparedStatement preparedStatement = null;
         try {
             cn = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = cn.prepareStatement(SELECT_USER_BY_LOGIN);
+            preparedStatement = cn.prepareStatement(SELECT_USER_BY_LOGIN);
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
@@ -55,6 +63,11 @@ public class UserDaoSQLImpl implements UserDao {
         } catch (SQLException e) {
             throw new DaoException("Can't make prepared statement", e);
         } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (cn != null) {
                 try {
                     ConnectionPool.getInstance().releaseConnection(cn);

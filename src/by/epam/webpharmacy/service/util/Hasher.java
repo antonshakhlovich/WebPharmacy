@@ -16,21 +16,17 @@ public class Hasher {
      * @param value String to hash
      * @return md5 hash value of the string
      */
-    public static String md5Hash(String value) throws ServiceException {
+    public static String md5Hash(String value) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         String hashValue = null;
-        try {
-            if (value != null) {
-                MessageDigest md = MessageDigest.getInstance("MD5");
-                byte[] bytesValue = value.getBytes("UTF-8");
-                byte[] messageDigest = md.digest(bytesValue);
-                StringBuilder sb = new StringBuilder();
-                for (byte b : messageDigest) {
-                    sb.append(String.format("%02x", b));
-                }
-                hashValue = sb.toString();
+        if (value != null) {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] bytesValue = value.getBytes("UTF-8");
+            byte[] messageDigest = md.digest(bytesValue);
+            StringBuilder sb = new StringBuilder();
+            for (byte b : messageDigest) {
+                sb.append(String.format("%02x", b));
             }
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            throw new ServiceException(e);
+            hashValue = sb.toString();
         }
         return hashValue;
     }

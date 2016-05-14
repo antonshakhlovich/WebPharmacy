@@ -4,7 +4,7 @@ package by.epam.webpharmacy.dao;
  * Contains names of all possible data storages
  */
 public enum DaoName {
-    MYSQL ("jdbc:mysql://mysql33623-library.mycloud.by/webpharmacy","root","LENoep78529", "com.mysql.jdbc.Driver"),
+    MYSQL ("jdbc:mysql://31.130.206.159/webpharmacy","root","LENoep78529", "com.mysql.jdbc.Driver"),
     MYSQL_LOCAL ("jdbc:mysql://localhost:3306/webpharmacy","root","123456", "com.mysql.jdbc.Driver");
 
     private String connectionURI;
