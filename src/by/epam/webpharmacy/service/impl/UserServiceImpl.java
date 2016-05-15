@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private static AtomicBoolean isNull = new AtomicBoolean(true);
     private static ReentrantLock lock = new ReentrantLock();
 
-    private UserServiceImpl () {
+    private UserServiceImpl() {
 
     }
 
@@ -46,15 +46,16 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             throw new ServiceException("Can't get data from DAO layer", e);
         }
-        String saltedPassword = user.getSalt() + password;
-        try {
-            if (Hasher.md5Hash(saltedPassword).equals(user.getHashedPassword())) {
-                return user;
-            } else {
-                return null;
+        if (user != null) {
+            String saltedPassword = user.getSalt() + password;
+            try {
+                if (!Hasher.md5Hash(saltedPassword).equals(user.getHashedPassword())) {
+                    return null;
+                }
+            } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+                throw new ServiceException("Can't get md5 hash");
             }
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            throw new ServiceException("Can't get md5 hash");
         }
+        return user;
     }
 }

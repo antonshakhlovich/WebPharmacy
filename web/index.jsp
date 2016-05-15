@@ -19,6 +19,7 @@
     <fmt:message bundle="${loc}" key="local.message.welcome" var="welcome_message"/>
     <fmt:message bundle="${loc}" key="local.message.company.name" var="company_name"/>
     <fmt:message bundle="${loc}" key="local.message.staffonly" var="staff_only"/>
+    <fmt:message bundle="${loc}" key="local.message.login.error" var="login_error"/>
     <title><fmt:message bundle="${loc}" key="local.title"/></title>
 </head>
 
@@ -34,6 +35,10 @@
 <div class="login">
     <c:if test="${sessionScope.user != null}">
         <span><c:out value="${login_message} : ${sessionScope.user.login}"/></span>
+    </c:if>
+    <c:out value="${requestScope.login_failed}"/>
+    <c:if test="${requestScope.login_failed eq true}">
+        <span><c:out value="${login_error}"/></span>
     </c:if>
     <c:if test="${sessionScope.user == null}">
         <form role="form" action="Controller" method="post">

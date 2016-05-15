@@ -1,19 +1,17 @@
 package by.epam.webpharmacy.dao.impl;
 
 import by.epam.webpharmacy.dao.DaoException;
-import by.epam.webpharmacy.dao.DaoName;
 import by.epam.webpharmacy.dao.UserDao;
 import by.epam.webpharmacy.dao.util.ConnectionPool;
 import by.epam.webpharmacy.dao.util.ConnectionPoolException;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.entity.UserRole;
+import by.epam.webpharmacy.util.Parameter;
 
-import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This is an implementation of the {@see UserDao} interface.
@@ -46,27 +44,29 @@ public class UserDaoSQLImpl implements UserDao {
                 return null;
             }
             resultSet.next();
-            user.setId(resultSet.getLong("id"));
-            user.setLogin(resultSet.getString("login"));
-            user.setHashedPassword(resultSet.getString("password_md5"));
-            user.setRole(UserRole.valueOf(resultSet.getString("role").toUpperCase()));
-            user.setSalt(resultSet.getString("salt"));
-            user.setBanned(resultSet.getBoolean("ban_status"));
-            user.setEmail(resultSet.getString("email"));
-            user.setFirstName(resultSet.getString("first_name"));
-            user.setLastName(resultSet.getString("last_name"));
-            user.setPhoneNumber(resultSet.getString("phone_number"));
-            user.setCity(resultSet.getString("city"));
-            user.setAddress(resultSet.getString("address"));
+            user.setId(resultSet.getLong(Parameter.ID.getName()));
+            user.setLogin(resultSet.getString(Parameter.LOGIN.getName()));
+            user.setHashedPassword(resultSet.getString(Parameter.PASSWORD_MD5.getName()));
+            user.setRole(UserRole.valueOf(resultSet.getString(Parameter.ROLE.getName()).toUpperCase()));
+            user.setSalt(resultSet.getString(Parameter.SALT.getName()));
+            user.setBanned(resultSet.getBoolean(Parameter.SALT.getName()));
+            user.setEmail(resultSet.getString(Parameter.EMAIL.getName()));
+            user.setFirstName(resultSet.getString(Parameter.FIRST_NAME.getName()));
+            user.setLastName(resultSet.getString(Parameter.LAST_NAME.getName()));
+            user.setPhoneNumber(resultSet.getString(Parameter.PHONE_NUMBER.getName()));
+            user.setCity(resultSet.getString(Parameter.CITY.getName()));
+            user.setAddress(resultSet.getString(Parameter.ADDRESS.getName()));
         } catch (ConnectionPoolException e) {
             throw new DaoException("Can't get connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DaoException("Can't make prepared statement", e);
         } finally {
             try {
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new DaoException("Can't close preparedStatement", e);
             }
             if (cn != null) {
                 try {

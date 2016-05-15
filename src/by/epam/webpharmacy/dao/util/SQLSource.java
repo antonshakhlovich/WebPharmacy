@@ -1,9 +1,9 @@
-package by.epam.webpharmacy.dao;
+package by.epam.webpharmacy.dao.util;
 
 /**
  * Contains names of all possible data storages
  */
-public enum DaoName {
+public enum SQLSource {
     MYSQL ("jdbc:mysql://31.130.206.159/webpharmacy","root","LENoep78529", "com.mysql.jdbc.Driver"),
     MYSQL_LOCAL ("jdbc:mysql://localhost:3306/webpharmacy","root","123456", "com.mysql.jdbc.Driver");
 
@@ -12,7 +12,7 @@ public enum DaoName {
     private String password;
     private String classDriver;
 
-    DaoName(String connectionURI, String username, String password, String classDriver) {
+    SQLSource(String connectionURI, String username, String password, String classDriver) {
         this.connectionURI = connectionURI;
         this.username = username;
         this.password = password;

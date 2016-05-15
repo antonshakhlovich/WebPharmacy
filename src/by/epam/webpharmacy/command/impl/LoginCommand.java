@@ -6,6 +6,7 @@ import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.UserService;
 import by.epam.webpharmacy.service.impl.UserServiceImpl;
+import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,9 +16,8 @@ import javax.servlet.http.HttpSession;
  * for signing in a user with given credentials
  */
 public class LoginCommand implements Command {
-    private static final String PARAM_NAME_LOGIN = "login";
-    private static final String PARAM_NAME_PASSWORD = "password";
-    private static final String PARAM_NAME_USER = "user";
+
+    private static final String ERROR_MESSAGE = "local.message.login.error";
 
     private static UserService userService = UserServiceImpl.getInstance();
 
@@ -31,8 +31,9 @@ public class LoginCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         User user;
-        String login = request.getParameter(PARAM_NAME_LOGIN);
-        String password = request.getParameter(PARAM_NAME_PASSWORD);
+        String login = request.getParameter(Parameter.LOGIN.getName());
+        String password = request.getParameter(Parameter.PASSWORD.getName());
+
         try {
             user = userService.loginUser(login, password);
         } catch (ServiceException e) {
@@ -40,8 +41,10 @@ public class LoginCommand implements Command {
         }
         if (user != null) {
             HttpSession session = request.getSession();
-            session.setAttribute(PARAM_NAME_USER, user);
-
+            session.setAttribute(Parameter.USER.getName(), user);
+            request.setAttribute(Parameter.LOGIN_FAILED.getName(),Boolean.FALSE);
+        } else{
+            request.setAttribute(Parameter.LOGIN_FAILED.getName(),Boolean.TRUE);
         }
         return request.getParameter("from");
 

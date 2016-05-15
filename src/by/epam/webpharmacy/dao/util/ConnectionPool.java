@@ -2,8 +2,6 @@ package by.epam.webpharmacy.dao.util;
 
 
 
-import by.epam.webpharmacy.dao.DaoName;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
 
-    private static final DaoName DAO_NAME = DaoName.MYSQL;
+    private static final SQLSource SQL_SOURCE = SQLSource.MYSQL;
 
     private static ConnectionPool instance = new ConnectionPool();
     private static AtomicBoolean isEmpty = new AtomicBoolean(true);
@@ -40,11 +38,11 @@ public class ConnectionPool {
         if (isEmpty.get()) {
             connections = new ArrayBlockingQueue<Connection>(poolSize);
             try {
-                Class.forName(DAO_NAME.getClassDriver());
+                Class.forName(SQL_SOURCE.getClassDriver());
                 int currentConnectionSize = connections.size();
                 for (int i = 0; i < poolSize - currentConnectionSize; i++) {
-                    connections.add(DriverManager.getConnection(DAO_NAME.getConnectionURI(),
-                            DAO_NAME.getUsername(),DAO_NAME.getPassword()));
+                    connections.add(DriverManager.getConnection(SQL_SOURCE.getConnectionURI(),
+                            SQL_SOURCE.getUsername(), SQL_SOURCE.getPassword()));
                 }
                 isEmpty.set(false);
             } catch (ClassNotFoundException | SQLException e) {
