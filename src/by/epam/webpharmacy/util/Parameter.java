@@ -2,7 +2,7 @@ package by.epam.webpharmacy.util;
 
 public enum Parameter {
     USER("user"),
-    LOGIN_FAILED("login_failed"),
+    LOGIN_FAILED("loginfailed"),
     LOGIN("login"),
     ID("id"),
     PASSWORD("password"),

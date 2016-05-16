@@ -17,8 +17,6 @@ import javax.servlet.http.HttpSession;
  */
 public class LoginCommand implements Command {
 
-    private static final String ERROR_MESSAGE = "local.message.login.error";
-
     private static UserService userService = UserServiceImpl.getInstance();
 
     /**
@@ -39,12 +37,13 @@ public class LoginCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException("Can't get user from UserService layer", e);
         }
+        HttpSession session = request.getSession();
         if (user != null) {
-            HttpSession session = request.getSession();
             session.setAttribute(Parameter.USER.getName(), user);
-            request.setAttribute(Parameter.LOGIN_FAILED.getName(),Boolean.FALSE);
+            session.setAttribute(Parameter.LOGIN_FAILED.getName(),Boolean.FALSE);
         } else{
-            request.setAttribute(Parameter.LOGIN_FAILED.getName(),Boolean.TRUE);
+            session.setAttribute(Parameter.LOGIN_FAILED.getName(),Boolean.TRUE);
+
         }
         return request.getParameter("from");
 

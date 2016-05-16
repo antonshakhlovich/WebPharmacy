@@ -36,10 +36,10 @@
     <c:if test="${sessionScope.user != null}">
         <span><c:out value="${login_message} : ${sessionScope.user.login}"/></span>
     </c:if>
-    <c:out value="${requestScope.login_failed}"/>
-    <c:if test="${requestScope.login_failed eq true}">
-        <span><c:out value="${login_error}"/></span>
+    <c:if test="${sessionScope.loginfailed}">
+        <c:out value="${login_error}"/>
     </c:if>
+
     <c:if test="${sessionScope.user == null}">
         <form role="form" action="Controller" method="post">
             <input type="hidden" name="command" value="login"/>
