@@ -1,8 +1,6 @@
 package by.epam.webpharmacy.command;
 
-import by.epam.webpharmacy.command.impl.ChangeLocaleCommand;
-import by.epam.webpharmacy.command.impl.LoginCommand;
-import by.epam.webpharmacy.command.impl.UnknownCommand;
+import by.epam.webpharmacy.command.impl.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -24,6 +22,8 @@ public class CommandFactory {
         commands.put(CommandName.UNKNOWN, new UnknownCommand());
         commands.put(CommandName.CHANGE_LOCALE, new ChangeLocaleCommand());
         commands.put(CommandName.LOGIN, new LoginCommand());
+        commands.put(CommandName.LOGOUT, new LogoutCommand());
+        commands.put(CommandName.REGISTER, new RegisterCommand());
     }
 
     public static CommandFactory getInstance() {

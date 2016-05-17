@@ -6,5 +6,7 @@ package by.epam.webpharmacy.command;
 public enum CommandName {
     UNKNOWN,
     LOGIN,
-    CHANGE_LOCALE;
+    CHANGE_LOCALE,
+    REGISTER,
+    LOGOUT;
 }
