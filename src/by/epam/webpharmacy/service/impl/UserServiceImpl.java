@@ -4,9 +4,11 @@ import by.epam.webpharmacy.dao.DaoException;
 import by.epam.webpharmacy.dao.UserDao;
 import by.epam.webpharmacy.dao.impl.UserDaoSQLImpl;
 import by.epam.webpharmacy.entity.User;
+import by.epam.webpharmacy.entity.UserRole;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.UserService;
 import by.epam.webpharmacy.service.util.Hasher;
+import by.epam.webpharmacy.service.util.SaltGenerator;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -58,4 +60,32 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
+
+
+    @Override
+    public boolean registerUser(String login, String password, String email, String firstName, String lastName,
+                                String phoneNumber, String city, String address) throws ServiceException {
+
+        boolean result;
+        UserDao userDao = UserDaoSQLImpl.getInstance();
+        try {
+            User user = new User();
+            user.setSalt(SaltGenerator.getInstance().getSalt());
+            String hashedPassword = Hasher.md5Hash(user.getSalt() + password);
+            user.setHashedPassword(hashedPassword);
+            user.setLogin(login);
+            user.setEmail(email);
+            user.setRole(UserRole.USER);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setPhoneNumber(phoneNumber);
+            user.setCity(city);
+            user.setAddress(address);
+            result = userDao.insertUser(user);
+        } catch (DaoException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            throw new ServiceException(e);
+        }
+        return result;
+    }
+
 }

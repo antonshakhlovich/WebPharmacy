@@ -1,7 +1,5 @@
 package by.epam.webpharmacy.service.util;
 
-import by.epam.webpharmacy.service.ServiceException;
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

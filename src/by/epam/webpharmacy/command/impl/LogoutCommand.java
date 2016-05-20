@@ -17,13 +17,13 @@ public class LogoutCommand implements Command{
      * Handles request to the servlet by trying to logout a user
      *
      * @param request request from the servlet, containing user's login and password
-     * @return path to the same page, and set user parameter to null
+     * @return path to index.jsp, and set remove user attribute from session
      * @throws CommandException
      */
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        session.setAttribute(Parameter.USER.getName(),null);
+        session.removeAttribute(Parameter.USER.getName());
         return "/index.jsp";
     }
 }
