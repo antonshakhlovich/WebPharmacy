@@ -2,6 +2,7 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.UserService;
 import by.epam.webpharmacy.service.impl.UserServiceImpl;
 import by.epam.webpharmacy.util.Parameter;
@@ -24,6 +25,11 @@ public class RegisterCommand implements Command{
         String city = request.getParameter(Parameter.CITY.getName());
         String address = request.getParameter(Parameter.ADDRESS.getName());
         UserService userService = UserServiceImpl.getInstance();
+        try {
+            userService.registerUser(login, password, email, firstName, lastName, phoneNumber, city, address);
+        } catch (ServiceException e) {
+            throw new CommandException(e);
+        }
         return "/index.jsp";
     }
 }

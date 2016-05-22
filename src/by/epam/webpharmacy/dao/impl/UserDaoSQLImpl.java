@@ -21,14 +21,18 @@ public class UserDaoSQLImpl implements UserDao {
     private final static String SELECT_USER_BY_LOGIN = "SELECT id, login, password_md5, role, salt, " +
             "email, ban_status, first_name, last_name, phone_number, city, address" +
             " FROM users WHERE login = ?";
+    private final static String REGISTER_USER = "INSERT INTO users (id, login, password_md5, role" +
+            ", salt, email, ban_status, first_name, last_name, phone_number, city, address)" +
+            "  VALUES (0 ,?, ?, 'user',?, ?, 0, ?, ?, ? , ?, ?);";
 
     private static UserDao instance = new UserDaoSQLImpl();
 
-    public static UserDao getInstance () {
+    public static UserDao getInstance() {
         return instance;
     }
 
-    private UserDaoSQLImpl() {}
+    private UserDaoSQLImpl() {
+    }
 
     @Override
     public User selectUserByLogin(String login) throws DaoException {
@@ -87,5 +91,45 @@ public class UserDaoSQLImpl implements UserDao {
     @Override
     public User selectUserByEmail(String email) throws DaoException {
         return null;
+    }
+
+    @Override
+    public boolean registerUser(User user) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(REGISTER_USER);
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getHashedPassword());
+            preparedStatement.setString(3,user.getSalt());
+            preparedStatement.setString(4,user.getEmail());
+            preparedStatement.setString(5,user.getFirstName());
+            preparedStatement.setString(6,user.getLastName());
+            preparedStatement.setString(7,user.getPhoneNumber());
+            preparedStatement.setString(8, user.getCity());
+            preparedStatement.setString(9, user.getAddress());
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("Can't get connection from Connection Pool", e);
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage(), e);
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                throw new DaoException("Can't close preparedStatement", e);
+            }
+            if (cn != null) {
+                try {
+                    ConnectionPool.getInstance().releaseConnection(cn);
+                } catch (ConnectionPoolException e) {
+                    throw new DaoException("Can't release connection to connection pool", e);
+                }
+            }
+        }
     }
 }

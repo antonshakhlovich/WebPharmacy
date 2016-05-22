@@ -18,8 +18,6 @@
     <fmt:message bundle="${loc}" key="local.button.name.login" var="login_button"/>
     <fmt:message bundle="${loc}" key="local.text.login" var="login_message"/>
     <fmt:message bundle="${loc}" key="local.message.welcome" var="welcome_message"/>
-    <fmt:message bundle="${loc}" key="local.message.company.name" var="company_name"/>
-    <fmt:message bundle="${loc}" key="local.message.staffonly" var="staff_only"/>
     <fmt:message bundle="${loc}" key="local.message.login.error" var="login_error"/>
     <title><fmt:message bundle="${loc}" key="local.title"/></title>
 </head>

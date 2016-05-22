@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
             user.setPhoneNumber(phoneNumber);
             user.setCity(city);
             user.setAddress(address);
-            result = userDao.insertUser(user);
+            result = userDao.registerUser(user);
         } catch (DaoException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
             throw new ServiceException(e);
         }

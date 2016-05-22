@@ -13,9 +13,16 @@
         <servlet-name>Controller</servlet-name>
         <servlet-class>by.epam.webpharmacy.controller.Controller</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>Register</servlet-name>
+        <jsp-file>/WEB-INF/jsp/register.jsp</jsp-file>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>/Controller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Register</servlet-name>
+        <url-pattern>/register</url-pattern>
     </servlet-mapping>
 </web-app>
