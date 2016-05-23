@@ -4,9 +4,20 @@ package by.epam.webpharmacy.command;
  * Contains names of all classes that implemenents {@see Command} interface
  */
 public enum CommandName {
-    UNKNOWN,
-    LOGIN,
-    CHANGE_LOCALE,
-    REGISTER,
-    LOGOUT;
+    BAN_USER(false),
+    UNKNOWN(true),
+    LOGIN(false),
+    CHANGE_LOCALE(true),
+    REGISTER(false),
+    LOGOUT(true);
+
+    private boolean isGetAllowed;
+
+    CommandName(boolean isGetAllowed) {
+        this.isGetAllowed = isGetAllowed;
+    }
+
+    public boolean isGetAllowed() {
+        return isGetAllowed;
+    }
 }

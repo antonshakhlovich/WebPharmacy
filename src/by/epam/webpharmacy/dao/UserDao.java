@@ -6,6 +6,7 @@ import by.epam.webpharmacy.entity.User;
  * Represents an interface for retrieving user-related data from data storage, such as database.
  */
 public interface UserDao {
+
     /**
      * Retrieves a user with given login.
      * @param login user's login
@@ -13,6 +14,7 @@ public interface UserDao {
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
     User selectUserByLogin(String login) throws DaoException;
+
     /**
      * Retrieves a user with given id.
      * @param id user's id
@@ -20,6 +22,7 @@ public interface UserDao {
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
     User selectUserById(long id) throws DaoException;
+
     /**
      * Retrieves a user with given e-mail.
      * @param email user's login
@@ -27,6 +30,7 @@ public interface UserDao {
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
     User selectUserByEmail(String email) throws DaoException;
+
     /**
      * Retrieves a user with given e-mail.
      * @param user is user bean that should be stored in database
@@ -35,5 +39,13 @@ public interface UserDao {
      */
     boolean registerUser(User user) throws DaoException;
 
+    /**
+     * Updates user's banned status
+     * @param userId id of the user
+     * @param banStatus {@code true} to ban, or {@code false} to unban
+     * @return {@code true} if item has been successfully updated, {@code false} if update failed
+     * @throws DaoException if failed to update data from the storage due to technical problems
+     */
+    boolean updateUserBannedStatus(long userId, boolean banStatus) throws DaoException;
 
 }

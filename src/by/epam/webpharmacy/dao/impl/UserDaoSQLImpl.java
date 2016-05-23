@@ -7,11 +7,9 @@ import by.epam.webpharmacy.dao.util.ConnectionPoolException;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.entity.UserRole;
 import by.epam.webpharmacy.util.Parameter;
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * This is an implementation of the {@see UserDao} interface.
@@ -24,6 +22,7 @@ public class UserDaoSQLImpl implements UserDao {
     private final static String REGISTER_USER = "INSERT INTO users (id, login, password_md5, role" +
             ", salt, email, ban_status, first_name, last_name, phone_number, city, address)" +
             "  VALUES (0 ,?, ?, 'user',?, ?, 0, ?, ?, ? , ?, ?);";
+    private final static String UPDATE_USER_STATUS = "UPDATE users SET ban_status=? WHERE id=?";
 
     private static UserDao instance = new UserDaoSQLImpl();
 
@@ -102,15 +101,17 @@ public class UserDaoSQLImpl implements UserDao {
             preparedStatement = cn.prepareStatement(REGISTER_USER);
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getHashedPassword());
-            preparedStatement.setString(3,user.getSalt());
-            preparedStatement.setString(4,user.getEmail());
-            preparedStatement.setString(5,user.getFirstName());
-            preparedStatement.setString(6,user.getLastName());
-            preparedStatement.setString(7,user.getPhoneNumber());
+            preparedStatement.setString(3, user.getSalt());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.setString(5, user.getFirstName());
+            preparedStatement.setString(6, user.getLastName());
+            preparedStatement.setString(7, user.getPhoneNumber());
             preparedStatement.setString(8, user.getCity());
             preparedStatement.setString(9, user.getAddress());
             int result = preparedStatement.executeUpdate();
             return result > 0;
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return false;
         } catch (ConnectionPoolException e) {
             throw new DaoException("Can't get connection from Connection Pool", e);
         } catch (SQLException e) {
@@ -131,5 +132,25 @@ public class UserDaoSQLImpl implements UserDao {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean updateUserBannedStatus(long userId, boolean banStatus) throws DaoException {
+        Connection cn;
+        PreparedStatement preparedStatement;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(UPDATE_USER_STATUS);
+            preparedStatement.setBoolean(1, banStatus);
+            preparedStatement.setLong(2, userId);
+            if (preparedStatement.executeUpdate() == 0) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Request to database failed", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("Can't get connection from connection pool");
+        }
+        return true;
     }
 }

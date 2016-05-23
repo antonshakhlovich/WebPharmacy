@@ -3,6 +3,10 @@ package by.epam.webpharmacy.controller;
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.command.CommandFactory;
+import by.epam.webpharmacy.command.CommandName;
+import by.epam.webpharmacy.dao.util.ConnectionPool;
+import by.epam.webpharmacy.dao.util.ConnectionPoolException;
+import by.epam.webpharmacy.util.Parameter;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -24,23 +28,34 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = processRequest(request, response);
-        if (page != null) {
-            LOG.debug("Command was requested from " +  request.getParameter("from"));
-            getServletContext().getRequestDispatcher(page).forward(request, response);
+        String commandName = request.getParameter(Parameter.COMMAND.getName()).replace("-", "_").toUpperCase();
+        CommandName command = CommandName.valueOf(commandName);
+        if (command.isGetAllowed()) {
+            String page = processRequest(request, response);
+            if (page != null) {
+                getServletContext().getRequestDispatcher(page).forward(request, response);
+            }
+        } else {
+            String ipAddress = request.getHeader("X-FORWARDED-FOR");
+            if (ipAddress == null) {
+                ipAddress = request.getRemoteAddr();
+            }
+            LOG.error(ipAddress + " tries to use " + commandName + " command by \"GET\" method");
+            response.sendRedirect("/index.jsp");
         }
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = processRequest(request, response);
         if (page != null) {
-            LOG.debug("Command was requested from " +  request.getParameter("from"));
             response.sendRedirect(page);
         }
     }
 
     private String processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        LOG.debug("Command was requested from " + request.getParameter("from"));
         try {
             Command command = CommandFactory.getInstance().getCommand(request);
             LOG.debug("executing " + command);
@@ -49,6 +64,15 @@ public class Controller extends HttpServlet {
             LOG.error("Command execution failed", e);
             response.sendError(500);
             return null;
+        }
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            ConnectionPool.getInstance().closePool();
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool wasn't closed");
         }
     }
 }

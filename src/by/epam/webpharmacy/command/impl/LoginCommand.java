@@ -45,7 +45,7 @@ public class LoginCommand implements Command {
             session.setAttribute(Parameter.LOGIN_FAILED.getName(),Boolean.TRUE);
 
         }
-        return request.getParameter("from");
+        return request.getParameter(Parameter.FROM.getName());
 
     }
 }

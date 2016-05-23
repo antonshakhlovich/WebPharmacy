@@ -1,31 +1,29 @@
 package by.epam.webpharmacy.util;
 
 public enum Parameter {
-    USER("user"),
-    FROM("from"),
-    LOGIN_FAILED("loginfailed"),
-    LOGIN("login"),
-    ID("id"),
-    PASSWORD("password"),
-    PASSWORD_MD5("password_md5"),
-    ROLE("role"),
-    SALT("salt"),
-    BAN_STATUS("ban_status"),
-    EMAIL("email"),
-    FIRST_NAME("first_name"),
-    LAST_NAME("last_name"),
-    PHONE_NUMBER("phone_number"),
-    ADDRESS("address"),
-    CITY("city");
-
-
-    private String name;
-
-    Parameter(String name) {
-        this.name = name;
-    }
+    ADDRESS,
+    BAN_STATUS,
+    CITY,
+    COMMAND,
+    EMAIL,
+    ERROR_MESSAGE,
+    FIRST_NAME,
+    FROM,
+    ID,
+    LAST_NAME,
+    LOCALE,
+    LOGIN,
+    LOGIN_FAILED,
+    PASSWORD,
+    PASSWORD_MD5,
+    PHONE_NUMBER,
+    ROLE,
+    SALT,
+    SUCCESS_MESSAGE,
+    USER;
 
     public String getName() {
-        return name;
+        return name().toLowerCase();
     }
+
 }

@@ -27,4 +27,13 @@ public interface UserService {
      */
     boolean registerUser(String login, String password, String email, String firstName, String lastName,
                          String phoneNumber, String city, String address) throws ServiceException;
+
+    /**
+     * Bans or unbans a specified user
+     * @param userId id of the user to change banned status
+     * @param banned {@code true} to ban, {@code false} to unban
+     * @return true if status successfully changed
+     * @throws ServiceException if DaoException occurred
+     */
+    boolean changeUserBanStatus(long userId, boolean banned) throws ServiceException;
 }

@@ -19,30 +19,20 @@ import java.util.concurrent.locks.ReentrantLock;
  * Represents a class implementation of a {@see UserService} interface.
  */
 public class UserServiceImpl implements UserService {
-    private static UserServiceImpl instance;
-    private static AtomicBoolean isNull = new AtomicBoolean(true);
-    private static ReentrantLock lock = new ReentrantLock();
+
+    private static UserDao userDao = UserDaoSQLImpl.getInstance();
+    private static UserServiceImpl instance = new UserServiceImpl();
 
     private UserServiceImpl() {
-
     }
 
     public static UserService getInstance() {
-        if (isNull.get()) {
-            lock.lock();
-            if (isNull.get()) {
-                instance = new UserServiceImpl();
-                isNull.set(false);
-            }
-            lock.unlock();
-        }
         return instance;
     }
 
     @Override
     public User loginUser(String login, String password) throws ServiceException {
         User user;
-        UserDao userDao = UserDaoSQLImpl.getInstance();
         try {
             user = userDao.selectUserByLogin(login);
         } catch (DaoException e) {
@@ -67,7 +57,6 @@ public class UserServiceImpl implements UserService {
                                 String phoneNumber, String city, String address) throws ServiceException {
 
         boolean result;
-        UserDao userDao = UserDaoSQLImpl.getInstance();
         try {
             User user = new User();
             user.setSalt(SaltGenerator.getInstance().getSalt());
@@ -86,6 +75,15 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
         return result;
+    }
+
+    @Override
+    public boolean changeUserBanStatus(long userId, boolean banned) throws ServiceException {
+        try {
+            return userDao.updateUserBannedStatus(userId, banned);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
 }

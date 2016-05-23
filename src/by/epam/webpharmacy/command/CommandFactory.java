@@ -1,6 +1,7 @@
 package by.epam.webpharmacy.command;
 
 import by.epam.webpharmacy.command.impl.*;
+import sun.plugin.com.event.COMEventHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class CommandFactory {
         commands.put(CommandName.LOGIN, new LoginCommand());
         commands.put(CommandName.LOGOUT, new LogoutCommand());
         commands.put(CommandName.REGISTER, new RegisterCommand());
+        commands.put(CommandName.BAN_USER, new BanUserCommand());
     }
 
     public static CommandFactory getInstance() {

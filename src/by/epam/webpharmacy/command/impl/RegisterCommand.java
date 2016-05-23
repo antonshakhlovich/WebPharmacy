@@ -14,8 +14,12 @@ import javax.servlet.http.HttpServletRequest;
  * for registration of a new user
  */
 public class RegisterCommand implements Command{
+
+    private static UserService userService = UserServiceImpl.getInstance();
+
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
+        boolean result;
         String login = request.getParameter(Parameter.LOGIN.getName());
         String password = request.getParameter(Parameter.PASSWORD.getName());
         String email = request.getParameter(Parameter.EMAIL.getName());
@@ -24,12 +28,21 @@ public class RegisterCommand implements Command{
         String phoneNumber = request.getParameter(Parameter.PHONE_NUMBER.getName());
         String city = request.getParameter(Parameter.CITY.getName());
         String address = request.getParameter(Parameter.ADDRESS.getName());
-        UserService userService = UserServiceImpl.getInstance();
         try {
-            userService.registerUser(login, password, email, firstName, lastName, phoneNumber, city, address);
+            result = userService.registerUser(login, password, email, firstName, lastName, phoneNumber, city, address);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return "/index.jsp";
+        if (result) {
+            try {
+                request.getSession().setAttribute(Parameter.USER.getName(),userService.loginUser(login,password));
+            } catch (ServiceException e) {
+                throw new CommandException(e);
+            }
+            return "/index.jsp";
+        } else {
+            request.getSession().setAttribute(Parameter.ERROR_MESSAGE.getName(),Boolean.TRUE);
+            return "/register";
+        }
     }
 }

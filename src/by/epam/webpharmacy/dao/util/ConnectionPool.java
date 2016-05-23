@@ -73,6 +73,14 @@ public class ConnectionPool {
         }
         return b;
     }
+
+    public boolean closePool() throws ConnectionPoolException {
+        for (Connection connection : connections) {
+            releaseConnection(connection);
+        }
+        isEmpty.set(true);
+        return true;
+    }
 }
 
 

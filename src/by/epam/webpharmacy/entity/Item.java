@@ -1,11 +1,12 @@
 package by.epam.webpharmacy.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * Class {@code Item} represents an item in the pharmacy's catalog.
  */
-public class Item {
+public class Item implements Serializable {
     private long id;
     private String label;
     private String dosageForm;

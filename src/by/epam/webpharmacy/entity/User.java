@@ -1,12 +1,14 @@
 package by.epam.webpharmacy.entity;
 
+import java.io.Serializable;
+
 /**
  * Represents a user of the system.
  * Each user has its unique login, along with a password, email and {@see by.epam.webpharmacy.entity.UserRole}.
  * May contain First Name, Last Name, address, phone number. Also has a boolean field, specifying whether user is banned and therefore can't
  * be authorized.
  */
-public class User {
+public class User implements Serializable{
 
     private long id;
     private String email;
