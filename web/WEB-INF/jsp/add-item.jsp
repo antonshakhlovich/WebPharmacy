@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="${pageContext.request.contextPath}/css/bootstrap.js"></script>
+    <title><fmt:message key="local.title.additem"/></title>
 </head>
 <body>
 <%@include file="/WEB-INF/jsp/header.jsp" %>
@@ -21,8 +22,8 @@
     <input type="hidden" name="from" value="${pageContext.request.requestURI}"/>
     <input type="text" name="label" placeholder="<fmt:message key="local.text.label"/>"/>
     <select>
-        <c:forEach var="dosage_form" items="${dosage_forms}">
-        <option value="${dosage_form.id}">${dosage_form.name}</option>
+        <c:forEach var="dosage_form" items="${sessionScope.dosage_forms}">
+            <option value="${dosage_form.id}">${dosage_form.name}</option>
         </c:forEach>
     </select>
 

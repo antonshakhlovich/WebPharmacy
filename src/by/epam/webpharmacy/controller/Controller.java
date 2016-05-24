@@ -55,7 +55,7 @@ public class Controller extends HttpServlet {
     }
 
     private String processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        LOG.debug("Command was requested from " + request.getParameter("from"));
+        LOG.debug("Command was requested from " + request.getParameter(Parameter.FROM.getName()));
         try {
             Command command = CommandFactory.getInstance().getCommand(request);
             LOG.debug("executing " + command);

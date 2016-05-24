@@ -24,6 +24,6 @@ public class LogoutCommand implements Command{
     public String execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         session.removeAttribute(Parameter.USER.getName());
-        return "/index.jsp";
+        return "/";
     }
 }

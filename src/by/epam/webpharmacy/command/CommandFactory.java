@@ -1,6 +1,7 @@
 package by.epam.webpharmacy.command;
 
 import by.epam.webpharmacy.command.impl.*;
+import by.epam.webpharmacy.util.Parameter;
 import sun.plugin.com.event.COMEventHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +51,7 @@ public class CommandFactory {
      */
     public Command getCommand(HttpServletRequest request) throws CommandException {
         Command command = commands.get(CommandName.UNKNOWN);
-        String commandRequest = request.getParameter("command");
+        String commandRequest = request.getParameter(Parameter.COMMAND.getName());
         if (commandRequest == null || commandRequest.isEmpty()) {
             return command;
         } else {
@@ -63,7 +64,7 @@ public class CommandFactory {
                     throw new CommandException("No such command in CommandFactory commands map");
                 }
             } catch (IllegalArgumentException e) {
-                throw new CommandException("command parameter is invalid (can't find it in CommandName enum).");
+                throw new CommandException("command parameter is invalid (can't find it in CommandName enum)",e);
             }
         }
     }

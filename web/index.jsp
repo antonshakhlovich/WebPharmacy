@@ -54,7 +54,8 @@
     </c:if>
 </div>
 <form role="form" action="Controller" method="get">
-    <input type="hidden" value="view-add-item">
+    <input type="hidden" name="command" value="view-add-item">
+    <input type="hidden" name="from" value="${pageContext.request.requestURI}"/>
     <input class="btn btn-default" type="submit" value="<fmt:message key="local.button.item.add"/>"/>
 </form>
 
