@@ -53,6 +53,10 @@
         <c:set var="login_failed" scope="session" value="false"/>
     </c:if>
 </div>
+<form role="form" action="Controller" method="get">
+    <input type="hidden" value="view-add-item">
+    <input class="btn btn-default" type="submit" value="<fmt:message key="local.button.item.add"/>"/>
+</form>
 
 
 </body>

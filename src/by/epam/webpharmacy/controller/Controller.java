@@ -41,7 +41,7 @@ public class Controller extends HttpServlet {
                 ipAddress = request.getRemoteAddr();
             }
             LOG.error(ipAddress + " tries to use " + commandName + " command by \"GET\" method");
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect("/");
         }
 
     }

@@ -26,6 +26,6 @@ public class BanUserCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return "/index.jsp";
+        return "/";
     }
 }

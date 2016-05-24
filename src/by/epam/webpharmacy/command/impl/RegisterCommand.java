@@ -39,7 +39,7 @@ public class RegisterCommand implements Command{
             } catch (ServiceException e) {
                 throw new CommandException(e);
             }
-            return "/index.jsp";
+            return "/";
         } else {
             request.getSession().setAttribute(Parameter.ERROR_MESSAGE.getName(),Boolean.TRUE);
             return "/register";

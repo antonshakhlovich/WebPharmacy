@@ -22,10 +22,10 @@
 <div class="col-sm-2"></div>
 <div class="col-sm-8">
 <c:if test="${sessionScope.error_message}">
-    <div style="text-align:right;padding-right: 20px"><fmt:message key="local.message.register.error" /></div>
+    <div style="text-align:left"><fmt:message key="local.message.register.error" /></div>
     <c:set var="error_message" scope="session" value="false"/>
 </c:if>
-<form role="form" action="/Controller" method="post">
+<form role="form" action="Controller" method="post">
     <input type="hidden" name="command" value="register"/>
     <input type="text" class="form-control" placeholder="<fmt:message key="local.text.username" />" name="login" required/>
     <input type="password" class="form-control" placeholder="<fmt:message key="local.text.password" />" name="password" required/>

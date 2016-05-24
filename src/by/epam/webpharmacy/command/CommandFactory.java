@@ -26,6 +26,7 @@ public class CommandFactory {
         commands.put(CommandName.LOGOUT, new LogoutCommand());
         commands.put(CommandName.REGISTER, new RegisterCommand());
         commands.put(CommandName.BAN_USER, new BanUserCommand());
+        commands.put(CommandName.VIEW_ADD_ITEM, new ViewAddItemCommand());
     }
 
     public static CommandFactory getInstance() {

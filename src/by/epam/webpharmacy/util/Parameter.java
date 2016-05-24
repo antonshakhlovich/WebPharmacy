@@ -5,6 +5,7 @@ public enum Parameter {
     BAN_STATUS,
     CITY,
     COMMAND,
+    DOSAGE_FORMS,
     EMAIL,
     ERROR_MESSAGE,
     FIRST_NAME,

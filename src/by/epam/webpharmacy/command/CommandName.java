@@ -9,7 +9,8 @@ public enum CommandName {
     LOGIN(false),
     CHANGE_LOCALE(true),
     REGISTER(false),
-    LOGOUT(true);
+    LOGOUT(true),
+    VIEW_ADD_ITEM(true);
 
     private boolean isGetAllowed;
 

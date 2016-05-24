@@ -57,24 +57,39 @@ public class UserServiceImpl implements UserService {
                                 String phoneNumber, String city, String address) throws ServiceException {
 
         boolean result;
+        boolean isNotExist = false;
         try {
-            User user = new User();
-            user.setSalt(SaltGenerator.getInstance().getSalt());
-            String hashedPassword = Hasher.md5Hash(user.getSalt() + password);
-            user.setHashedPassword(hashedPassword);
-            user.setLogin(login);
-            user.setEmail(email);
-            user.setRole(UserRole.USER);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setPhoneNumber(phoneNumber);
-            user.setCity(city);
-            user.setAddress(address);
-            result = userDao.registerUser(user);
-        } catch (DaoException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            if (userDao.selectUserByEmail(email) == null) {
+                if (userDao.selectUserByLogin(login) == null) {
+                    isNotExist = true;
+                }
+            }
+        } catch (DaoException e) {
             throw new ServiceException(e);
         }
-        return result;
+        if (isNotExist) {
+            try {
+                User user = new User();
+                user.setSalt(SaltGenerator.getInstance().getSalt());
+                String hashedPassword = Hasher.md5Hash(user.getSalt() + password);
+                user.setHashedPassword(hashedPassword);
+                user.setLogin(login);
+                user.setEmail(email);
+                user.setRole(UserRole.USER);
+                user.setFirstName(firstName);
+                user.setLastName(lastName);
+                user.setPhoneNumber(phoneNumber);
+                user.setCity(city);
+                user.setAddress(address);
+                result = userDao.registerUser(user);
+            } catch (DaoException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
+                throw new ServiceException(e);
+            }
+            return result;
+        } else {
+            return false;
+        }
+
     }
 
     @Override

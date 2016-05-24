@@ -76,7 +76,11 @@ public class ConnectionPool {
 
     public boolean closePool() throws ConnectionPoolException {
         for (Connection connection : connections) {
-            releaseConnection(connection);
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new ConnectionPoolException(e);
+            }
         }
         isEmpty.set(true);
         return true;
