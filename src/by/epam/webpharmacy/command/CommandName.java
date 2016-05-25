@@ -10,13 +10,15 @@ import java.util.List;
  * Contains names of all classes that implements {@see Command} interface
  */
 public enum CommandName {
-    BAN_USER(false, UserRole.ADMIN),
-    UNKNOWN(true,UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.DOCTOR),
+    ADD_ITEM(false, UserRole.MANAGER, UserRole.ADMIN),
+    BAN_USER(false, UserRole.MANAGER, UserRole.ADMIN),
+    UNKNOWN(true,UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     LOGIN(false, UserRole.GUEST),
-    CHANGE_LOCALE(true, UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.DOCTOR),
+    CHANGE_LOCALE(true, UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER,UserRole.DOCTOR),
     REGISTER(false, UserRole.GUEST),
-    LOGOUT(true, UserRole.USER, UserRole.ADMIN, UserRole.DOCTOR),
-    VIEW_ADD_ITEM(true, UserRole.ADMIN);
+    LOGOUT(true, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
+    VIEW_ADD_ITEM(true, UserRole.ADMIN),
+    VIEW_PAGE(true, UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR);
 
     private boolean isGetAllowed;
     private List<UserRole> rolesAllowed = new ArrayList<>();

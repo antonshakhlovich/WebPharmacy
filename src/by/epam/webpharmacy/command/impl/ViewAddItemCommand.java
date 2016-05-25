@@ -6,6 +6,7 @@ import by.epam.webpharmacy.entity.DosageForm;
 import by.epam.webpharmacy.service.ItemService;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.impl.ItemServiceImpl;
+import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
 import org.apache.log4j.Logger;
 
@@ -25,10 +26,12 @@ public class ViewAddItemCommand implements Command {
         try {
             HttpSession session = request.getSession();
             List<DosageForm> dosageForms = itemService.getDosageForms();
-            session.setAttribute(Parameter.DOSAGE_FORMS.getName(), dosageForms);
+            List<String> volumeTypes = itemService.getVolumeTypes();
+            request.setAttribute(Parameter.DOSAGE_FORMS.getName(), dosageForms);
+            request.setAttribute(Parameter.VOLUME_TYPES.getName(),volumeTypes);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return "/WEB-INF/jsp/add-item.jsp";
+        return JspPage.ADD_ITEM.getPath();
     }
 }

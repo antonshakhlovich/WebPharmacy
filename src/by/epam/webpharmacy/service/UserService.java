@@ -18,15 +18,12 @@ public interface UserService {
 
 
     /**
-     * Attempts to register a new user with given personal info. Login should be unique in the system
-     * @param login user's login
-     * @param password user's password
-     * @param email user's email
+     * Attempts to register a new user with given personal info. Login  and email should be unique in the system
+     * @param user user with given parameters
      * @return true if registration succeeded, false if user with such login or email already exists
      * @throws ServiceException if DaoException occurred
      */
-    boolean registerUser(String login, String password, String email, String firstName, String lastName,
-                         String phoneNumber, String city, String address) throws ServiceException;
+    boolean registerUser(User user) throws ServiceException;
 
     /**
      * Bans or unbans a specified user

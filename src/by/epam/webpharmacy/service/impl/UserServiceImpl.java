@@ -12,8 +12,6 @@ import by.epam.webpharmacy.service.util.SaltGenerator;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Represents a class implementation of a {@see UserService} interface.
@@ -53,14 +51,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean registerUser(String login, String password, String email, String firstName, String lastName,
-                                String phoneNumber, String city, String address) throws ServiceException {
+    public boolean registerUser(User user) throws ServiceException {
 
         boolean result;
         boolean isNotExist = false;
         try {
-            if (userDao.selectUserByEmail(email) == null) {
-                if (userDao.selectUserByLogin(login) == null) {
+            if (userDao.selectUserByEmail(user.getEmail()) == null) {
+                if (userDao.selectUserByLogin(user.getLogin()) == null) {
                     isNotExist = true;
                 }
             }
@@ -69,19 +66,11 @@ public class UserServiceImpl implements UserService {
         }
         if (isNotExist) {
             try {
-                User user = new User();
                 user.setSalt(SaltGenerator.getInstance().getSalt());
-                String hashedPassword = Hasher.md5Hash(user.getSalt() + password);
+                String hashedPassword = Hasher.md5Hash(user.getSalt() + user.getPassword());
                 user.setHashedPassword(hashedPassword);
-                user.setLogin(login);
-                user.setEmail(email);
                 user.setRole(UserRole.USER);
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setPhoneNumber(phoneNumber);
-                user.setCity(city);
-                user.setAddress(address);
-                result = userDao.registerUser(user);
+                result = userDao.insertUser(user);
             } catch (DaoException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
                 throw new ServiceException(e);
             }

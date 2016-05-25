@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
 
-    private static final SQLSource SQL_SOURCE = SQLSource.MYSQL;
+    private static final SQLSource SQL_SOURCE = SQLSource.MYSQL_LOCAL;
 
     private static ConnectionPool instance = new ConnectionPool();
     private static AtomicBoolean isEmpty = new AtomicBoolean(true);

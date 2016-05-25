@@ -5,6 +5,7 @@ import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.UserService;
 import by.epam.webpharmacy.service.impl.UserServiceImpl;
+import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,6 @@ public class BanUserCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return "/";
+        return JspPage.ROOT.getPath();
     }
 }

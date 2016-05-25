@@ -28,6 +28,8 @@ public class CommandFactory {
         commands.put(CommandName.REGISTER, new RegisterCommand());
         commands.put(CommandName.BAN_USER, new BanUserCommand());
         commands.put(CommandName.VIEW_ADD_ITEM, new ViewAddItemCommand());
+        commands.put(CommandName.ADD_ITEM, new AddItemCommand());
+        commands.put(CommandName.VIEW_PAGE, new ViewPageCommand());
     }
 
     public static CommandFactory getInstance() {

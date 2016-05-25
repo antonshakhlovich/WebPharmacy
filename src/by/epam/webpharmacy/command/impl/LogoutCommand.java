@@ -2,6 +2,7 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,6 @@ public class LogoutCommand implements Command{
     public String execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         session.removeAttribute(Parameter.USER.getName());
-        return "/";
+        return JspPage.ROOT.getPath();
     }
 }

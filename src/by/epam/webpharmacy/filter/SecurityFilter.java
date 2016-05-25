@@ -3,6 +3,7 @@ package by.epam.webpharmacy.filter;
 import by.epam.webpharmacy.command.CommandName;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.entity.UserRole;
+import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.*;
@@ -13,12 +14,13 @@ import java.io.IOException;
 
 /**
  * Filters all requests to the servlet by checking whether the user has corresponding rights to execute
- * a specified command and whether request method is appropriate for the command.
- * If rights are insufficient, request is redirected to the index page.
+ * a specified command and whether get method is appropriate for the command.
+ * If rights are insufficient, request is redirected to the root page.
  */
 @WebFilter(urlPatterns = {"/Controller"})
 public class SecurityFilter implements Filter {
-    private static final String INDEX = "/index.jsp";
+
+    private static final String GET = "get";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -39,8 +41,8 @@ public class SecurityFilter implements Filter {
         if (command != null) {
             CommandName commandName = CommandName.valueOf(command.replace("-", "_").toUpperCase());
             if (!commandName.isRoleAllowed(role) ||
-                    (!commandName.isGetAllowed() && request.getMethod().equalsIgnoreCase("get"))) {
-                response.sendRedirect(request.getContextPath() + INDEX);
+                    (!commandName.isGetAllowed() && request.getMethod().equalsIgnoreCase(GET))) {
+                response.sendRedirect(JspPage.ROOT.getPath());
                 return;
             }
         }

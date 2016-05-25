@@ -112,5 +112,20 @@ public class Item implements Serializable {
         this.imagePath = imagePath;
     }
 
-
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", label='" + label + '\'' +
+                ", dosageFormId=" + dosageFormId +
+                ", dosage='" + dosage + '\'' +
+                ", volume=" + volume +
+                ", volumeType='" + volumeType + '\'' +
+                ", manufacturerId=" + manufacturerId +
+                ", price=" + price +
+                ", byPrescription=" + byPrescription +
+                ", description='" + description + '\'' +
+                ", imagePath='" + imagePath + '\'' +
+                '}';
+    }
 }

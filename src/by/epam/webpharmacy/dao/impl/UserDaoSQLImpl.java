@@ -58,7 +58,7 @@ public class UserDaoSQLImpl implements UserDao {
     }
 
     @Override
-    public boolean registerUser(User user) throws DaoException {
+    public boolean insertUser(User user) throws DaoException {
         Connection cn = null;
         PreparedStatement preparedStatement = null;
         try {

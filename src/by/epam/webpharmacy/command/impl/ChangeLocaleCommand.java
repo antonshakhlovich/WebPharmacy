@@ -2,6 +2,7 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ public class ChangeLocaleCommand implements Command {
     /**
      * Handles request to the servlet by changing the locale for the session
      * @param request request from the servlet, containing the desired locale
-     * @return null
+     * @return the page where command was requested
      * @throws CommandException
      */
     @Override
@@ -23,6 +24,6 @@ public class ChangeLocaleCommand implements Command {
         String locale = request.getParameter(Parameter.LOCALE.getName());
         HttpSession session = request.getSession();
         session.setAttribute(Parameter.LOCALE.getName(),locale);
-        return request.getParameter(Parameter.FROM.getName());
+        return JspPage.ROOT.getPath();
     }
 }

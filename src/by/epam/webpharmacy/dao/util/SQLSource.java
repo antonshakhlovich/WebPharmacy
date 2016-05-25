@@ -5,7 +5,7 @@ package by.epam.webpharmacy.dao.util;
  */
 public enum SQLSource {
     MYSQL ("jdbc:mysql://31.130.206.159/webpharmacy","root","LENoep78529", "com.mysql.jdbc.Driver"),
-    MYSQL_LOCAL ("jdbc:mysql://localhost:3306/webpharmacy","root","123456", "com.mysql.jdbc.Driver");
+    MYSQL_LOCAL ("jdbc:mysql://localhost:3306/pharmacy","root","123456", "com.mysql.jdbc.Driver");
 
     private String connectionURI;
     private String username;

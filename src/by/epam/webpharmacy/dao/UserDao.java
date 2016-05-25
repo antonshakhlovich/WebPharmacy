@@ -32,12 +32,12 @@ public interface UserDao {
     User selectUserByEmail(String email) throws DaoException;
 
     /**
-     * Retrieves a user with given e-mail.
+     * Add a new user to the storage, e.g. database with
      * @param user is user bean that should be stored in database
-     * @return User with corresponding e-mail and other parameters or {@code null} if such user doesn't exist
+     * @return true if user was added and false if user with such parameters already exists
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
-    boolean registerUser(User user) throws DaoException;
+    boolean insertUser(User user) throws DaoException;
 
     /**
      * Updates user's banned status
