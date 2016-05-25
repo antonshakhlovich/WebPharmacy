@@ -1,9 +1,11 @@
 package by.epam.webpharmacy.entity;
 
+import java.io.Serializable;
+
 /**
  * Class {@code DosageForm} represents an type of possbile dosage forms for drugs in the pharmacy's catalog.
  */
-public class DosageForm {
+public class DosageForm implements Serializable{
     private long id;
     private String name;
 

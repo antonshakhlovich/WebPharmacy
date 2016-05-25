@@ -10,14 +10,12 @@ import by.epam.webpharmacy.util.Parameter;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Extracts all present messages from the session to the request, checks security rights
- * and defines the page path to forward to
+ * Checks security rights and defines the page path to forward to
  */
 public class ViewPageCommand implements Command {
     /**
-     * Checks whether page is allowed to be viewed by a user. If allowed, adds messages to the request
-     * and returns a page to view. If not, return path to the index page
-     *
+     * Checks whether page is allowed to be viewed by a user. If allowed,
+     * returns a page to view. If not, return path to the index page
      * @param request request from the servlet which may contain messages in the session
      * @return path to the page to view
      */
