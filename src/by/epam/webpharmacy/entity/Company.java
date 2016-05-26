@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Class {@code Company} represents any company that can be used in the pharmacy-app
  * such as manufacturer or vendor and etc
  */
-public class Company implements Serializable {
+public class Company implements Serializable, Comparable<Company> {
 
     private long id;
     private String type;
@@ -91,5 +91,10 @@ public class Company implements Serializable {
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (website != null ? website.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Company o) {
+        return this.fullName.compareTo(o.fullName);
     }
 }

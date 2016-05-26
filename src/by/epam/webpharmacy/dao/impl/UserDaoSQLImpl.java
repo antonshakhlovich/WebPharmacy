@@ -82,20 +82,7 @@ public class UserDaoSQLImpl implements UserDao {
         } catch (SQLException e) {
             throw new DaoException(e.getMessage(), e);
         } finally {
-            try {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-            } catch (SQLException e) {
-                throw new DaoException("Can't close preparedStatement", e);
-            }
-            if (cn != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(cn);
-                } catch (ConnectionPoolException e) {
-                    throw new DaoException("Can't release connection to connection pool", e);
-                }
-            }
+            closeResources(cn,preparedStatement);
         }
     }
 

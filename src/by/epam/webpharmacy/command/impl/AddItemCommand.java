@@ -6,17 +6,17 @@ import by.epam.webpharmacy.entity.Item;
 import by.epam.webpharmacy.service.ItemService;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.impl.ItemServiceImpl;
-import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
-import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * Class {@code AddItemCommand} is an admin-only implementation of {@see Command}
@@ -54,7 +54,7 @@ public class AddItemCommand implements Command {
                 if (!fileSaveDir.exists()) {
                     fileSaveDir.mkdir();
                 }
-                String fileName = extractFileName(part);
+                String fileName = Calendar.getInstance().getTimeInMillis() + extractFileName(part);
                 part.write(savePath + File.separator + fileName);
                 item.setImagePath(File.separator + SAVE_DIR + File.separator + fileName);
             }
@@ -65,7 +65,10 @@ public class AddItemCommand implements Command {
         }
         try {
             if (itemService.addItem(item)) {
-                request.getSession().setAttribute(Parameter.SUCCESS_MESSAGE.getName(), Boolean.TRUE);
+                HttpSession session = request.getSession();
+                session.setAttribute(Parameter.SUCCESS_MESSAGE.getName(), Boolean.TRUE);
+                session.setAttribute(Parameter.ITEM.getName(),itemService.selectItemByLabelDosageVolume(item.getLabel(),
+                        item.getDosageFormId(), item.getDosage(), item.getVolume(), item.getVolumeType(), item.getManufacturerId()));
             } else {
                 request.getSession().setAttribute(Parameter.ERROR_MESSAGE.getName(), Boolean.TRUE);
             }

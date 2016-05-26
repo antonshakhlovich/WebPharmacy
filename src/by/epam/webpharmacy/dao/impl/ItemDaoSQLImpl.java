@@ -25,11 +25,20 @@ public class ItemDaoSQLImpl implements ItemDao {
 
     private static final String SELECT_DOSAGE_FORMS = "SELECT id, name FROM drugs_dosage_forms";
     private static final String SELECT_VOLUME_TYPES = "SHOW COLUMNS FROM drugs LIKE 'volume_type'";
-    private static final String SELECT_ITEM_BY_ID = "SELECT id,label, dosage_form_id, dosage, volume, volume_type, " +
-            "manufacturer_id, Price, by_prescription, description, image_path FROM drugs WHERE id = ?";
-    private static final String SELECT_ITEM_BY_LABEL_DOSAGE_VOLUME = "SELECT id,label, dosage_form_id, dosage, volume, " +
-            "volume_type, manufacturer_id, Price, by_prescription, description, image_path " +
-            "FROM drugs WHERE label = ? AND dosage = ? AND volume = ?";
+    private static final String SELECT_ITEM_BY_ID = "SELECT d.id,d.label,d.dosage_form_id, ddf.name as dosage_form_name, " +
+            "d.dosage, d.volume, d.volume_type, d.manufacturer_id, CONCAT(c.type,' \"',c.name,'\" (',c.country,')') " +
+            "AS manufacturer_name,d.price,d.by_prescription,d.description,d.image_path " +
+            "  From drugs d\n" +
+            "  JOIN drugs_dosage_forms ddf ON d.dosage_form_id = ddf.id\n" +
+            "  JOIN companies c ON d.manufacturer_id = c.id" +
+            " WHERE d.id = ?";
+    private static final String SELECT_ITEM_BY_LABEL_DOSAGE_VOLUME = "SELECT d.id,d.label,d.dosage_form_id, " +
+            "ddf.name as dosage_form_name, d.dosage, d.volume, d.volume_type, d.manufacturer_id, " +
+            "CONCAT(c.type,' \"',c.name,'\" (',c.country,')') AS manufacturer_name,d.price,d.by_prescription,d.description," +
+            "d.image_path From drugs d JOIN drugs_dosage_forms ddf ON d.dosage_form_id = ddf.id" +
+            " JOIN companies c ON d.manufacturer_id = c.id" +
+            " WHERE d.label = ? AND d.dosage_form_id=? AND d.dosage = ?" +
+            " AND d.volume = ? AND d.volume_type=? AND d.manufacturer_id=?";
     private static final String INSERT_ITEM = "INSERT INTO drugs(id, label, dosage_form_id, dosage, volume, " +
             "volume_type, manufacturer_id, price, by_prescription, description, image_path) " +
             "VALUES(0 , ?, ?, ? , ?, ?, ?, ?, ?, ?,?)";
@@ -115,7 +124,6 @@ public class ItemDaoSQLImpl implements ItemDao {
             resultSet.next();
             setItemParameters(item, resultSet);
             return item;
-
         } catch (ConnectionPoolException | SQLException e) {
             throw new DaoException(e);
         } finally {
@@ -124,7 +132,8 @@ public class ItemDaoSQLImpl implements ItemDao {
     }
 
     @Override
-    public Item selectItemByLabelDosageVolume(String label, String dosage, double volume) throws DaoException {
+    public Item selectItemByLabelDosageVolume(String label, long dosageFormId, String dosage, double volume,
+                                              String volumeType, long manufacturerId) throws DaoException {
         Item item = new Item();
         Connection cn = null;
         PreparedStatement preparedStatement = null;
@@ -133,8 +142,11 @@ public class ItemDaoSQLImpl implements ItemDao {
             cn = ConnectionPool.getInstance().getConnection();
             preparedStatement = cn.prepareStatement(SELECT_ITEM_BY_LABEL_DOSAGE_VOLUME);
             preparedStatement.setString(1, label);
-            preparedStatement.setString(2, dosage);
-            preparedStatement.setDouble(3, volume);
+            preparedStatement.setLong(2, dosageFormId);
+            preparedStatement.setString(3, dosage);
+            preparedStatement.setDouble(4, volume);
+            preparedStatement.setString(5, volumeType);
+            preparedStatement.setLong(6, manufacturerId);
             resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return null;
@@ -189,6 +201,8 @@ public class ItemDaoSQLImpl implements ItemDao {
         item.setLabel(resultSet.getString(Parameter.LABEL.getName()));
         item.setDosageFormId(resultSet.getLong(Parameter.DOSAGE_FORM_ID.getName()));
         item.setDosage(resultSet.getString(Parameter.DOSAGE.getName()));
+        item.setDosageFormName(resultSet.getString(Parameter.DOSAGE_FORM_NAME.getName()));
+        item.setManufacturerName(resultSet.getString(Parameter.MANUFACTURER_NAME.getName()));
     }
 
     private void closeResources(Connection connection, PreparedStatement preparedStatement) throws DaoException {

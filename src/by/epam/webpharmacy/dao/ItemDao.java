@@ -35,7 +35,8 @@ public interface ItemDao {
      * @return Item with corresponding label,dosage and volume and other parameters or {@code null} if such item doesn't exist
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
-    Item selectItemByLabelDosageVolume(String label, String dosage, double volume) throws DaoException;
+    Item selectItemByLabelDosageVolume(String label, long dosageFormId, String dosage, double volume,
+                                       String volumeType, long manufacturerId) throws DaoException;
 
     boolean insertItem(Item item) throws DaoException;
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  * Filters all requests to the servlet by checking whether the encoding matches the encoding specified in the init params
- * of the filter. If n
+ * of the filter.
  */
 @WebFilter(urlPatterns = {"/*"},
         initParams = {

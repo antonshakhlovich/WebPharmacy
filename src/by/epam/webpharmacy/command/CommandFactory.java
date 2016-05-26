@@ -30,6 +30,7 @@ public class CommandFactory {
         commands.put(CommandName.VIEW_ADD_ITEM, new ViewAddItemCommand());
         commands.put(CommandName.ADD_ITEM, new AddItemCommand());
         commands.put(CommandName.VIEW_PAGE, new ViewPageCommand());
+        commands.put(CommandName.VIEW_ITEM, new ViewItemCommand());
     }
 
     public static CommandFactory getInstance() {

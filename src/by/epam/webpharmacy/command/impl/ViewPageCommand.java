@@ -19,6 +19,7 @@ public class ViewPageCommand implements Command {
      * @param request request from the servlet which may contain messages in the session
      * @return path to the page to view
      */
+    public static final String PATH = "/Controller?command=view_page&page=";
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {

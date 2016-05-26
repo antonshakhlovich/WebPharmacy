@@ -2,17 +2,20 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.entity.Company;
 import by.epam.webpharmacy.entity.DosageForm;
+import by.epam.webpharmacy.service.CompanyService;
 import by.epam.webpharmacy.service.ItemService;
 import by.epam.webpharmacy.service.ServiceException;
+import by.epam.webpharmacy.service.impl.CompanyServiceImpl;
 import by.epam.webpharmacy.service.impl.ItemServiceImpl;
 import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class {@code ViewAddItemCommand} is an admin-only implementation of {@see Command}
@@ -20,6 +23,7 @@ import java.util.List;
  */
 public class ViewAddItemCommand implements Command {
     private static ItemService itemService = ItemServiceImpl.getInstance();
+    private static CompanyService companyService = CompanyServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
@@ -27,8 +31,10 @@ public class ViewAddItemCommand implements Command {
             HttpSession session = request.getSession();
             List<DosageForm> dosageForms = itemService.getDosageForms();
             List<String> volumeTypes = itemService.getVolumeTypes();
+            Set<Company> companies = companyService.getCompanySet();
             request.setAttribute(Parameter.DOSAGE_FORMS.getName(), dosageForms);
             request.setAttribute(Parameter.VOLUME_TYPES.getName(),volumeTypes);
+            request.setAttribute(Parameter.COMPANIES.getName(),companies);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

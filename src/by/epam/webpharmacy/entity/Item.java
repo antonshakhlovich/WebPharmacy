@@ -11,16 +11,18 @@ public class Item implements Serializable {
     private long id;
     private String label;
     private long dosageFormId;
+    private String dosageFormName;
     private String dosage;
     private double volume;
     private String volumeType;
     private long manufacturerId;
+    private String manufacturerName;
     private BigDecimal price;
     private boolean byPrescription;
     private String description;
     private String imagePath;
 
-    public Item () {
+    public Item() {
 
     }
 
@@ -46,6 +48,14 @@ public class Item implements Serializable {
 
     public void setDosageFormId(long dosageFormId) {
         this.dosageFormId = dosageFormId;
+    }
+
+    public String getDosageFormName() {
+        return dosageFormName;
+    }
+
+    public void setDosageFormName(String dosageFormName) {
+        this.dosageFormName = dosageFormName;
     }
 
     public String getDosage() {
@@ -78,6 +88,14 @@ public class Item implements Serializable {
 
     public void setManufacturerId(long manufacturerId) {
         this.manufacturerId = manufacturerId;
+    }
+
+    public String getManufacturerName() {
+        return manufacturerName;
+    }
+
+    public void setManufacturerName(String manufacturerName) {
+        this.manufacturerName = manufacturerName;
     }
 
     public BigDecimal getPrice() {
@@ -125,8 +143,12 @@ public class Item implements Serializable {
         if (manufacturerId != item.manufacturerId) return false;
         if (byPrescription != item.byPrescription) return false;
         if (label != null ? !label.equals(item.label) : item.label != null) return false;
+        if (dosageFormName != null ? !dosageFormName.equals(item.dosageFormName) : item.dosageFormName != null)
+            return false;
         if (dosage != null ? !dosage.equals(item.dosage) : item.dosage != null) return false;
         if (volumeType != null ? !volumeType.equals(item.volumeType) : item.volumeType != null) return false;
+        if (manufacturerName != null ? !manufacturerName.equals(item.manufacturerName) : item.manufacturerName != null)
+            return false;
         if (price != null ? !price.equals(item.price) : item.price != null) return false;
         if (description != null ? !description.equals(item.description) : item.description != null) return false;
         return imagePath != null ? imagePath.equals(item.imagePath) : item.imagePath == null;
@@ -140,11 +162,13 @@ public class Item implements Serializable {
         result = (int) (id ^ (id >>> 32));
         result = 31 * result + (label != null ? label.hashCode() : 0);
         result = 31 * result + (int) (dosageFormId ^ (dosageFormId >>> 32));
+        result = 31 * result + (dosageFormName != null ? dosageFormName.hashCode() : 0);
         result = 31 * result + (dosage != null ? dosage.hashCode() : 0);
         temp = Double.doubleToLongBits(volume);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (volumeType != null ? volumeType.hashCode() : 0);
         result = 31 * result + (int) (manufacturerId ^ (manufacturerId >>> 32));
+        result = 31 * result + (manufacturerName != null ? manufacturerName.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (byPrescription ? 1 : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
@@ -158,10 +182,12 @@ public class Item implements Serializable {
                 "id=" + id +
                 ", label='" + label + '\'' +
                 ", dosageFormId=" + dosageFormId +
+                ", dosageFormName='" + dosageFormName + '\'' +
                 ", dosage='" + dosage + '\'' +
                 ", volume=" + volume +
                 ", volumeType='" + volumeType + '\'' +
                 ", manufacturerId=" + manufacturerId +
+                ", manufacturerName='" + manufacturerName + '\'' +
                 ", price=" + price +
                 ", byPrescription=" + byPrescription +
                 ", description='" + description + '\'' +

@@ -8,10 +8,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="${pageContext.request.contextPath}/css/bootstrap.js"></script>
     <fmt:message key="local.button.name.login" var="login_button"/>
     <fmt:message key="local.text.login" var="login_message"/>
     <fmt:message key="local.message.welcome" var="welcome_message"/>
@@ -20,7 +20,6 @@
 </head>
 <body>
 <%@include file="/WEB-INF/jsp/header.jsp" %>
-<%@include file="/WEB-INF/jsp/change-locale.jsp" %>
 <div class="login">
     <c:if test="${sessionScope.user != null}">
         <span><c:out value="${login_message} : ${sessionScope.user.login}"/></span>

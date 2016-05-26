@@ -45,11 +45,31 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public boolean addItem(Item item) throws ServiceException {
         try {
-            if (itemDao.selectItemByLabelDosageVolume(item.getLabel(), item.getDosage(), item.getVolume()) != null) {
+            if (itemDao.selectItemByLabelDosageVolume(item.getLabel(),item.getDosageFormId(),item.getDosage(),
+                    item.getVolume(),item.getVolumeType(),item.getManufacturerId()) != null) {
                 return false;
             } else {
                 return itemDao.insertItem(item);
             }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Item selectItemById(long id) throws ServiceException {
+        try {
+            return itemDao.selectItemById(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Item selectItemByLabelDosageVolume(String label, long dosageFormId, String dosage, double volume,
+                                              String volumeType, long manufacturerId) throws ServiceException {
+        try {
+            return itemDao.selectItemByLabelDosageVolume(label, dosageFormId, dosage, volume, volumeType, manufacturerId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
