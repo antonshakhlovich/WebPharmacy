@@ -29,19 +29,40 @@ public class ItemDaoSQLImpl implements ItemDao {
             "d.dosage, d.volume, d.volume_type, d.manufacturer_id, CONCAT(c.type,' \"',c.name,'\" (',c.country,')') " +
             "AS manufacturer_name,d.price,d.by_prescription,d.description,d.image_path " +
             "  From drugs d\n" +
-            "  JOIN drugs_dosage_forms ddf ON d.dosage_form_id = ddf.id\n" +
-            "  JOIN companies c ON d.manufacturer_id = c.id" +
+            "  LEFT JOIN drugs_dosage_forms ddf ON d.dosage_form_id = ddf.id\n" +
+            "  LEFT JOIN companies c ON d.manufacturer_id = c.id" +
             " WHERE d.id = ?";
     private static final String SELECT_ITEM_BY_LABEL_DOSAGE_VOLUME = "SELECT d.id,d.label,d.dosage_form_id, " +
             "ddf.name as dosage_form_name, d.dosage, d.volume, d.volume_type, d.manufacturer_id, " +
             "CONCAT(c.type,' \"',c.name,'\" (',c.country,')') AS manufacturer_name,d.price,d.by_prescription,d.description," +
             "d.image_path From drugs d JOIN drugs_dosage_forms ddf ON d.dosage_form_id = ddf.id" +
-            " JOIN companies c ON d.manufacturer_id = c.id" +
+            " LEFT JOIN companies c ON d.manufacturer_id = c.id" +
             " WHERE d.label = ? AND d.dosage_form_id=? AND d.dosage = ?" +
             " AND d.volume = ? AND d.volume_type=? AND d.manufacturer_id=?";
     private static final String INSERT_ITEM = "INSERT INTO drugs(id, label, dosage_form_id, dosage, volume, " +
             "volume_type, manufacturer_id, price, by_prescription, description, image_path) " +
             "VALUES(0 , ?, ?, ? , ?, ?, ?, ?, ?, ?,?)";
+    private static final String SELECT_ALL_ITEMS="SELECT d.id,d.label,d.dosage_form_id, ddf.name as dosage_form_name, " +
+            "d.dosage, d.volume, d.volume_type, d.manufacturer_id, CONCAT(c.type,' \"',c.name,'\" (',c.country,')')" +
+            " AS manufacturer_name,d.price,d.by_prescription,d.description,d.image_path \n" +
+            "  From drugs d\n" +
+            "  LEFT JOIN drugs_dosage_forms ddf ON d.dosage_form_id = ddf.id\n" +
+            "  LEFT JOIN companies c ON d.manufacturer_id = c.id" +
+            " ORDER BY d.label " +
+            "LIMIT ?,?";
+    private static final String SELECT_ITEMS_BY_LABEL="SELECT d.id,d.label,d.dosage_form_id, ddf.name as dosage_form_name, " +
+            "d.dosage, d.volume, d.volume_type, d.manufacturer_id, CONCAT(c.type,' \"',c.name,'\" (',c.country,')')" +
+            " AS manufacturer_name,d.price,d.by_prescription,d.description,d.image_path \n" +
+            "  From drugs d\n" +
+            "  LEFT JOIN drugs_dosage_forms ddf ON d.dosage_form_id = ddf.id\n" +
+            "  LEFT JOIN companies c ON d.manufacturer_id = c.id" +
+            " WHERE d.label = ?" +
+            " ORDER BY ddf.name " +
+            " LIMIT ?,?";
+    private static final String COUNT_ALL_ITEMS = "SELECT COUNT(*) AS number_of_items FROM drugs";
+    private static final String COUNT_ITEMS_BY_LABEL = "SELECT COUNT(*) FROM drugs" +
+            "  GROUP BY label" +
+            "  HAVING label = ?";
     private static final String REGEXP_VOLUME_TYPE = "\'([^']*)\'";
 
     private static ItemDao instance = new ItemDaoSQLImpl();
@@ -161,6 +182,103 @@ public class ItemDaoSQLImpl implements ItemDao {
             closeResources(cn, preparedStatement, resultSet);
         }
     }
+
+    @Override
+    public List<Item> selectAllItems(int offset, int limit) throws DaoException {
+        List<Item> itemList = new ArrayList<>();
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(SELECT_ALL_ITEMS);
+            preparedStatement.setInt(1,offset);
+            preparedStatement.setInt(2,limit);
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            while (resultSet.next()) {
+                Item item = new Item();
+                setItemParameters(item, resultSet);
+                itemList.add(item);
+            }
+            return itemList;
+
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
+    }
+
+    @Override
+    public int countAllItems() throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(COUNT_ALL_ITEMS);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
+    }
+
+    @Override
+    public List<Item> selectItemsByLabel(String label, int offset, int limit) throws DaoException {
+        List<Item> itemList = new ArrayList<>();
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(SELECT_ITEMS_BY_LABEL);
+            preparedStatement.setString(1,label);
+            preparedStatement.setInt(2,offset);
+            preparedStatement.setInt(3,limit);
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            while (resultSet.next()) {
+                Item item = new Item();
+                setItemParameters(item, resultSet);
+                itemList.add(item);
+            }
+            return itemList;
+
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
+    }
+
+    @Override
+    public int countItemsByLabel(String label) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(COUNT_ITEMS_BY_LABEL);
+            preparedStatement.setString(1,label);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
+    }
+
     @Override
     public boolean insertItem(Item item) throws DaoException {
         Connection cn = null;

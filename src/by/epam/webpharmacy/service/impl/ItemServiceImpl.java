@@ -45,8 +45,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public boolean addItem(Item item) throws ServiceException {
         try {
-            if (itemDao.selectItemByLabelDosageVolume(item.getLabel(),item.getDosageFormId(),item.getDosage(),
-                    item.getVolume(),item.getVolumeType(),item.getManufacturerId()) != null) {
+            if (itemDao.selectItemByLabelDosageVolume(item.getLabel(), item.getDosageFormId(), item.getDosage(),
+                    item.getVolume(), item.getVolumeType(), item.getManufacturerId()) != null) {
                 return false;
             } else {
                 return itemDao.insertItem(item);
@@ -70,6 +70,42 @@ public class ItemServiceImpl implements ItemService {
                                               String volumeType, long manufacturerId) throws ServiceException {
         try {
             return itemDao.selectItemByLabelDosageVolume(label, dosageFormId, dosage, volume, volumeType, manufacturerId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Item> selectAllItems(int offset, int limit) throws ServiceException {
+        try {
+            return itemDao.selectAllItems(offset, limit);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public int countAllItems() throws ServiceException {
+        try {
+            return itemDao.countAllItems();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Item> selectItemsByLabel(String label, int offset, int limit) throws ServiceException {
+        try {
+            return itemDao.selectItemsByLabel(label, offset, limit);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public int countItemsByLabel(String label) throws ServiceException {
+        try {
+            return itemDao.countItemsByLabel(label);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

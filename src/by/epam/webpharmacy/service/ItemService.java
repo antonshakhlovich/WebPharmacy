@@ -50,4 +50,34 @@ public interface ItemService {
     Item selectItemByLabelDosageVolume(String label, long dosageFormId, String dosage, double volume,
                                        String volumeType, long manufacturerId) throws ServiceException;
 
+    /**
+     * Retrieves a list of items from {@param offset}. List's max limit is {@param limit}.
+     * @param offset set the number of the first row from request
+     * @param limit set the number of items that will be listed
+     * @return list that contains limited number of items.
+     * @throws ServiceException
+     */
+    List<Item> selectAllItems(int offset, int limit) throws ServiceException;
+
+    /**Counts all items in the storage.
+     * @return number of items .
+     * @throws ServiceException
+     */
+    int countAllItems() throws ServiceException;
+
+    /**
+     * Retrieves a list of items with given label from {@param offset}. List's max limit is {@param limit}.
+     * @param offset set the number of the first row from request
+     * @param limit set the number of items that will be listed
+     * @return list that contains limited number of items.
+     * @throws ServiceException
+     */
+    List<Item> selectItemsByLabel(String label, int offset, int limit) throws ServiceException;
+
+    /**Counts only currently searched items in the storage.
+     * @return number of items .
+     * @throws ServiceException
+     */
+    int countItemsByLabel(String label) throws ServiceException;
+
 }

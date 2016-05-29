@@ -2,7 +2,7 @@ package by.epam.webpharmacy.dao;
 
 import by.epam.webpharmacy.entity.Company;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Represents an interface for retrieving company-related data. Contains all methods, required for getting such
@@ -15,7 +15,7 @@ public interface CompanyDao {
      * @return list of companies
      * @throws DaoException
      */
-    Set<Company> getCompanySet() throws DaoException;
+    List<Company> getCompanyList() throws DaoException;
 
     /**
      * Insert company to the storage, e.g. database

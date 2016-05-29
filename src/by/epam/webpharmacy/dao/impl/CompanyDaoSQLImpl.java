@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -21,7 +22,8 @@ import java.util.TreeSet;
  */
 public class CompanyDaoSQLImpl implements CompanyDao{
 
-    private static final String SELECT_COMPANIES = "SELECT id, type, name, short_name, country, website FROM companies";
+    private static final String SELECT_COMPANIES = "SELECT id, type, name, short_name, country, website FROM companies" +
+            " ORDER BY name";
     private static final String INSERT_COMPANY = "INSERT INTO companies(id, type, name, short_name, country, website) " +
             "VALUES(0 ,? ,? ,? ,? ,?)";
 
@@ -36,8 +38,8 @@ public class CompanyDaoSQLImpl implements CompanyDao{
 
 
     @Override
-    public Set<Company> getCompanySet() throws DaoException {
-        Set<Company> companies = new TreeSet<>();
+    public List<Company> getCompanyList() throws DaoException {
+        List<Company> companies = new ArrayList<>();
         Connection cn = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;

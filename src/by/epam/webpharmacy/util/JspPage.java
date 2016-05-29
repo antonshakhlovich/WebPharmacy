@@ -14,7 +14,8 @@ public enum JspPage {
     INDEX("/index.jsp", UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
     ROOT("/", UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
     REGISTER("/register", UserRole.GUEST),
-    VIEW_ITEM("/WEB-INF/jsp/view-item.jsp",UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN);
+    VIEW_ITEM("/WEB-INF/jsp/view-item.jsp",UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
+    VIEW_CATALOG("/WEB-INF/jsp/view-catalog.jsp",UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN);
 
     private String path;
     private List<UserRole> rolesAllowed = new ArrayList<>();

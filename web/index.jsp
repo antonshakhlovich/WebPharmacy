@@ -12,46 +12,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css"/>
-    <fmt:message key="local.button.name.login" var="login_button"/>
-    <fmt:message key="local.text.login" var="login_message"/>
-    <fmt:message key="local.message.welcome" var="welcome_message"/>
-    <fmt:message key="local.message.login.error" var="login_error"/>
     <title><fmt:message key="local.title"/></title>
 </head>
-<body>
+<body class="index">
 <%@include file="/WEB-INF/jsp/header.jsp" %>
-<div class="login">
-    <c:if test="${sessionScope.user != null}">
-        <span><c:out value="${login_message} : ${sessionScope.user.login}"/></span>
-        <a href="${pageContext.request.contextPath}/Controller?command=logout">
-            <fmt:message key="local.link.logout"/>
-        </a>
-    </c:if>
-    <c:if test="${sessionScope.user == null}">
-        <form role="form" action="Controller" method="post">
-            <input type="hidden" name="command" value="login"/>
-            <input type="hidden" name="from" value="${pageContext.request.requestURI}"/>
-            <div class="row">
-                <div class="col-sm-7"></div>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control" placeholder="<fmt:message key="local.text.username"/>"
-                           name="login">
-                </div>
-                <div class="col-sm-2">
-                    <input type="password" class="form-control" placeholder="<fmt:message key="local.text.password"/>"
-                           name="password">
-                </div>
-                <div class="col-sm-1">
-                    <input class="btn btn-default" type="submit" value="${login_button}">
-                </div>
-            </div>
-        </form>
-    </c:if>
-    <c:if test="${sessionScope.login_failed}">
-        <div style="text-align:right;padding-right: 20px"><c:out value="${login_error}"/></div>
-        <c:set var="login_failed" scope="session" value="false"/>
-    </c:if>
-</div>
+
 <form role="form" action="Controller" method="get">
     <input type="hidden" name="command" value="view-add-item">
     <input type="hidden" name="from" value="${pageContext.request.requestURI}"/>

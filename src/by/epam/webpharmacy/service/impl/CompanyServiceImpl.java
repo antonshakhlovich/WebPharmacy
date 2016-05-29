@@ -7,7 +7,7 @@ import by.epam.webpharmacy.entity.Company;
 import by.epam.webpharmacy.service.CompanyService;
 import by.epam.webpharmacy.service.ServiceException;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by antons on 26.05.2016.
@@ -27,9 +27,9 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Set<Company> getCompanySet() throws ServiceException {
+    public List<Company> getCompanyList() throws ServiceException {
         try {
-            return companyDao.getCompanySet();
+            return companyDao.getCompanyList();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

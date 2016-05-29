@@ -70,10 +70,10 @@ public class Controller extends HttpServlet {
 
     @Override
     public void destroy() {
-//        try {
-//            ConnectionPool.getInstance().closePool();
-//        } catch (ConnectionPoolException e) {
-//            LOG.error("Connection pool wasn't closed");
-//        }
+        try {
+            ConnectionPool.getInstance().closePool();
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool wasn't closed");
+        }
     }
 }

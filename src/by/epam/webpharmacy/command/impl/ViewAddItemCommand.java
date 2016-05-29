@@ -15,7 +15,6 @@ import by.epam.webpharmacy.util.Parameter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class {@code ViewAddItemCommand} is an admin-only implementation of {@see Command}
@@ -31,7 +30,7 @@ public class ViewAddItemCommand implements Command {
             HttpSession session = request.getSession();
             List<DosageForm> dosageForms = itemService.getDosageForms();
             List<String> volumeTypes = itemService.getVolumeTypes();
-            Set<Company> companies = companyService.getCompanySet();
+            List<Company> companies = companyService.getCompanyList();
             request.setAttribute(Parameter.DOSAGE_FORMS.getName(), dosageForms);
             request.setAttribute(Parameter.VOLUME_TYPES.getName(),volumeTypes);
             request.setAttribute(Parameter.COMPANIES.getName(),companies);
