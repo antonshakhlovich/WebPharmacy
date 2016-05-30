@@ -221,6 +221,9 @@ public class ItemDaoSQLImpl implements ItemDao {
             cn = ConnectionPool.getInstance().getConnection();
             preparedStatement = cn.prepareStatement(COUNT_ALL_ITEMS);
             resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return 0;
+            }
             resultSet.next();
             return resultSet.getInt(1);
         } catch (ConnectionPoolException | SQLException e) {
@@ -270,6 +273,9 @@ public class ItemDaoSQLImpl implements ItemDao {
             preparedStatement = cn.prepareStatement(COUNT_ITEMS_BY_LABEL);
             preparedStatement.setString(1,label);
             resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return 0;
+            }
             resultSet.next();
             return resultSet.getInt(1);
         } catch (ConnectionPoolException | SQLException e) {

@@ -45,6 +45,6 @@
         </form>
     </c:if>
 </div>
-<a href="/">
+<a>
     <span class="glyphicon glyphicon-home"></span>
 </a>

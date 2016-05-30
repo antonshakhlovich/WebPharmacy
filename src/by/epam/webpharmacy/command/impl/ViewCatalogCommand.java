@@ -20,7 +20,6 @@ import java.util.List;
 public class ViewCatalogCommand implements Command {
 
     private static ItemService itemService = ItemServiceImpl.getInstance();
-    private static final Logger logger = Logger.getLogger(ViewCatalogCommand.class);
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
@@ -30,8 +29,6 @@ public class ViewCatalogCommand implements Command {
             List<Item> itemList = itemService.selectAllItems(offset, limit);
             request.setAttribute(Parameter.ITEMS.getName(), itemList);
             request.setAttribute(Parameter.NUMBER_OF_ITEMS.getName(), itemService.countAllItems());
-            logger.debug(itemService.countAllItems());
-
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

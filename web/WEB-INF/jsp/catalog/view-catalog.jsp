@@ -2,7 +2,8 @@
          pageEncoding="utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="ctg" uri="customtags" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="resources.local"/>
 <html>
@@ -13,13 +14,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css"/>
-    <title>${item.label}</title>
+    <title><fmt:message key="local.title.catalog"/></title>
 </head>
 <body>
-<%@include file="/WEB-INF/jsp/header.jsp" %>
+<ctg:header/>
 <c:set var="number_of_pages" value="${number_of_items div param.limit + 1}"/>
 <div style="padding: 10px;">
-    <span><fmt:message key="local.text.number.of.items"/>:</span>
+    <span><fmt:message key="local.text.number.of.items.on.page"/>:</span>
     <form style="display: inline-block" role="form" action="Controller" method="get">
         <input type="hidden" name="command" value="view-catalog">
         <input type="hidden" name="page_number" value="<fmt:parseNumber integerOnly="true" type="number"
@@ -31,7 +32,7 @@
         <input type="hidden" name="command" value="view-catalog">
         <input type="hidden" name="page_number" value="<fmt:parseNumber integerOnly="true" type="number"
          value="${((param.page_number-1)* param.limit) / 10 + 1}"/>"/>
-        <input type="hidden" name="limit"  value="10"/>
+        <input type="hidden" name="limit" value="10"/>
         <input class="btn btn-default" type="submit" value="10"/>
     </form>
     <form style="display: inline-block" role="form" action="Controller" method="get">
@@ -45,29 +46,38 @@
     <span><fmt:message key="local.text.go.to.page"/>:</span>
     <form style="display: inline-block" role="form" action="Controller" method="get">
         <input type="hidden" name="command" value="view-catalog">
-        <input type="number" max="${number_of_pages}" min="1" name="page_number" placeholder="${param.page_number}/<fmt:parseNumber integerOnly="true" type="number"
-                                                                             value="${number_of_pages}"/>"/>
+        <input type="number" max="${number_of_pages}" min="1" name="page_number"
+               placeholder="${param.page_number}/<fmt:parseNumber integerOnly="true" type="number"
+                value="${number_of_pages}"/>" required/>
         <input type="hidden" name="limit" value="${param.limit}"/>
         <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.go"/>"/>
     </form>
-    <c:if test="${param.page_number != 1}">
-        <form style="display: inline-block" role="form" action="Controller" method="get">
-            <input type="hidden" name="command" value="view-catalog">
-            <input type="hidden" name="page_number" value="${param.page_number - 1}"/>
-            <input type="hidden" name="limit" value="${param.limit}"/>
-            <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.previous"/>"/>
-        </form>
-    </c:if>
-    <c:if test="${param.page_number < (number_of_pages - 1)}">
-        <form style="display: inline-block" role="form" action="Controller" method="get">
-            <input type="hidden" name="command" value="view-catalog">
-            <input type="hidden" name="page_number" value="${param.page_number + 1}"/>
-            <input type="hidden" name="limit" value="${param.limit}"/>
-            <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.next"/>"/>
-        </form>
-    </c:if>
-
-
+    <c:choose>
+        <c:when test="${param.page_number != 1}">
+            <form style="display: inline-block" role="form" action="Controller" method="get">
+                <input type="hidden" name="command" value="view-catalog">
+                <input type="hidden" name="page_number" value="${param.page_number - 1}"/>
+                <input type="hidden" name="limit" value="${param.limit}"/>
+                <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.previous"/>"/>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.previous"/>" disabled/>
+        </c:otherwise>
+    </c:choose>
+    <c:choose>
+        <c:when test="${param.page_number < (number_of_pages - 1)}">
+            <form style="display: inline-block" role="form" action="Controller" method="get">
+                <input type="hidden" name="command" value="view-catalog">
+                <input type="hidden" name="page_number" value="${param.page_number + 1}"/>
+                <input type="hidden" name="limit" value="${param.limit}"/>
+                <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.next"/>"/>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.next"/>" disabled/>
+        </c:otherwise>
+    </c:choose>
 </div>
 <table class="table">
     <thead>

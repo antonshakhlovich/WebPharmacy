@@ -2,6 +2,7 @@
          pageEncoding="utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="ctg" uri="customtags" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="resources.local"/>
 <html>
@@ -15,8 +16,7 @@
     <title><fmt:message key="local.title.additem"/></title>
 </head>
 <body>
-<%@include file="/WEB-INF/jsp/header.jsp" %>
-
+<ctg:header/>
 <div class="col-sm-2"></div>
 <div class="col-sm-8">
     <div>

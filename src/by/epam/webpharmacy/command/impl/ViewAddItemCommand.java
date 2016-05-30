@@ -13,7 +13,6 @@ import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -27,7 +26,6 @@ public class ViewAddItemCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         try {
-            HttpSession session = request.getSession();
             List<DosageForm> dosageForms = itemService.getDosageForms();
             List<String> volumeTypes = itemService.getVolumeTypes();
             List<Company> companies = companyService.getCompanyList();
@@ -37,6 +35,6 @@ public class ViewAddItemCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return JspPage.ADD_ITEM.getPath();
+        return ViewPageCommand.PATH + JspPage.ADD_ITEM;
     }
 }

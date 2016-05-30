@@ -2,6 +2,7 @@
          pageEncoding="utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="ctg" uri="customtags" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="resources.local"/>
 <html>
@@ -15,14 +16,6 @@
     <title><fmt:message key="local.title"/></title>
 </head>
 <body class="index">
-<%@include file="/WEB-INF/jsp/header.jsp" %>
-
-<form role="form" action="Controller" method="get">
-    <input type="hidden" name="command" value="view-add-item">
-    <input type="hidden" name="from" value="${pageContext.request.requestURI}"/>
-    <input class="btn btn-default" type="submit" value="<fmt:message key="local.button.item.add"/>"/>
-</form>
-
-
+<ctg:header/>
 </body>
 </html>

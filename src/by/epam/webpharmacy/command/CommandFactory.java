@@ -32,6 +32,7 @@ public class CommandFactory {
         commands.put(CommandName.VIEW_PAGE, new ViewPageCommand());
         commands.put(CommandName.VIEW_ITEM, new ViewItemCommand());
         commands.put(CommandName.VIEW_CATALOG, new ViewCatalogCommand());
+        commands.put(CommandName.SEARCH_ITEM, new SearchItemCommand());
     }
 
     public static CommandFactory getInstance() {
