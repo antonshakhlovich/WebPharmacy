@@ -20,81 +20,98 @@
 <c:set var="count" value="0" scope="page"/>
 <c:set var="total_quantity" value="0" scope="page"/>
 <c:set var="total_amount" value="0" scope="page"/>
-<form>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>
-                #
-            </th>
-            <th>
-                <fmt:message key="local.text.drug"/>
-            </th>
-            <th>
-                <fmt:message key="local.text.quantity"/>
-            </th>
-            <th>
-                <fmt:message key="local.text.price"/>
-            </th>
-            <th>
-                <fmt:message key="local.text.byprescription"/>
-            </th>
-            <th>
-                <fmt:message key="local.text.image"/>
-            </th>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            #
+        </th>
+        <th>
+            <fmt:message key="local.text.drug"/>
+        </th>
+        <th>
+            <fmt:message key="local.text.quantity"/>
+        </th>
+        <th>
+            <fmt:message key="local.text.price"/>
+        </th>
+        <th>
+            <fmt:message key="local.text.byprescription"/>
+        </th>
+        <th>
+            <fmt:message key="local.text.image"/>
+        </th>
+        <th></th>
 
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="entry" items="${sessionScope.shopping_cart.items}">
-        <c:set var="count" value="${count+1}"/>
-        <c:set var="total_quantity" value="${total_quantity + entry.value}"/>
-        <c:set var="total_amount" value="${total_amount + entry.value * entry.key.price}"/>
-        <tr>
-            <td>
-                    ${count}
-            </td>
-            <td>
-                <a href="${pageContext.request.contextPath}/Controller?command=view-item&id=${entry.key.id}">
-                    <b>${entry.key.label}</b> ${entry.key.dosage}, ${entry.key.volume} ${entry.key.volumeType}
-                </a>
-            </td>
-            <td>
-                    ${entry.value}
-            </td>
-            <td>
-                    ${entry.key.price}
-            </td>
-            <td>
-                <c:if test="${entry.key.byPrescription}">
-                    <span class="glyphicon glyphicon-ok"></span>
-                </c:if>
-            </td>
-            <td>
-                <c:if test="${entry.key.imagePath != null}">
-                    <img src="${entry.key.imagePath}"/>
-                </c:if>
-            </td>
-            </c:forEach>
-        </tr>
-        </tbody>
-        <tfoot>
-        <td></td>
-        <th>
-            <fmt:message key="local.text.total"/>
-        </th>
-        <th>
-           ${total_quantity}
-        </th>
-        <th>
-            ${total_amount}
-        </th>
-        <th></th>
-        <th></th>
-        </tfoot>
-    </table>
-    <input type="submit" style="padding: 10px;margin-left: 30%" class="btn btn-success" value="Обновить Количество"/>
-</form>
+    </tr>
+    </thead>
+    <tbody>
+    <c:forEach var="entry" items="${sessionScope.shopping_cart.items}">
+    <c:set var="count" value="${count+1}"/>
+    <c:set var="total_quantity" value="${total_quantity + entry.value}"/>
+    <c:set var="total_amount" value="${total_amount + entry.value * entry.key.price}"/>
+    <tr>
+        <td>
+                ${count}
+        </td>
+        <td>
+            <a href="${pageContext.request.contextPath}/Controller?command=view-item&id=${entry.key.id}">
+                <b>${entry.key.label}</b> ${entry.key.dosage}, ${entry.key.volume} ${entry.key.volumeType}
+            </a>
+        </td>
+        <td>
+            <form class="form-inline" action="Controller" method="post">
+                <input type="hidden" name="command" value="add-item-to-order"/>
+                <input type="hidden" name="change_quantity" value="true"/>
+                <input type="hidden" name="old_quantity" value="${entry.value}"/>
+                <input type="hidden" name="item_id" value="${entry.key.id}"/>
+                <div class="form-group">
+                    <input type="number" class="form-control" min="1" max="999" name="quantity" value="${entry.value}"/>
+                </div>
+                <button type="submit" class="btn btn-warning" value=""><fmt:message key="local.button.change"/></button>
+            </form>
+
+        </td>
+        <td>
+                ${entry.key.price}
+        </td>
+        <td>
+            <c:if test="${entry.key.byPrescription}">
+                <span class="glyphicon glyphicon-ok"></span>
+            </c:if>
+        </td>
+        <td>
+            <c:if test="${entry.key.imagePath != null}">
+                <img src="${entry.key.imagePath}"/>
+            </c:if>
+        </td>
+        <td>
+            <form action="Controller" method="post">
+                <input type="hidden" name="command" value="remove-item-from-order"/>
+                <input type="hidden" name="item_id" value="${entry.key.id}"/>
+                <input type="hidden" name="order_id" value="${sessionScope.shopping_cart.id}"/>
+                <input type="submit" class="btn btn-danger" value="<fmt:message key="local.button.delete"/> "/>
+            </form>
+        </td>
+        </c:forEach>
+    </tr>
+    </tbody>
+    <tfoot>
+    <td></td>
+    <th>
+        <fmt:message key="local.text.total"/>
+    </th>
+    <th>
+        ${total_quantity}
+    </th>
+    <th>
+        ${total_amount}
+    </th>
+    <th></th>
+    <th></th>
+    <th></th>
+    </tfoot>
+</table>
 
 </body>
 </html>

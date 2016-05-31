@@ -49,6 +49,6 @@ public class SearchItemCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return ViewPageCommand.PATH + JspPage.SEARCH_ITEM;
+        return ViewPageCommand.VIEW_PAGE + JspPage.SEARCH_ITEM;
     }
 }

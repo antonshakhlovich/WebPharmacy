@@ -44,7 +44,9 @@ public class RegisterCommand implements Command{
             try {
                 HttpSession session = request.getSession();
                 User registeredUser = userService.loginUser(user.getLogin(), user.getPassword());
-                session.setAttribute(Parameter.USER.getName(),registeredUser);
+                if (session.getAttribute(Parameter.USER.getName()) == null) {
+                    session.setAttribute(Parameter.USER.getName(),registeredUser);
+                }
             } catch (ServiceException e) {
                 throw new CommandException(e);
             }

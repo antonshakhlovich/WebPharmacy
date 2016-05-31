@@ -2,33 +2,34 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.command.CommandName;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.impl.OrderServiceSQLImpl;
-import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
- * Class {@code ViewShoppingCart} is a non-guest implementation of {@see Command}
- * for viewing shopping cart of logged in user
+ * Class {@code RemoveItemFromOrderCommand} is animplementation of {@see Command}
+ * for removing from the current order an earlier added item
  */
-public class ViewShoppingCartCommand implements Command {
+public class RemoveItemFromOrderCommand implements Command {
 
     private static OrderService orderService = OrderServiceSQLImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Parameter.USER.getName());
+        long orderId = Long.parseLong(request.getParameter(Parameter.ORDER_ID.getName()));
+        long itemId = Long.parseLong(request.getParameter(Parameter.ITEM_ID.getName()));
         try {
-            session.setAttribute(Parameter.SHOPPING_CART.getName(), orderService.selectShoppingCart(user.getId()));
+            orderService.removeItemFromOrder(itemId, orderId);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return ViewPageCommand.VIEW_PAGE + JspPage.VIEW_SHOPPING_CART;
+        return ViewPageCommand.VIEW_COMMAND + CommandName.VIEW_SHOPPING_CART;
+
+
     }
 }

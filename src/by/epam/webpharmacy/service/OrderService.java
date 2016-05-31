@@ -50,23 +50,23 @@ public interface OrderService {
     boolean submitOrder(long orderId) throws ServiceException;
 
     /**
-     * Adds a specified count of items with a given id to the order, identified by id
+     * Adds a specified quantity of items with a given id to the order, identified by id
      * @param itemId id of the item to add
-     * @param count count of items
-     * @param userId id of the order to add to
+     * @param quantity quantity of items
+     * @param orderId id of the order to add to
      * @return {@code true} if added successfully
      * @throws ServiceException if exception occurred on an underlying level
      */
-    boolean addItemToOrder(long itemId, int count, long userId) throws ServiceException;
+    boolean addItemToOrder(long itemId, int quantity, long orderId) throws ServiceException;
 
     /**
      * Removes all items with a given id from the specified order
      * @param itemId id of the item
-     * @param userId id of the user
+     * @param orderId id of the order
      * @return {@code true} if removed successfully
      * @throws ServiceException if exception occurred on an underlying level
      */
-    boolean removeItemFromOrder(long itemId, long userId) throws ServiceException;
+    boolean removeItemFromOrder(long itemId, long orderId) throws ServiceException;
 
     /**
      * Selects id of the user, owning the order

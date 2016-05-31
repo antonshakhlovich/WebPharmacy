@@ -30,6 +30,6 @@ public class ViewItemCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return ViewPageCommand.PATH + JspPage.VIEW_ITEM.name();
+        return ViewPageCommand.VIEW_PAGE + JspPage.VIEW_ITEM.name();
     }
 }

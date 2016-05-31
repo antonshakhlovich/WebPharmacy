@@ -23,24 +23,24 @@ import java.util.List;
 
 public class OrderDaoSQLImpl implements OrderDao {
 
-    private static final String SELECT_SHOPPING_CART = "SELECT o.id, o.customer_id, o.timestamp, o.amount, " +
-            "o.status,o.is_canceled, do.drug_id, d.label, d.dosage_form_id, d. dosage_form_name, " +
-            "  d.dosage, d.volume, d.volume_type,d.manufacturer_id,d.manufacturer_name,d.by_prescription," +
-            "d.description,d.image_path, do.quantity, d.price  " +
-            "  FROM orders o  " +
-            "  LEFT JOIN drugs_ordered do ON o.id = do.order_id" +
-            "  LEFT JOIN (SELECT d.id,d.label,d.dosage_form_id, ddf.name as dosage_form_name, d.dosage, " +
-            "  d.volume, d.volume_type, d.manufacturer_id, CONCAT(c.type,' \"',c.name,'\" (',c.country,')') " +
-            "  AS manufacturer_name,d.price,d.by_prescription,d.description,d.image_path " +
-            "  FROM drugs d" +
-            "  LEFT JOIN drugs_dosage_forms ddf ON d.dosage_form_id = ddf.id" +
-            "  LEFT JOIN companies c ON d.manufacturer_id = c.id) AS d " +
-            "  ON do.drug_id = d.id" +
-            "  WHERE o.customer_id = ? AND o.status = 'открыт' AND o.is_canceled = 0";
+    private static final String SELECT_SHOPPING_CART = "SELECT o.id, o.customer_id, d.id AS drug_id, d.label, d.dosage, " +
+            "d.volume, d.volume_type,d.by_prescription,d.image_path, dro.quantity, d.price  \n" +
+            "  FROM `orders` o  \n" +
+            "  LEFT JOIN `drugs_ordered` dro \n" +
+            "  ON o.id = dro.order_id\n" +
+            "  LEFT JOIN `drugs` d ON dro.drug_id = d.id\n" +
+            "  WHERE o.customer_id = ? AND o.status = \"открыт\" AND o.is_canceled = 0";
 
     private static final String CREATE_SHOPPING_CART = "INSERT INTO orders" +
             "  (id, customer_id, is_canceled)" +
             "  VALUES (0, ?, 0);";
+    private static final String DELETE_ITEM_FROM_ORDER = "DELETE FROM `drugs_ordered` " +
+            "Where" +
+            "  order_id = ? " +
+            "  AND drug_id = ?";
+    private static final String INSERT_ITEM_TO_ORDER = "INSERT INTO drugs_ordered (order_id,drug_id,quantity) " +
+            "VALUES (?,?,?) " +
+            "ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)";
 
     private static OrderDaoSQLImpl ourInstance = new OrderDaoSQLImpl();
     private static ItemDao itemDao = ItemDaoSQLImpl.getInstance();
@@ -96,10 +96,6 @@ public class OrderDaoSQLImpl implements OrderDao {
             resultSet.next();
             order.setId(resultSet.getLong(Parameter.ID.getName()));
             order.setCustomerId(resultSet.getLong(Parameter.CUSTOMER_ID.getName()));
-            order.setTimestamp(resultSet.getTimestamp(Parameter.TIMESTAMP.getName()));
-            order.setAmount(resultSet.getBigDecimal(Parameter.AMOUNT.getName()));
-            order.setOrderStatus(resultSet.getString(Parameter.STATUS.getName()));
-            order.setCanceled(resultSet.getBoolean(Parameter.IS_CANCELED.getName()));
             do {
                 Item item = new Item();
                 item.setId(resultSet.getLong(Parameter.DRUG_ID.getName()));
@@ -108,15 +104,10 @@ public class OrderDaoSQLImpl implements OrderDao {
                 }
                 item.setPrice(resultSet.getBigDecimal(Parameter.PRICE.getName()));
                 item.setLabel(resultSet.getString(Parameter.LABEL.getName()));
-                item.setDosageFormId(resultSet.getLong(Parameter.DOSAGE_FORM_ID.getName()));
-                item.setDosageFormName(resultSet.getString(Parameter.DOSAGE_FORM_NAME.getName()));
                 item.setDosage(resultSet.getString(Parameter.DOSAGE.getName()));
                 item.setVolumeType(resultSet.getString(Parameter.VOLUME_TYPE.getName()));
                 item.setVolume(resultSet.getDouble(Parameter.VOLUME.getName()));
-                item.setManufacturerId(resultSet.getLong(Parameter.MANUFACTURER_ID.getName()));
-                item.setManufacturerName(resultSet.getString(Parameter.MANUFACTURER_NAME.getName()));
                 item.setByPrescription(resultSet.getBoolean(Parameter.BY_PRESCRIPTION.getName()));
-                item.setDescription(resultSet.getString(Parameter.DESCRIPTION.getName()));
                 item.setImagePath(resultSet.getString(Parameter.IMAGE_PATH.getName()));
                 order.getItems().put(item, resultSet.getInt(Parameter.QUANTITY.getName()));
             } while (resultSet.next());
@@ -130,12 +121,39 @@ public class OrderDaoSQLImpl implements OrderDao {
 
     @Override
     public boolean deleteItemFromOrder(long itemId, long orderId) throws DaoException {
-        return false;
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(DELETE_ITEM_FROM_ORDER);
+            preparedStatement.setLong(1,orderId);
+            preparedStatement.setLong(2,itemId);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement);
+        }
     }
 
     @Override
-    public boolean insertItemToOrder(long itemId, int count, long orderId) throws DaoException {
-        return false;
+    public boolean insertItemToOrder(long itemId, int quantity, long orderId) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(INSERT_ITEM_TO_ORDER);
+            preparedStatement.setLong(1,orderId);
+            preparedStatement.setLong(2,itemId);
+            preparedStatement.setInt(3,quantity);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement);
+        }
     }
 
     @Override

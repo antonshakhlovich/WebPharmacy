@@ -34,6 +34,8 @@ public class CommandFactory {
         commands.put(CommandName.SEARCH_ITEM, new SearchItemCommand());
         commands.put(CommandName.VIEW_ORDER, new ViewOrderCommand());
         commands.put(CommandName.VIEW_SHOPPING_CART, new ViewShoppingCartCommand());
+        commands.put(CommandName.REMOVE_ITEM_FROM_ORDER, new RemoveItemFromOrderCommand());
+        commands.put(CommandName.ADD_ITEM_TO_ORDER, new AddItemToOrderCommand());
     }
 
     public static CommandFactory getInstance() {

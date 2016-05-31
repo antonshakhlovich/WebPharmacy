@@ -57,13 +57,21 @@ public class OrderServiceSQLImpl implements OrderService {
     }
 
     @Override
-    public boolean addItemToOrder(long itemId, int count, long userId) throws ServiceException {
-        return false;
+    public boolean addItemToOrder(long itemId, int quantity, long orderId) throws ServiceException {
+        try {
+            return orderDao.insertItemToOrder(itemId, quantity, orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public boolean removeItemFromOrder(long itemId, long userId) throws ServiceException {
-        return false;
+    public boolean removeItemFromOrder(long itemId, long orderId) throws ServiceException {
+        try {
+            return orderDao.deleteItemFromOrder(itemId,orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override

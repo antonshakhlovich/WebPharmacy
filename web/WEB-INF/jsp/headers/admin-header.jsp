@@ -55,7 +55,7 @@
                         class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="#"><fmt:message key="local.link.register.new.user"/> </a>
+                        <a href="${pageContext.request.contextPath}/register"><fmt:message key="local.link.register.new.user"/> </a>
                     </li>
                     <li class="divider"></li>
                     <li>
@@ -73,8 +73,7 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/Controller?command=view-catalog&page_number=1&limit=10"
-                           target="_blank">
+                        <a href="${pageContext.request.contextPath}/Controller?command=view-catalog&page_number=1&limit=10">
                             <fmt:message key="local.link.view.catalog"/>
                         </a>
                     </li>

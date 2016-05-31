@@ -35,6 +35,6 @@ public class ViewAddItemCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return ViewPageCommand.PATH + JspPage.ADD_ITEM;
+        return ViewPageCommand.VIEW_PAGE + JspPage.ADD_ITEM;
     }
 }

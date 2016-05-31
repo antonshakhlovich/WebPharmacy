@@ -47,14 +47,14 @@ public interface OrderDao {
     boolean deleteItemFromOrder(long itemId, long orderId) throws DaoException;
 
     /**
-     * Adds an item with a specified id of a specified count to a given order
+     * Adds an item with a specified id of a specified quantity to a given order
      * @param itemId id of the item to add
-     * @param count count of items
+     * @param quantity quantity of items
      * @param orderId id of the order
      * @return {@code true} if inserted successfully, {@code false} if insert failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
-    boolean insertItemToOrder(long itemId, int count, long orderId) throws DaoException;
+    boolean insertItemToOrder(long itemId, int quantity, long orderId) throws DaoException;
 
     /**
      * Mark a specified order as canceled

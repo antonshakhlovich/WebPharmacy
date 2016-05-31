@@ -8,7 +8,6 @@ import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.impl.ItemServiceImpl;
 import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -32,6 +31,6 @@ public class ViewCatalogCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return ViewPageCommand.PATH + JspPage.VIEW_CATALOG;
+        return ViewPageCommand.VIEW_PAGE + JspPage.VIEW_CATALOG;
     }
 }

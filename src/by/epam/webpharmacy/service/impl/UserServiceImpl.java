@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
                     return null;
                 }
             } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-                throw new ServiceException("Can't get md5 hash");
+                throw new ServiceException("Can't get md5 hash",e);
             }
         }
         return user;

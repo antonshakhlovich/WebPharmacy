@@ -109,6 +109,7 @@
         <th>
             <fmt:message key="local.text.image"/>
         </th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -144,6 +145,14 @@
                 <c:if test="${item.imagePath != null}">
                     <img src="${item.imagePath}"/>
                 </c:if>
+            </td>
+            <td>
+                <form action="Controller" method="post">
+                    <input type="hidden" name="command" value="add-item-to-order" />
+                    <input type="hidden" name="item_id" value="${item.id}" />
+                    <input type="number" min="1" max="999" name="quantity" value="1" />
+                    <input type="submit" class="btn btn-warning" value="<fmt:message key="local.button.item.buy"/>"/>
+                </form>
             </td>
         </tr>
     </c:forEach>
