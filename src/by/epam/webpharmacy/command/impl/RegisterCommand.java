@@ -3,13 +3,16 @@ package by.epam.webpharmacy.command.impl;
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.entity.User;
+import by.epam.webpharmacy.service.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.UserService;
+import by.epam.webpharmacy.service.impl.OrderServiceSQLImpl;
 import by.epam.webpharmacy.service.impl.UserServiceImpl;
 import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Class {@code RegisterCommand} is a guest-only implementation of {@see Command}
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RegisterCommand implements Command{
 
     private static UserService userService = UserServiceImpl.getInstance();
+    private static OrderService orderService = OrderServiceSQLImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
@@ -38,7 +42,9 @@ public class RegisterCommand implements Command{
         }
         if (result) {
             try {
-                request.getSession().setAttribute(Parameter.USER.getName(),userService.loginUser(user.getLogin(),user.getPassword()));
+                HttpSession session = request.getSession();
+                User registeredUser = userService.loginUser(user.getLogin(), user.getPassword());
+                session.setAttribute(Parameter.USER.getName(),registeredUser);
             } catch (ServiceException e) {
                 throw new CommandException(e);
             }

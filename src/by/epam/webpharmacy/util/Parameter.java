@@ -51,6 +51,7 @@ public enum Parameter {
     SALT,
     SEARCH,
     SHORT_NAME,
+    SHOPPING_CART,
     STATUS,
     SUCCESS_MESSAGE,
     TIMESTAMP,

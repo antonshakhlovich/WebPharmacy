@@ -2,7 +2,8 @@ package by.epam.webpharmacy.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 public class Order implements Serializable{
     private long id;
     private long customerId;
-    private Date timeStamp;
+    private Timestamp timestamp;
     private Date creationDate;
     private BigDecimal amount;
     private String orderStatus;
@@ -39,12 +40,12 @@ public class Order implements Serializable{
         this.customerId = customerId;
     }
 
-    public Date getTimeStamp() {
-        return timeStamp;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimeStamp(Date timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Date getCreationDate() {
@@ -97,7 +98,7 @@ public class Order implements Serializable{
         if (id != order.id) return false;
         if (customerId != order.customerId) return false;
         if (isCanceled != order.isCanceled) return false;
-        if (timeStamp != null ? !timeStamp.equals(order.timeStamp) : order.timeStamp != null) return false;
+        if (timestamp != null ? !timestamp.equals(order.timestamp) : order.timestamp != null) return false;
         if (creationDate != null ? !creationDate.equals(order.creationDate) : order.creationDate != null) return false;
         if (amount != null ? !amount.equals(order.amount) : order.amount != null) return false;
         if (orderStatus != null ? !orderStatus.equals(order.orderStatus) : order.orderStatus != null) return false;
@@ -109,7 +110,7 @@ public class Order implements Serializable{
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (int) (customerId ^ (customerId >>> 32));
-        result = 31 * result + (timeStamp != null ? timeStamp.hashCode() : 0);
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
         result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
         result = 31 * result + (amount != null ? amount.hashCode() : 0);
         result = 31 * result + (orderStatus != null ? orderStatus.hashCode() : 0);

@@ -29,20 +29,9 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String commandName = request.getParameter(Parameter.COMMAND.getName()).replace("-", "_").toUpperCase();
-        CommandName command = CommandName.valueOf(commandName);
-        if (command.isGetAllowed()) {
-            String page = processRequest(request, response);
-            if (page != null) {
-                getServletContext().getRequestDispatcher(page).forward(request, response);
-            }
-        } else {
-            String ipAddress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAddress == null) {
-                ipAddress = request.getRemoteAddr();
-            }
-            LOG.error(ipAddress + " tries to use " + commandName + " command by \"GET\" method");
-            response.sendRedirect("/");
+        String page = processRequest(request, response);
+        if (page != null) {
+            getServletContext().getRequestDispatcher(page).forward(request, response);
         }
 
     }

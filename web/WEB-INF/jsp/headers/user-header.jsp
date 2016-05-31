@@ -22,9 +22,7 @@
         </form>
     </div>
     <div class="messages">
-        <c:if test="${sessionScope.user != null}">
-            <span><fmt:message key="local.text.login"/> : ${sessionScope.user.login}</span>
-        </c:if>
+        <span><fmt:message key="local.text.login"/> : ${sessionScope.user.login}</span>
     </div>
 </div>
 <nav class="navbar navbar-default" role="navigation">
@@ -72,6 +70,10 @@
                        placeholder="<fmt:message key="local.text.enter.drug.name"/> "/>
             </div>
             <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.search"/>"/>
+        </form>
+        <form class="navbar-form navbar-right" action="Controller" method="get">
+            <input type="hidden" name="command" value="view-shopping-cart"/>
+            <input class="btn btn-default" type="submit" value="<fmt:message key="local.link.shopping.cart"/>"/>
         </form>
     </div>
 </nav>

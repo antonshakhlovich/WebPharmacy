@@ -20,8 +20,10 @@ public enum JspPage {
     ADMIN_HEADER("/WEB-INF/jsp/headers/admin-header.jsp", UserRole.ADMIN),
     DOCTOR_HEADER("/WEB-INF/jsp/headers/doctor-header.jsp", UserRole.DOCTOR),
     MANAGER_HEADER("/WEB-INF/jsp/headers/doctor-header.jsp", UserRole.MANAGER),
-    VIEW_ITEM("/WEB-INF/jsp/catalog/view-item.jsp",UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
-    VIEW_CATALOG("/WEB-INF/jsp/catalog/view-catalog.jsp",UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN);
+    VIEW_ITEM("/WEB-INF/jsp/catalog/view-item.jsp", UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
+    VIEW_CATALOG("/WEB-INF/jsp/catalog/view-catalog.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
+    VIEW_ORDER("/WEB-INF/jsp/orders/view-order.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
+    VIEW_SHOPPING_CART("/WEB-INF/jsp/orders/view-shopping-cart.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN);
 
     private String path;
     private List<UserRole> rolesAllowed = new ArrayList<>();

@@ -1,5 +1,6 @@
 package by.epam.webpharmacy.filter;
 
+import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandName;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.entity.UserRole;
@@ -38,8 +39,14 @@ public class SecurityFilter implements Filter {
             role = user.getRole();
         }
         String command = request.getParameter(Parameter.COMMAND.getName());
-        if (command != null) {
-            CommandName commandName = CommandName.valueOf(command.replace("-", "_").toUpperCase());
+        if (command != null || command.isEmpty()) {
+            CommandName commandName;
+            try {
+                commandName = CommandName.valueOf(command.replace("-", "_").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                response.sendRedirect(JspPage.ROOT.getPath());
+                return;
+            }
             if (!commandName.isRoleAllowed(role) ||
                     (!commandName.isGetAllowed() && request.getMethod().equalsIgnoreCase(GET))) {
                 response.sendRedirect(JspPage.ROOT.getPath());

@@ -98,5 +98,9 @@
             </div>
             <input class="btn btn-default" type="submit" value="<fmt:message key="local.text.search"/>"/>
         </form>
+        <form class="navbar-form navbar-right" action="Controller" method="get">
+            <input type="hidden" name="command" value="view-shopping-cart"/>
+            <input class="btn btn-default" type="submit" value="<fmt:message key="local.link.shopping.cart"/>"/>
+        </form>
     </div>
 </nav>

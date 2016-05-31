@@ -1,6 +1,7 @@
 package by.epam.webpharmacy.dao;
 
 import by.epam.webpharmacy.entity.Order;
+import by.epam.webpharmacy.entity.OrderStatus;
 
 import java.util.List;
 
@@ -36,4 +37,39 @@ public interface OrderDao {
      */
     Order selectShoppingCart(long userId) throws DaoException;
 
+    /**
+     * Removes all items with a specified id from given order
+     * @param itemId id of the item to remove
+     * @param orderId id of the order
+     * @return {@code true} if removed successfully, {@code false} if delete failed
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    boolean deleteItemFromOrder(long itemId, long orderId) throws DaoException;
+
+    /**
+     * Adds an item with a specified id of a specified count to a given order
+     * @param itemId id of the item to add
+     * @param count count of items
+     * @param orderId id of the order
+     * @return {@code true} if inserted successfully, {@code false} if insert failed
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    boolean insertItemToOrder(long itemId, int count, long orderId) throws DaoException;
+
+    /**
+     * Mark a specified order as canceled
+     * @param orderId id of the order to cancel
+     * @return {@code true} if canceled successfully, {@code false} if cancel failed
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    boolean cancelOrder(long orderId) throws DaoException;
+
+    /**
+     * Update status of given order
+     * @param orderStatus is orderStatus to update
+     * @param orderId is id of order
+     * @return {@code true} if updated successfully, {@code false} if update failed
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    boolean updateOrderStatus(OrderStatus orderStatus, long orderId) throws DaoException;
 }

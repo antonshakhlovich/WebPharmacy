@@ -2,7 +2,6 @@ package by.epam.webpharmacy.command;
 
 import by.epam.webpharmacy.command.impl.*;
 import by.epam.webpharmacy.util.Parameter;
-import sun.plugin.com.event.COMEventHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -33,6 +32,8 @@ public class CommandFactory {
         commands.put(CommandName.VIEW_ITEM, new ViewItemCommand());
         commands.put(CommandName.VIEW_CATALOG, new ViewCatalogCommand());
         commands.put(CommandName.SEARCH_ITEM, new SearchItemCommand());
+        commands.put(CommandName.VIEW_ORDER, new ViewOrderCommand());
+        commands.put(CommandName.VIEW_SHOPPING_CART, new ViewShoppingCartCommand());
     }
 
     public static CommandFactory getInstance() {
