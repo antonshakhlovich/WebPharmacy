@@ -29,6 +29,22 @@ public interface ItemService {
     boolean addItem(Item item) throws ServiceException;
 
     /**
+     * Attempts to edit item with given parameters.
+     * @param item item with given parameters
+     * @return true if editing succeeded, false if given parameters incorrect
+     * @throws ServiceException if DaoException occurred
+     */
+    boolean editItem(Item item) throws ServiceException;
+
+    /**
+     * Attempts to delete item with given id.
+     * @param id is item's id
+     * @return true if deleting succeeded, false if no item was found in the storage or item is used in orders
+     * @throws ServiceException if DaoException occurred
+     */
+    boolean deleteItem(long id) throws ServiceException;
+
+    /**
      * Selects item by a given id
      * @param id id of the item
      * @return corresponding item

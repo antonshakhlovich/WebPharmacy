@@ -35,16 +35,29 @@ public class OrderDaoSQLImpl implements OrderDao {
             "  (id, customer_id, is_canceled)" +
             "  VALUES (0, ?, 0);";
     private static final String DELETE_ITEM_FROM_ORDER = "DELETE FROM `drugs_ordered` " +
-            "Where" +
+            "WHERE" +
             "  order_id = ? " +
             "  AND drug_id = ?";
     private static final String INSERT_ITEM_TO_ORDER = "INSERT INTO drugs_ordered (order_id,drug_id,quantity) " +
             "VALUES (?,?,?) " +
             "ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)";
+    private static final String SUBMIT_ORDER = "UPDATE orders \n" +
+            "SET\n" +
+            "date = NOW()\n" +
+            ",status =  'в работе'\n" +
+            "WHERE\n" +
+            "  id = ?";
+    private static final String UPDATE_ORDER_PRICES = "UPDATE drugs_ordered do\n" +
+            "  JOIN drugs d ON do.drug_id = d.id\n" +
+            "  JOIN orders o ON do.order_id = o.id\n" +
+            "  SET do.price = d.price\n" +
+            "  WHERE o.id = ?";
+    private static final String UPDATE_ORDER_AMOUNT = "UPDATE orders o\n" +
+            "  JOIN (SELECT  d.order_id, SUM(d.quantity*d.price) AS amount FROM drugs_ordered d\n" +
+            "  WHERE d.order_id = ?) AS do ON o.id = do.order_id\n" +
+            "  SET o.amount = do.amount\n";
 
     private static OrderDaoSQLImpl ourInstance = new OrderDaoSQLImpl();
-    private static ItemDao itemDao = ItemDaoSQLImpl.getInstance();
-    private static UserDao userDao = UserDaoSQLImpl.getInstance();
 
     public static OrderDaoSQLImpl getInstance() {
         return ourInstance;
@@ -65,7 +78,7 @@ public class OrderDaoSQLImpl implements OrderDao {
         try {
             cn = ConnectionPool.getInstance().getConnection();
             preparedStatement = cn.prepareStatement(CREATE_SHOPPING_CART);
-            preparedStatement.setLong(1,userId);
+            preparedStatement.setLong(1, userId);
             int result = preparedStatement.executeUpdate();
             return result > 0;
         } catch (ConnectionPoolException | SQLException e) {
@@ -84,10 +97,10 @@ public class OrderDaoSQLImpl implements OrderDao {
         try {
             cn = ConnectionPool.getInstance().getConnection();
             preparedStatement = cn.prepareStatement(SELECT_SHOPPING_CART);
-            preparedStatement.setLong(1,userId);
+            preparedStatement.setLong(1, userId);
             resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
-                if(!createShoppingCart(userId)){
+                if (!createShoppingCart(userId)) {
                     throw new DaoException("Can't create shopping cart");
                 } else {
                     resultSet = preparedStatement.executeQuery();
@@ -126,8 +139,8 @@ public class OrderDaoSQLImpl implements OrderDao {
         try {
             cn = ConnectionPool.getInstance().getConnection();
             preparedStatement = cn.prepareStatement(DELETE_ITEM_FROM_ORDER);
-            preparedStatement.setLong(1,orderId);
-            preparedStatement.setLong(2,itemId);
+            preparedStatement.setLong(1, orderId);
+            preparedStatement.setLong(2, itemId);
             int result = preparedStatement.executeUpdate();
             return result > 0;
         } catch (ConnectionPoolException | SQLException e) {
@@ -144,9 +157,9 @@ public class OrderDaoSQLImpl implements OrderDao {
         try {
             cn = ConnectionPool.getInstance().getConnection();
             preparedStatement = cn.prepareStatement(INSERT_ITEM_TO_ORDER);
-            preparedStatement.setLong(1,orderId);
-            preparedStatement.setLong(2,itemId);
-            preparedStatement.setInt(3,quantity);
+            preparedStatement.setLong(1, orderId);
+            preparedStatement.setLong(2, itemId);
+            preparedStatement.setInt(3, quantity);
             int result = preparedStatement.executeUpdate();
             return result > 0;
         } catch (ConnectionPoolException | SQLException e) {
@@ -162,8 +175,97 @@ public class OrderDaoSQLImpl implements OrderDao {
     }
 
     @Override
+    public boolean submitOrder(long orderId) throws DaoException {
+        Connection cn = null;
+        PreparedStatement submitOrder = null;
+        PreparedStatement updatePrices = null;
+        PreparedStatement updateTotal = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            cn.setAutoCommit(false);
+            submitOrder = cn.prepareStatement(SUBMIT_ORDER);
+            updatePrices = cn.prepareStatement(UPDATE_ORDER_PRICES);
+            updateTotal = cn.prepareStatement(UPDATE_ORDER_AMOUNT);
+            submitOrder.setLong(1, orderId);
+            submitOrder.executeUpdate();
+            updatePrices.setLong(1, orderId);
+            updatePrices.executeUpdate();
+            updateTotal.setLong(1, orderId);
+            updateTotal.executeUpdate();
+            cn.commit();
+            return true;
+        } catch (ConnectionPoolException | SQLException e) {
+            if (cn != null) {
+                try {
+                    cn.rollback();
+                    return false;
+                } catch (SQLException e1) {
+                    throw new DaoException(e);
+                }
+            }
+            throw new DaoException(e);
+        } finally {
+            try {
+                if (submitOrder != null) {
+                    submitOrder.close();
+                }
+                if (updatePrices != null) {
+                    updatePrices.close();
+                }
+                if (updateTotal != null) {
+                    updateTotal.close();
+                }
+            } catch (SQLException e) {
+                throw new DaoException("Can't close prepared statement", e);
+            }
+            if (cn != null) {
+                try {
+                    cn.setAutoCommit(true);
+                    ConnectionPool.getInstance().releaseConnection(cn);
+                } catch (ConnectionPoolException | SQLException e) {
+                    throw new DaoException("Can't release connection to connection pool or set auto commit", e);
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean updateOrderStatus(OrderStatus orderStatus, long orderId) throws DaoException {
         return false;
+    }
+
+    @Override
+    public boolean updateOrderPrices(long orderId) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(UPDATE_ORDER_PRICES);
+            preparedStatement.setLong(1, orderId);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement);
+        }
+    }
+
+    @Override
+    public boolean updateOrderAmount(long orderId) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(UPDATE_ORDER_AMOUNT);
+            preparedStatement.setLong(1, orderId);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement);
+        }
     }
 
     private void closeResources(Connection connection, PreparedStatement preparedStatement) throws DaoException {

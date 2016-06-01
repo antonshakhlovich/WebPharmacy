@@ -15,6 +15,7 @@ public enum JspPage {
     ROOT("/", UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
     REGISTER("/register", UserRole.GUEST),
     SEARCH_ITEM("/WEB-INF/jsp/search-item.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
+    EDIT_ITEM("/WEB-INF/jsp/catalog/edit-item.jsp", UserRole.ADMIN, UserRole.MANAGER),
     GUEST_HEADER("/WEB-INF/jsp/headers/guest-header.jsp", UserRole.GUEST),
     USER_HEADER("/WEB-INF/jsp/headers/user-header.jsp", UserRole.USER),
     ADMIN_HEADER("/WEB-INF/jsp/headers/admin-header.jsp", UserRole.ADMIN),
@@ -23,6 +24,7 @@ public enum JspPage {
     VIEW_ITEM("/WEB-INF/jsp/catalog/view-item.jsp", UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
     VIEW_CATALOG("/WEB-INF/jsp/catalog/view-catalog.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
     VIEW_ORDER("/WEB-INF/jsp/orders/view-order.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
+    VIEW_ORDERS("/WEB-INF/jsp/orders/view-orders.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
     VIEW_SHOPPING_CART("/WEB-INF/jsp/orders/view-shopping-cart.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN);
 
     private String path;

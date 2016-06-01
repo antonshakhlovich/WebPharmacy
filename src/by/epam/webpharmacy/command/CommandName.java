@@ -12,6 +12,7 @@ import java.util.List;
 public enum CommandName {
     ADD_ITEM(false, UserRole.MANAGER, UserRole.ADMIN),
     ADD_ITEM_TO_ORDER(false, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
+    DELETE_ITEM(false, UserRole.ADMIN, UserRole.MANAGER),
     BAN_USER(false, UserRole.MANAGER, UserRole.ADMIN),
     UNKNOWN(true,UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     LOGIN(false, UserRole.GUEST),
@@ -20,7 +21,9 @@ public enum CommandName {
     LOGOUT(true, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     REMOVE_ITEM_FROM_ORDER(false,UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     SEARCH_ITEM(true, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
-    VIEW_ADD_ITEM(true, UserRole.ADMIN),
+    SUBMIT_ORDER(false,UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
+    VIEW_ADD_ITEM(true,  UserRole.MANAGER, UserRole.ADMIN),
+    VIEW_EDIT_ITEM(true, UserRole.MANAGER, UserRole.ADMIN),
     VIEW_CATALOG(true, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     VIEW_ITEM(true, UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     VIEW_ORDER(true, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),

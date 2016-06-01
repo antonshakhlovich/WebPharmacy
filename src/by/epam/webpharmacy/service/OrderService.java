@@ -41,7 +41,8 @@ public interface OrderService {
     List<Order> selectAllOrdersByStatus(OrderStatus orderStatus) throws ServiceException;
 
     /**
-     * Submits an order with a specified id to the system. Date and time of submission are saved as creation date of the order.
+     * Submits an order with a specified id to the system. Date of submission are saved as creation date of the order.
+     * Also final prices and total amount saved to the order.
      * After submission the order can't be modified, it can only be canceled.
      * @param orderId id of the order to submit
      * @return {@code true} if submitted successfully, {@code false} if order doesn't contain any items or failed to be submitted
@@ -67,15 +68,6 @@ public interface OrderService {
      * @throws ServiceException if exception occurred on an underlying level
      */
     boolean removeItemFromOrder(long itemId, long orderId) throws ServiceException;
-
-    /**
-     * Selects id of the user, owning the order
-     * @param orderId id of the order
-     * @return id of the user, owning the order
-     * @throws ServiceException if exception occurred on an underlying level
-     */
-    long selectOrderCustomerId(long orderId) throws ServiceException;
-
 
 
 }

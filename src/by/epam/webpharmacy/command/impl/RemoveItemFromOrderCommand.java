@@ -3,10 +3,9 @@ package by.epam.webpharmacy.command.impl;
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.command.CommandName;
-import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
-import by.epam.webpharmacy.service.impl.OrderServiceSQLImpl;
+import by.epam.webpharmacy.service.impl.OrderServiceImpl;
 import by.epam.webpharmacy.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RemoveItemFromOrderCommand implements Command {
 
-    private static OrderService orderService = OrderServiceSQLImpl.getInstance();
+    private static OrderService orderService = OrderServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {

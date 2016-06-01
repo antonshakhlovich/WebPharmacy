@@ -6,11 +6,10 @@ import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.UserService;
-import by.epam.webpharmacy.service.impl.OrderServiceSQLImpl;
+import by.epam.webpharmacy.service.impl.OrderServiceImpl;
 import by.epam.webpharmacy.service.impl.UserServiceImpl;
 import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,7 +22,7 @@ import javax.servlet.http.HttpSession;
 public class LoginCommand implements Command {
 
     private static UserService userService = UserServiceImpl.getInstance();
-    private static OrderService orderService = OrderServiceSQLImpl.getInstance();
+    private static OrderService orderService = OrderServiceImpl.getInstance();
 
     /**
      * Handles request to the servlet by trying to log in a user with given credentials

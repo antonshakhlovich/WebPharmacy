@@ -112,6 +112,14 @@
     <th></th>
     </tfoot>
 </table>
+<form action="Controller" method="post">
+    <input type="hidden" name="command" value="submit-order"/>
+    <input type="hidden" name="order_id" value="${sessionScope.shopping_cart.id}"/>
+    <div style="text-align: center">
+        <input type="submit" style="padding: 10px" class ="btn btn-success" value="<fmt:message key="local.button.order.submit"/> "/>
+    </div>
+</form>
+
 
 </body>
 </html>

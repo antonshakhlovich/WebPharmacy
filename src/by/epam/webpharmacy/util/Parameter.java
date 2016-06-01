@@ -11,6 +11,7 @@ public enum Parameter {
     CITY,
     CHANGE_QUANTITY,
     COMMAND,
+    COMMAND_TO,
     COMPANY_ID,
     COMPANIES,
     COUNTRY,

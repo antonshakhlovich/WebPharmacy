@@ -45,6 +45,22 @@ public interface ItemDao {
      * @throws DaoException
      */
     boolean insertItem(Item item) throws DaoException;
+    /**
+     * Update item in the storage, e.g. database
+     * @param item is given item
+     * @return true if item was updated, and false if not
+     * @throws DaoException
+     */
+    boolean updateItem(Item item) throws DaoException;
+
+    /**
+     * Delete item from the storage, e.g. database
+     * @param id is item's id
+     * @return true if item was deleted, and false if item is used in orders
+     * @throws DaoException
+     */
+    boolean deleteItem(long id) throws DaoException;
+
 
     /**
      * Retrieves a list of all items from {@param offset}. List's max limit is {@param limit}.

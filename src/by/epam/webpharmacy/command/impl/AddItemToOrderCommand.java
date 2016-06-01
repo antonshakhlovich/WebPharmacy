@@ -6,9 +6,8 @@ import by.epam.webpharmacy.command.CommandName;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
-import by.epam.webpharmacy.service.impl.OrderServiceSQLImpl;
+import by.epam.webpharmacy.service.impl.OrderServiceImpl;
 import by.epam.webpharmacy.util.Parameter;
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +16,8 @@ import javax.servlet.http.HttpServletRequest;
  * for adding a chosen item to current order.
  */
 public class AddItemToOrderCommand implements Command {
-    private static OrderService orderService = OrderServiceSQLImpl.getInstance();
+    private static OrderService orderService = OrderServiceImpl.getInstance();
+
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
@@ -35,7 +35,5 @@ public class AddItemToOrderCommand implements Command {
             throw new CommandException(e);
         }
         return ViewPageCommand.VIEW_COMMAND + CommandName.VIEW_SHOPPING_CART;
-
-
     }
 }

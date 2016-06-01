@@ -28,6 +28,8 @@ public class CommandFactory {
         commands.put(CommandName.BAN_USER, new BanUserCommand());
         commands.put(CommandName.VIEW_ADD_ITEM, new ViewAddItemCommand());
         commands.put(CommandName.ADD_ITEM, new AddItemCommand());
+        commands.put(CommandName.DELETE_ITEM, new DeleteItemCommand());
+        commands.put(CommandName.VIEW_EDIT_ITEM, new ViewEditItemCommand());
         commands.put(CommandName.VIEW_PAGE, new ViewPageCommand());
         commands.put(CommandName.VIEW_ITEM, new ViewItemCommand());
         commands.put(CommandName.VIEW_CATALOG, new ViewCatalogCommand());
@@ -36,6 +38,7 @@ public class CommandFactory {
         commands.put(CommandName.VIEW_SHOPPING_CART, new ViewShoppingCartCommand());
         commands.put(CommandName.REMOVE_ITEM_FROM_ORDER, new RemoveItemFromOrderCommand());
         commands.put(CommandName.ADD_ITEM_TO_ORDER, new AddItemToOrderCommand());
+        commands.put(CommandName.SUBMIT_ORDER, new SubmitOrderCommand());
     }
 
     public static CommandFactory getInstance() {

@@ -12,15 +12,15 @@ import java.util.List;
 
 /**
  * {@inheritDoc}
- *
+ * <p>
  * A singleton implementation of the {@link OrderService} interface, using OrderDao as an underlying level
  */
-public class OrderServiceSQLImpl implements OrderService {
+public class OrderServiceImpl implements OrderService {
 
-    private static OrderService instance = new OrderServiceSQLImpl();
+    private static OrderService instance = new OrderServiceImpl();
     private static OrderDao orderDao = OrderDaoSQLImpl.getInstance();
 
-    private OrderServiceSQLImpl() {
+    private OrderServiceImpl() {
     }
 
     public static OrderService getInstance() {
@@ -53,7 +53,11 @@ public class OrderServiceSQLImpl implements OrderService {
 
     @Override
     public boolean submitOrder(long orderId) throws ServiceException {
-        return false;
+        try {
+            return orderDao.submitOrder(orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
@@ -68,14 +72,10 @@ public class OrderServiceSQLImpl implements OrderService {
     @Override
     public boolean removeItemFromOrder(long itemId, long orderId) throws ServiceException {
         try {
-            return orderDao.deleteItemFromOrder(itemId,orderId);
+            return orderDao.deleteItemFromOrder(itemId, orderId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    @Override
-    public long selectOrderCustomerId(long orderId) throws ServiceException {
-        return 0;
-    }
 }

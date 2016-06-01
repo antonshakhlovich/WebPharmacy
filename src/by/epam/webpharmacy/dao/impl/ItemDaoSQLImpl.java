@@ -42,6 +42,12 @@ public class ItemDaoSQLImpl implements ItemDao {
     private static final String INSERT_ITEM = "INSERT INTO drugs(id, label, dosage_form_id, dosage, volume, " +
             "volume_type, manufacturer_id, price, by_prescription, description, image_path) " +
             "VALUES(0 , ?, ?, ? , ?, ?, ?, ?, ?, ?,?)";
+    private static final String UPDATE_ITEM = "UPDATE drugs \n" +
+            "SET\n" +
+            "  label = ?,dosage_form_id = ?,dosage = ?,volume = ?,volume_type = ?,manufacturer_id = ?,price = ? ,by_prescription = ?,description = ?, image_path = ?" +
+            "  WHERE\n" +
+            "  id = ?";
+    private static final String DELETE_ITEM = " DELETE FROM drugs WHERE id = ?";
     private static final String SELECT_ALL_ITEMS="SELECT d.id,d.label,d.dosage_form_id, ddf.name as dosage_form_name, " +
             "d.dosage, d.volume, d.volume_type, d.manufacturer_id, CONCAT(c.type,' \"',c.name,'\" (',c.country,')')" +
             " AS manufacturer_name,d.price,d.by_prescription,d.description,d.image_path \n" +
@@ -305,6 +311,52 @@ public class ItemDaoSQLImpl implements ItemDao {
             int result = preparedStatement.executeUpdate();
             return result > 0;
         } catch(MySQLIntegrityConstraintViolationException e){
+            return false;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally{
+            closeResources(cn, preparedStatement);
+        }
+    }
+
+    @Override
+    public boolean updateItem(Item item) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(UPDATE_ITEM);
+            preparedStatement.setString(1, item.getLabel());
+            preparedStatement.setLong(2, item.getDosageFormId());
+            preparedStatement.setString(3, item.getDosage());
+            preparedStatement.setDouble(4, item.getVolume());
+            preparedStatement.setString(5, item.getVolumeType());
+            preparedStatement.setLong(6, item.getManufacturerId());
+            preparedStatement.setBigDecimal(7, item.getPrice());
+            preparedStatement.setBoolean(8,item.isByPrescription());
+            preparedStatement.setString(9,item.getDescription());
+            preparedStatement.setString(10,item.getImagePath());
+            preparedStatement.setLong(11,item.getId());
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally{
+            closeResources(cn, preparedStatement);
+        }
+    }
+
+    @Override
+    public boolean deleteItem(long id) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(DELETE_ITEM);
+            preparedStatement.setLong(1, id);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        }catch(MySQLIntegrityConstraintViolationException e){
             return false;
         } catch (ConnectionPoolException | SQLException e) {
             throw new DaoException(e);

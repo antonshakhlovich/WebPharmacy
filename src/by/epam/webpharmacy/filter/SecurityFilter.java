@@ -39,7 +39,7 @@ public class SecurityFilter implements Filter {
             role = user.getRole();
         }
         String command = request.getParameter(Parameter.COMMAND.getName());
-        if (command != null || command.isEmpty()) {
+        if (command != null && !command.isEmpty()) {
             CommandName commandName;
             try {
                 commandName = CommandName.valueOf(command.replace("-", "_").toUpperCase());

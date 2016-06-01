@@ -57,6 +57,28 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public boolean editItem(Item item) throws ServiceException {
+        try {
+            return itemDao.updateItem(item);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteItem(long id) throws ServiceException {
+        try{
+            if (itemDao.selectItemById(id) != null) {
+                return itemDao.deleteItem(id);
+            } else {
+                return false;
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public Item selectItemById(long id) throws ServiceException {
         try {
             return itemDao.selectItemById(id);

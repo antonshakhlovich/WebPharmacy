@@ -65,6 +65,15 @@ public interface OrderDao {
     boolean cancelOrder(long orderId) throws DaoException;
 
     /**
+     * Submit order based on shopping cart
+     * @param orderId is id of shopping cart
+     * @return {@code true} if updated successfully, {@code false} if update failed
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    boolean submitOrder( long orderId) throws DaoException;
+
+
+    /**
      * Update status of given order
      * @param orderStatus is orderStatus to update
      * @param orderId is id of order
@@ -72,4 +81,21 @@ public interface OrderDao {
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
     boolean updateOrderStatus(OrderStatus orderStatus, long orderId) throws DaoException;
+
+    /**
+     * Update prices in order based on current prices from storage
+     * @param orderId is id of order
+     * @return {@code true} if updated successfully, {@code false} if update failed
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    boolean updateOrderPrices(long orderId) throws DaoException;
+
+    /**
+     * Update order amount based on items prices from order
+     * @param orderId is id of order
+     * @return {@code true} if updated successfully, {@code false} if update failed
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    boolean updateOrderAmount(long orderId) throws DaoException;
+
 }

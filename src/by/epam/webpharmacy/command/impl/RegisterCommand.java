@@ -6,7 +6,7 @@ import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.UserService;
-import by.epam.webpharmacy.service.impl.OrderServiceSQLImpl;
+import by.epam.webpharmacy.service.impl.OrderServiceImpl;
 import by.epam.webpharmacy.service.impl.UserServiceImpl;
 import by.epam.webpharmacy.util.JspPage;
 import by.epam.webpharmacy.util.Parameter;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
 public class RegisterCommand implements Command{
 
     private static UserService userService = UserServiceImpl.getInstance();
-    private static OrderService orderService = OrderServiceSQLImpl.getInstance();
+    private static OrderService orderService = OrderServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {

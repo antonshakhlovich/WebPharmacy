@@ -18,6 +18,18 @@
 </head>
 <body>
 <ctg:header/>
+<c:if test="${sessionScope.error_message}">
+    <div class="alert alert-info">
+        <fmt:message key="local.message.item.not.deleted"/>
+        <c:set var="error_message" scope="session" value="false"/>
+    </div>
+</c:if>
+<c:if test="${sessionScope.success_message}">
+    <div class="alert alert-info">
+        <fmt:message key="local.message.item.deleted"/>
+        <c:set var="success_message" scope="session" value="false"/>
+    </div>
+</c:if>
 <c:set var="number_of_pages" value="${number_of_items div param.limit + 1}"/>
 <div style="padding: 10px;">
     <span><fmt:message key="local.text.number.of.items.on.page"/>:</span>
@@ -113,7 +125,7 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="item" items="${items}">
+    <c:forEach var="item" items="${requestScope.items}">
         <tr>
             <td>
                     ${item.label}
@@ -147,12 +159,22 @@
                 </c:if>
             </td>
             <td>
-                <form action="Controller" method="post">
-                    <input type="hidden" name="command" value="add-item-to-order" />
-                    <input type="hidden" name="item_id" value="${item.id}" />
-                    <input type="number" min="1" max="999" name="quantity" value="1" />
+                <form  action="Controller" method="post">
+                    <input type="hidden" name="command" value="add-item-to-order"/>
+                    <input type="hidden" name="item_id" value="${item.id}"/>
+                    <input type="hidden" name="page_number" value="${param.page_number}"/>
+                    <input type="hidden" name="limit" value="${param.limit}"/>
+                    <input type="number" min="1" max="999" name="quantity" value="1"/>
                     <input type="submit" class="btn btn-warning" value="<fmt:message key="local.button.item.buy"/>"/>
                 </form>
+                <c:if test="${sessionScope.user.role eq 'ADMIN' or sessionScope.user.role eq 'MANAGER'}">
+                    <form  action="Controller" method="get">
+                        <input type="hidden" name="command" value="view-edit-item"/>
+                        <input type="hidden" name="id" value="${item.id}"/>
+                        <input type="submit" class="btn btn-success" value="<fmt:message key="local.button.change"/>"/>
+                    </form>
+
+                </c:if>
             </td>
         </tr>
     </c:forEach>

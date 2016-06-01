@@ -18,13 +18,13 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 
 /**
- * Class {@code AddItemCommand} is an admin-only implementation of {@see Command}
- * for adding new item to catalog
+ * Class {@code EditItemCommand} is an admin and manager only implementation of {@see Command}
+ * for editing given item from catalog
  */
-public class AddItemCommand implements Command {
+public class EditItemCommand implements Command {
 
-    private static final ItemService itemService = ItemServiceImpl.getInstance();
     private static FileHelper fileHelper = FileHelper.getInstance();
+    private static final ItemService itemService = ItemServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
@@ -34,6 +34,7 @@ public class AddItemCommand implements Command {
         } catch (UnsupportedEncodingException e) {
             throw new CommandException(e);
         }
+        item.setId(Long.parseLong(request.getParameter(Parameter.ID.getName())));
         item.setLabel(request.getParameter(Parameter.LABEL.getName()));
         item.setDosageFormId(Long.parseLong(request.getParameter(Parameter.DOSAGE_FORM_ID.getName())));
         item.setDosage(request.getParameter(Parameter.DOSAGE.getName()));
@@ -51,10 +52,9 @@ public class AddItemCommand implements Command {
 
         HttpSession session = request.getSession();
         try {
-            if (itemService.addItem(item)) {
+            if (itemService.editItem(item)) {
                 session.setAttribute(Parameter.SUCCESS_MESSAGE.getName(), Boolean.TRUE);
-                session.setAttribute(Parameter.ITEM.getName(),itemService.selectItemByLabelDosageVolume(item.getLabel(),
-                        item.getDosageFormId(), item.getDosage(), item.getVolume(), item.getVolumeType(), item.getManufacturerId()));
+                session.setAttribute(Parameter.ITEM.getName(), itemService.selectItemById(item.getId()));
             } else {
                 session.setAttribute(Parameter.ERROR_MESSAGE.getName(), Boolean.TRUE);
             }
@@ -62,7 +62,7 @@ public class AddItemCommand implements Command {
             throw new CommandException("Failed to add new item to database", e);
         }
 
-        return ViewPageCommand.VIEW_COMMAND + CommandName.VIEW_ADD_ITEM;
+        return ViewPageCommand.VIEW_COMMAND + CommandName.VIEW_EDIT_ITEM;
     }
 
 }
