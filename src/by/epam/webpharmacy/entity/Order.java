@@ -13,11 +13,11 @@ import java.util.Map;
  */
 public class Order implements Serializable{
     private long id;
-    private long customerId;
+    private User owner;
     private Timestamp timestamp;
-    private Date creationDate;
+    private Date date;
     private BigDecimal amount;
-    private String orderStatus;
+    private String status;
     private boolean isCanceled;
     private Map<Item, Integer> items = new HashMap<>();
 
@@ -32,12 +32,12 @@ public class Order implements Serializable{
         this.id = id;
     }
 
-    public long getCustomerId() {
-        return customerId;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public Timestamp getTimestamp() {
@@ -48,12 +48,12 @@ public class Order implements Serializable{
         this.timestamp = timestamp;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public BigDecimal getAmount() {
@@ -64,12 +64,12 @@ public class Order implements Serializable{
         this.amount = amount;
     }
 
-    public String getOrderStatus() {
-        return orderStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public boolean isCanceled() {
@@ -96,12 +96,12 @@ public class Order implements Serializable{
         Order order = (Order) o;
 
         if (id != order.id) return false;
-        if (customerId != order.customerId) return false;
         if (isCanceled != order.isCanceled) return false;
+        if (owner != null ? !owner.equals(order.owner) : order.owner != null) return false;
         if (timestamp != null ? !timestamp.equals(order.timestamp) : order.timestamp != null) return false;
-        if (creationDate != null ? !creationDate.equals(order.creationDate) : order.creationDate != null) return false;
+        if (date != null ? !date.equals(order.date) : order.date != null) return false;
         if (amount != null ? !amount.equals(order.amount) : order.amount != null) return false;
-        if (orderStatus != null ? !orderStatus.equals(order.orderStatus) : order.orderStatus != null) return false;
+        if (status != null ? !status.equals(order.status) : order.status != null) return false;
         return items != null ? items.equals(order.items) : order.items == null;
 
     }
@@ -109,11 +109,11 @@ public class Order implements Serializable{
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (customerId ^ (customerId >>> 32));
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
         result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (amount != null ? amount.hashCode() : 0);
-        result = 31 * result + (orderStatus != null ? orderStatus.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (isCanceled ? 1 : 0);
         result = 31 * result + (items != null ? items.hashCode() : 0);
         return result;

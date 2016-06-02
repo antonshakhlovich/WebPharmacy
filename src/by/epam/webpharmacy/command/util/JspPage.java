@@ -10,29 +10,27 @@ import java.util.List;
  * Contains names and paths of all possible jsp pages
  */
 public enum JspPage {
-    ADD_ITEM("/WEB-INF/jsp/catalog/add-item.jsp", UserRole.ADMIN, UserRole.MANAGER),
-    INDEX("/index.jsp", UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
-    ROOT("/", UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
-    REGISTER("/register", UserRole.GUEST),
-    SEARCH_ITEM("/WEB-INF/jsp/search-item.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
-    EDIT_ITEM("/WEB-INF/jsp/catalog/edit-item.jsp", UserRole.ADMIN, UserRole.MANAGER),
-    GUEST_HEADER("/WEB-INF/jsp/headers/guest-header.jsp", UserRole.GUEST),
-    USER_HEADER("/WEB-INF/jsp/headers/user-header.jsp", UserRole.USER),
-    ADMIN_HEADER("/WEB-INF/jsp/headers/admin-header.jsp", UserRole.ADMIN),
-    DOCTOR_HEADER("/WEB-INF/jsp/headers/doctor-header.jsp", UserRole.DOCTOR),
-    MANAGER_HEADER("/WEB-INF/jsp/headers/doctor-header.jsp", UserRole.MANAGER),
-    VIEW_ITEM("/WEB-INF/jsp/catalog/view-item.jsp", UserRole.GUEST, UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
-    VIEW_CATALOG("/WEB-INF/jsp/catalog/view-catalog.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
-    VIEW_ORDER("/WEB-INF/jsp/orders/view-order.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
-    VIEW_ORDERS("/WEB-INF/jsp/orders/view-orders.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN),
-    VIEW_SHOPPING_CART("/WEB-INF/jsp/orders/view-shopping-cart.jsp", UserRole.MANAGER, UserRole.USER, UserRole.DOCTOR, UserRole.ADMIN);
+    ADD_ITEM("/WEB-INF/jsp/catalog/add-item.jsp"),
+    INDEX("/index.jsp"),
+    ROOT("/"),
+    REGISTER("/register"),
+    SEARCH_ITEM("/WEB-INF/jsp/search-item.jsp"),
+    EDIT_ITEM("/WEB-INF/jsp/catalog/edit-item.jsp"),
+    GUEST_HEADER("/WEB-INF/jsp/headers/guest-header.jsp"),
+    USER_HEADER("/WEB-INF/jsp/headers/user-header.jsp"),
+    ADMIN_HEADER("/WEB-INF/jsp/headers/admin-header.jsp"),
+    DOCTOR_HEADER("/WEB-INF/jsp/headers/doctor-header.jsp"),
+    MANAGER_HEADER("/WEB-INF/jsp/headers/doctor-header.jsp"),
+    VIEW_ITEM("/WEB-INF/jsp/catalog/view-item.jsp"),
+    VIEW_CATALOG("/WEB-INF/jsp/catalog/view-catalog.jsp"),
+    VIEW_ORDER("/WEB-INF/jsp/orders/view-order.jsp"),
+    VIEW_ORDERS("/WEB-INF/jsp/orders/view-orders.jsp"),
+    VIEW_SHOPPING_CART("/WEB-INF/jsp/orders/view-shopping-cart.jsp");
 
     private String path;
-    private List<UserRole> rolesAllowed = new ArrayList<>();
 
-    JspPage(String path, UserRole... rolesAllowed) {
+    JspPage(String path) {
         this.path = path;
-        this.rolesAllowed.addAll(Arrays.asList(rolesAllowed));
     }
 
     /**
@@ -42,7 +40,4 @@ public enum JspPage {
         return path;
     }
 
-    public boolean isRoleAllowed(UserRole role) {
-        return rolesAllowed.contains(role);
-    }
 }

@@ -18,8 +18,8 @@
 </head>
 <body>
 <ctg:header/>
-<div class="col-sm-2"></div>
-<div class="col-sm-8">
+<div class="container">
+<div class="col-sm-offset-2 col-sm-8">
     <c:if test="${sessionScope.success_message}">
         <div class="alert alert-info">
             <span>
@@ -101,7 +101,7 @@
         </div>
     </form>
 </div>
-<div class="col-sm-2"></div>
+    <div class="container">
 
 </body>
 </html>

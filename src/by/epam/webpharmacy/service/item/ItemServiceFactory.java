@@ -8,11 +8,11 @@ import java.util.HashMap;
  * This class based on factory design pattern and provides all possible Item services on demand.
  */
 public class ItemServiceFactory {
-    private static HashMap<ItemServiceName, ItemService> itemServices = new HashMap<>();
+    private static HashMap<ItemServiceName, ItemService> itemServiceMap = new HashMap<>();
     private static final ItemServiceFactory instance = new ItemServiceFactory();
 
     private ItemServiceFactory() {
-        itemServices.put(ItemServiceName.ITEM_SERVICE, new ItemServiceImpl());
+        itemServiceMap.put(ItemServiceName.ITEM_SERVICE, new ItemServiceImpl());
     }
 
     public static ItemServiceFactory getInstance() {
@@ -20,6 +20,6 @@ public class ItemServiceFactory {
     }
 
     public ItemService getService(ItemServiceName itemServiceName) {
-        return itemServices.get(itemServiceName);
+        return itemServiceMap.get(itemServiceName);
     }
 }

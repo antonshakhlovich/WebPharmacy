@@ -40,30 +40,43 @@
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
         <ul class="nav navbar-nav">
-            <li>
+            <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/" class="current"><fmt:message key="local.link.home"/></a>
             </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/" class="current"><fmt:message key="local.link.orders"/></a>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><fmt:message key="local.link.orders"/><b
+                        class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="${pageContext.request.contextPath}/Controller?command=view-orders&is_canceled=false"><fmt:message
+                                key="local.link.orders.view.own"/></a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/"><fmt:message
+                                key="local.link.orders.view.all"/></a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="${pageContext.request.contextPath}/" class="current"><fmt:message
                         key="local.link.prescriptions"/></a>
             </li>
-            <li class="active dropdown">
+            <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><fmt:message key="local.link.users"/><b
                         class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="${pageContext.request.contextPath}/register"><fmt:message key="local.link.register.new.user"/> </a>
+                        <a href="${pageContext.request.contextPath}/register"><fmt:message
+                                key="local.link.register.new.user"/> </a>
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="#" target="_blank"><fmt:message key="local.link.manage.users"/> </a>
+                        <a href="#"><fmt:message key="local.link.manage.users"/> </a>
                     </li>
                 </ul>
             </li>
-            <li class="active dropdown">
+            <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><fmt:message key="local.title.catalog"/><b
                         class="caret"></b></a>
                 <ul class="dropdown-menu">

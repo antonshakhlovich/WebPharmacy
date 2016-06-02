@@ -15,15 +15,25 @@ public interface OrderDao {
     /**
      * Retrieves a list of all user's orders
      *
-     * @param userId id of the user
+     * @param userId     id of the user
+     * @param isCanceled defines what type of orders to select canceled or not
      * @return list of user's orders or {@code null} if user has none
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
+    List<Order> selectOrdersByUserId(long userId, boolean isCanceled) throws DaoException;
 
-    List<Order> selectOrdersByUserId(long userId) throws DaoException;
+    /**
+     * Retrieves an order with given id
+     *
+     * @param orderId     id of the order
+     * @return order or {@code null} if no such order
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    Order selectOrderByOrderId(long orderId) throws DaoException;
 
     /**
      * Create new shopping cart if user doesn't have one.
+     *
      * @param userId id of the user, owning the shopping cart
      * @return true if shopping cart successfully made or false due to some technical problems
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
@@ -32,6 +42,7 @@ public interface OrderDao {
 
     /**
      * Retrieves current(unsubmitted) order for a specified user. Kind of shopping cart
+     *
      * @param userId id of the user, owning the order
      * @return user's current shopping cart
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
@@ -40,7 +51,8 @@ public interface OrderDao {
 
     /**
      * Removes all items with a specified id from given order
-     * @param itemId id of the item to remove
+     *
+     * @param itemId  id of the item to remove
      * @param orderId id of the order
      * @return {@code true} if removed successfully, {@code false} if delete failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
@@ -49,9 +61,10 @@ public interface OrderDao {
 
     /**
      * Adds an item with a specified id of a specified quantity to a given order
-     * @param itemId id of the item to add
+     *
+     * @param itemId   id of the item to add
      * @param quantity quantity of items
-     * @param orderId id of the order
+     * @param orderId  id of the order
      * @return {@code true} if inserted successfully, {@code false} if insert failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
@@ -59,6 +72,7 @@ public interface OrderDao {
 
     /**
      * Mark a specified order as canceled
+     *
      * @param orderId id of the order to cancel
      * @return {@code true} if canceled successfully, {@code false} if cancel failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
@@ -67,17 +81,19 @@ public interface OrderDao {
 
     /**
      * Submit order based on shopping cart
+     *
      * @param orderId is id of shopping cart
      * @return {@code true} if updated successfully, {@code false} if update failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
-    boolean submitOrder( long orderId) throws DaoException;
+    boolean submitOrder(long orderId) throws DaoException;
 
 
     /**
      * Update status of given order
+     *
      * @param orderStatus is orderStatus to update
-     * @param orderId is id of order
+     * @param orderId     is id of order
      * @return {@code true} if updated successfully, {@code false} if update failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
@@ -85,6 +101,7 @@ public interface OrderDao {
 
     /**
      * Update prices in order based on current prices from storage
+     *
      * @param orderId is id of order
      * @return {@code true} if updated successfully, {@code false} if update failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
@@ -93,6 +110,7 @@ public interface OrderDao {
 
     /**
      * Update order amount based on items prices from order
+     *
      * @param orderId is id of order
      * @return {@code true} if updated successfully, {@code false} if update failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems

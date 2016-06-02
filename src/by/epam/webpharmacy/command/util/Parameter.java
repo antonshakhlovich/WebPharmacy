@@ -4,6 +4,7 @@ package by.epam.webpharmacy.command.util;
  * Contains names of all possible http parameters
  */
 public enum Parameter {
+    ACCESS_DENIED,
     ADDRESS,
     AMOUNT,
     BAN_STATUS,
@@ -16,6 +17,7 @@ public enum Parameter {
     COMPANIES,
     COUNTRY,
     CUSTOMER_ID,
+    DATE,
     DESCRIPTION,
     DOSAGE,
     DOSAGE_FORM_ID,
@@ -45,7 +47,9 @@ public enum Parameter {
     NAME,
     NUMBER_OF_ITEMS,
     OLD_QUANTITY,
+    ORDER,
     ORDER_ID,
+    ORDERS,
     PAGE,
     PAGE_NUMBER,
     PASSWORD,

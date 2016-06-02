@@ -11,31 +11,31 @@ import java.util.HashMap;
  */
 public class CommandFactory {
 
-    private static HashMap<CommandName, Command> commands = new HashMap<>();
+    private static HashMap<CommandName, Command> commandMap = new HashMap<>();
 
     private static final CommandFactory instance = new CommandFactory();
 
 
     private CommandFactory() {
-        commands.put(CommandName.UNKNOWN, new UnknownCommand());
-        commands.put(CommandName.CHANGE_LOCALE, new ChangeLocaleCommand());
-        commands.put(CommandName.LOGIN, new LoginCommand());
-        commands.put(CommandName.LOGOUT, new LogoutCommand());
-        commands.put(CommandName.REGISTER, new RegisterCommand());
-        commands.put(CommandName.BAN_USER, new BanUserCommand());
-        commands.put(CommandName.VIEW_ADD_ITEM, new ViewAddItemCommand());
-        commands.put(CommandName.ADD_ITEM, new AddItemCommand());
-        commands.put(CommandName.DELETE_ITEM, new DeleteItemCommand());
-        commands.put(CommandName.VIEW_EDIT_ITEM, new ViewEditItemCommand());
-        commands.put(CommandName.VIEW_PAGE, new ViewPageCommand());
-        commands.put(CommandName.VIEW_ITEM, new ViewItemCommand());
-        commands.put(CommandName.VIEW_CATALOG, new ViewCatalogCommand());
-        commands.put(CommandName.SEARCH_ITEM, new SearchItemCommand());
-        commands.put(CommandName.VIEW_ORDER, new ViewOrderCommand());
-        commands.put(CommandName.VIEW_SHOPPING_CART, new ViewShoppingCartCommand());
-        commands.put(CommandName.REMOVE_ITEM_FROM_ORDER, new RemoveItemFromOrderCommand());
-        commands.put(CommandName.ADD_ITEM_TO_ORDER, new AddItemToOrderCommand());
-        commands.put(CommandName.SUBMIT_ORDER, new SubmitOrderCommand());
+        commandMap.put(CommandName.UNKNOWN, new UnknownCommand());
+        commandMap.put(CommandName.CHANGE_LOCALE, new ChangeLocaleCommand());
+        commandMap.put(CommandName.LOGIN, new LoginCommand());
+        commandMap.put(CommandName.LOGOUT, new LogoutCommand());
+        commandMap.put(CommandName.REGISTER, new RegisterCommand());
+        commandMap.put(CommandName.BAN_USER, new BanUserCommand());
+        commandMap.put(CommandName.VIEW_ADD_ITEM, new ViewAddItemCommand());
+        commandMap.put(CommandName.ADD_ITEM, new AddItemCommand());
+        commandMap.put(CommandName.DELETE_ITEM, new DeleteItemCommand());
+        commandMap.put(CommandName.VIEW_EDIT_ITEM, new ViewEditItemCommand());
+        commandMap.put(CommandName.VIEW_ITEM, new ViewItemCommand());
+        commandMap.put(CommandName.VIEW_CATALOG, new ViewCatalogCommand());
+        commandMap.put(CommandName.SEARCH_ITEM, new SearchItemCommand());
+        commandMap.put(CommandName.VIEW_ORDER, new ViewOrderCommand());
+        commandMap.put(CommandName.VIEW_ORDERS, new ViewOrdersCommand());
+        commandMap.put(CommandName.VIEW_SHOPPING_CART, new ViewShoppingCartCommand());
+        commandMap.put(CommandName.REMOVE_ITEM_FROM_ORDER, new RemoveItemFromOrderCommand());
+        commandMap.put(CommandName.ADD_ITEM_TO_ORDER, new AddItemToOrderCommand());
+        commandMap.put(CommandName.SUBMIT_ORDER, new SubmitOrderCommand());
     }
 
     public static CommandFactory getInstance() {
@@ -50,7 +50,7 @@ public class CommandFactory {
      * @throws CommandException if command parameter is invalid
      */
     public Command getCommand(HttpServletRequest request) throws CommandException {
-        Command command = commands.get(CommandName.UNKNOWN);
+        Command command = commandMap.get(CommandName.UNKNOWN);
         String commandRequest = request.getParameter(Parameter.COMMAND.getName());
         if (commandRequest == null || commandRequest.isEmpty()) {
             return command;
@@ -58,8 +58,8 @@ public class CommandFactory {
             CommandName commandName;
             try {
                 commandName = CommandName.valueOf(commandRequest.replace("-", "_").toUpperCase());
-                if (commands.containsKey(commandName)) {
-                    return commands.get(commandName);
+                if (commandMap.containsKey(commandName)) {
+                    return commandMap.get(commandName);
                 } else {
                     throw new CommandException("No such command in CommandFactory commands map");
                 }

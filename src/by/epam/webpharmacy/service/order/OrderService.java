@@ -2,6 +2,7 @@ package by.epam.webpharmacy.service.order;
 
 import by.epam.webpharmacy.entity.Order;
 import by.epam.webpharmacy.entity.OrderStatus;
+import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.ServiceException;
 
 import java.util.List;
@@ -22,10 +23,22 @@ public interface OrderService {
     /**
      * Returns a list of {@link Order} orders of a specified user
      * @param userId id of the user, owning the requested orders
+     * @param isCanceled defines what type of orders to select canceled or not
      * @return list of user's orders
      * @throws ServiceException if exception occurred on an underlying level
      */
-    List<Order> selectOrdersByUser(long userId) throws ServiceException;
+    List<Order> selectOrdersByUser(long userId, boolean isCanceled) throws ServiceException;
+
+    /**
+     * Retrieves an order with given id
+     *
+     * @param orderId id of the order
+     * @param user User that request this order
+     * @return order or {@code null} if no such order
+     * or special Order object with status variable 'ACCESS DENIED' if user don't have permission for viewing this order
+     * @throws ServiceException if failed to retrieve data from dao layer
+     */
+    Order selectOrderByOrderId(long orderId, User user) throws ServiceException;
 
     /**
      * Selects all orders made by all users

@@ -1,11 +1,14 @@
 package by.epam.webpharmacy.service.order.impl;
 
+import by.epam.webpharmacy.command.util.Parameter;
 import by.epam.webpharmacy.dao.DaoException;
 import by.epam.webpharmacy.dao.order.OrderDao;
 import by.epam.webpharmacy.dao.order.OrderDaoFactory;
 import by.epam.webpharmacy.dao.order.OrderDaoName;
 import by.epam.webpharmacy.entity.Order;
 import by.epam.webpharmacy.entity.OrderStatus;
+import by.epam.webpharmacy.entity.User;
+import by.epam.webpharmacy.entity.UserRole;
 import by.epam.webpharmacy.service.order.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
 
@@ -28,8 +31,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> selectOrdersByUser(long userId) throws ServiceException {
-        return null;
+    public List<Order> selectOrdersByUser(long userId, boolean isCanceled) throws ServiceException {
+        try {
+            return orderDao.selectOrdersByUserId(userId, isCanceled);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Order selectOrderByOrderId(long orderId, User user) throws ServiceException {
+        try {
+            Order order = orderDao.selectOrderByOrderId(orderId);
+            if (user.getId() != order.getOwner().getId()) {
+                if (user.getRole() != UserRole.ADMIN || user.getRole() != UserRole.MANAGER) {
+                    order.setStatus(Parameter.ACCESS_DENIED.getName());
+                }
+            }
+            return order;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override

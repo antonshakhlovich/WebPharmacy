@@ -8,11 +8,11 @@ import java.util.HashMap;
  * This class based on factory design pattern and provides all possible Company services on demand.
  */
 public class CompanyServiceFactory {
-    private static HashMap<CompanyServiceName, CompanyService> companyServices = new HashMap<>();
+    private static HashMap<CompanyServiceName, CompanyService> companyServiceMap = new HashMap<>();
     private static final CompanyServiceFactory instance = new CompanyServiceFactory();
 
     private CompanyServiceFactory() {
-        companyServices.put(CompanyServiceName.COMPANY_SERVICE, new CompanyServiceImpl());
+        companyServiceMap.put(CompanyServiceName.COMPANY_SERVICE, new CompanyServiceImpl());
     }
 
     public static CompanyServiceFactory getInstance() {
@@ -20,6 +20,6 @@ public class CompanyServiceFactory {
     }
 
     public CompanyService getService(CompanyServiceName CompanyServiceName) {
-        return companyServices.get(CompanyServiceName);
+        return companyServiceMap.get(CompanyServiceName);
     }
 }

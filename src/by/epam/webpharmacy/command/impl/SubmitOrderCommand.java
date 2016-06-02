@@ -20,7 +20,7 @@ import java.io.IOException;
 public class SubmitOrderCommand implements Command{
 
     private static OrderService orderService = OrderServiceFactory.getInstance().getService(OrderServiceName.ORDER_SERVICE);
-
+    private static final String VIEW_ORDERS = "/Controller?command=view-orders&is_canceled=false";
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         long orderId = Long.parseLong(request.getParameter(Parameter.ORDER_ID.getName()));
@@ -34,7 +34,7 @@ public class SubmitOrderCommand implements Command{
             throw new CommandException(e);
         }
         try {
-            response.sendRedirect(JspPage.VIEW_ORDERS.getPath());
+            response.sendRedirect(VIEW_ORDERS);
         } catch (IOException e) {
             throw new CommandException("Can't get referer header from request", e);
         }

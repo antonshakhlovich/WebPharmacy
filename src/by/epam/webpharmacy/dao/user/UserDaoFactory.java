@@ -8,11 +8,11 @@ import java.util.HashMap;
  * This class based on factory design pattern and provides all possible User Daos on demand.
  */
 public class UserDaoFactory {
-    private static HashMap<UserDaoName, UserDao> userDaos = new HashMap<>();
+    private static HashMap<UserDaoName, UserDao> userDaoMap = new HashMap<>();
     private static final UserDaoFactory instance = new UserDaoFactory();
 
     private UserDaoFactory() {
-        userDaos.put(UserDaoName.USER_DAO, new UserDaoSQLImpl());
+        userDaoMap.put(UserDaoName.USER_DAO, new UserDaoSQLImpl());
     }
 
     public static UserDaoFactory getInstance() {
@@ -20,7 +20,7 @@ public class UserDaoFactory {
     }
 
     public UserDao getDao(UserDaoName UserDaoName) {
-        return userDaos.get(UserDaoName);
+        return userDaoMap.get(UserDaoName);
     }
 }
 

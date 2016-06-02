@@ -8,11 +8,13 @@ import by.epam.webpharmacy.entity.Item;
 import by.epam.webpharmacy.entity.Order;
 import by.epam.webpharmacy.entity.OrderStatus;
 import by.epam.webpharmacy.command.util.Parameter;
+import by.epam.webpharmacy.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,10 +56,93 @@ public class OrderDaoSQLImpl implements OrderDao {
             "  JOIN (SELECT  d.order_id, SUM(d.quantity*d.price) AS amount FROM drugs_ordered d\n" +
             "  WHERE d.order_id = ?) AS do ON o.id = do.order_id\n" +
             "  SET o.amount = do.amount\n";
+    private static final String SELECT_USER_ORDERS = "SELECT id, date, amount, status, is_canceled" +
+            " FROM orders" +
+            " WHERE customer_id = ? AND status != 'открыт' AND is_canceled = ?" +
+            " ORDER BY id DESC ";
+    private static final String SELECT_ORDER_BY_ID = "SELECT o.id, o.customer_id, o.date, o.amount, o.status, " +
+            "o.is_canceled, d.id AS drug_id,d.label, d.dosage,d.volume, d.volume_type,d.by_prescription,d.image_path, dro.quantity, dro.price FROM orders o\n" +
+            "  LEFT JOIN drugs_ordered dro ON o.id = dro.order_id\n" +
+            "  LEFT JOIN drugs d ON dro.drug_id = d.id\n" +
+            "  WHERE o.id = ?" +
+            "  ORDER BY d.label";
 
     @Override
-    public List<Order> selectOrdersByUserId(long userId) throws DaoException {
-        return null;
+    public List<Order> selectOrdersByUserId(long userId, boolean isCanceled) throws DaoException {
+        List<Order> orderList = new ArrayList<>();
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(SELECT_USER_ORDERS);
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setBoolean(2, isCanceled);
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setId(resultSet.getLong(Parameter.ID.getName()));
+                order.setDate(resultSet.getDate(Parameter.DATE.getName()));
+                order.setAmount(resultSet.getBigDecimal(Parameter.AMOUNT.getName()));
+                order.setStatus(resultSet.getString(Parameter.STATUS.getName()));
+                order.setCanceled(resultSet.getBoolean(Parameter.IS_CANCELED.getName()));
+                orderList.add(order);
+            }
+            return orderList;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
+    }
+
+    @Override
+    public Order selectOrderByOrderId(long orderId) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(SELECT_ORDER_BY_ID);
+            preparedStatement.setLong(1, orderId);
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            resultSet.next();
+            User owner = new User();
+            owner.setId(resultSet.getLong(Parameter.CUSTOMER_ID.getName()));
+            Order order = new Order();
+            order.setOwner(owner);
+            order.setId(resultSet.getLong(Parameter.ID.getName()));
+            order.setDate(resultSet.getDate(Parameter.DATE.getName()));
+            order.setAmount(resultSet.getBigDecimal(Parameter.AMOUNT.getName()));
+            order.setStatus(resultSet.getString(Parameter.STATUS.getName()));
+            order.setCanceled(resultSet.getBoolean(Parameter.IS_CANCELED.getName()));
+            do {
+                Item item = new Item();
+                item.setId(resultSet.getLong(Parameter.DRUG_ID.getName()));
+                if (resultSet.wasNull()) {
+                    break;
+                }
+                item.setLabel(resultSet.getString(Parameter.LABEL.getName()));
+                item.setDosage(resultSet.getString(Parameter.DOSAGE.getName()));
+                item.setVolume(resultSet.getDouble(Parameter.VOLUME.getName()));
+                item.setVolumeType(resultSet.getString(Parameter.VOLUME_TYPE.getName()));
+                item.setByPrescription(resultSet.getBoolean(Parameter.BY_PRESCRIPTION.getName()));
+                item.setImagePath(resultSet.getString(Parameter.IMAGE_PATH.getName()));
+                item.setPrice(resultSet.getBigDecimal(Parameter.PRICE.getName()));
+                order.getItems().put(item, resultSet.getInt(Parameter.QUANTITY.getName()));
+            } while (resultSet.next());
+            return order;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
     }
 
     @Override
@@ -96,8 +181,10 @@ public class OrderDaoSQLImpl implements OrderDao {
                 }
             }
             resultSet.next();
+            User owner = new User();
             order.setId(resultSet.getLong(Parameter.ID.getName()));
-            order.setCustomerId(resultSet.getLong(Parameter.CUSTOMER_ID.getName()));
+            owner.setId(resultSet.getLong(Parameter.CUSTOMER_ID.getName()));
+            order.setOwner(owner);
             do {
                 Item item = new Item();
                 item.setId(resultSet.getLong(Parameter.DRUG_ID.getName()));

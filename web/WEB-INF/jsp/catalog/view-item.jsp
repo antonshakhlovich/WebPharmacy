@@ -17,6 +17,7 @@
 </head>
 <body>
 <ctg:header/>
+<div class="container-fluid">
 <table class="table">
     <thead>
     <tr>
@@ -85,5 +86,6 @@
     </tr>
     </tbody>
 </table>
+</div>
 </body>
 </html>

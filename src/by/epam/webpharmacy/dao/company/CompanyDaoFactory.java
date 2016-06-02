@@ -9,11 +9,11 @@ import java.util.HashMap;
  * This class based on factory design pattern and provides all possible Company Daos on demand.
  */
 public class CompanyDaoFactory {
-    private static HashMap<CompanyDaoName, CompanyDao> companyDaos = new HashMap<>();
+    private static HashMap<CompanyDaoName, CompanyDao> companyDaoMap = new HashMap<>();
     private static final CompanyDaoFactory instance = new CompanyDaoFactory();
 
     private CompanyDaoFactory() {
-        companyDaos.put(CompanyDaoName.COMPANY_DAO, new CompanyDaoSQLImpl());
+        companyDaoMap.put(CompanyDaoName.COMPANY_DAO, new CompanyDaoSQLImpl());
     }
 
     public static CompanyDaoFactory getInstance() {
@@ -21,6 +21,6 @@ public class CompanyDaoFactory {
     }
 
     public CompanyDao getDao(CompanyDaoName CompanyDaoName) {
-        return companyDaos.get(CompanyDaoName);
+        return companyDaoMap.get(CompanyDaoName);
     }
 }

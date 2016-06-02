@@ -42,7 +42,7 @@
                 <a href="${pageContext.request.contextPath}/" class="current"><fmt:message key="local.link.home"/></a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/" class="current"><fmt:message key="local.link.orders"/></a>
+                <a href="${pageContext.request.contextPath}/Controller?command=view-orders&is_canceled=false" class="current"><fmt:message key="local.link.orders"/></a>
             </li>
             <li>
                 <a href="${pageContext.request.contextPath}/" class="current"><fmt:message
