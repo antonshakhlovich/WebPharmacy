@@ -22,18 +22,31 @@
 <div class="col-sm-8">
 
     <c:if test="${sessionScope.success_message}">
-        <div class="alert alert-info">
+        <div class="alert alert-success">
             <span>
-                <fmt:message key="local.message.item.edit.success"/> :<a
-                    href="${pageContext.request.contextPath}/Controller?command=view_item&id=${requestScope.item.id}">${requestScope.item.label}</a>
+                <fmt:message key="local.message.item.edit.success"/>
             </span>
             <c:set var="success_message" value="false" scope="session"/>
         </div>
     </c:if>
     <c:if test="${sessionScope.error_message}">
-        <div class="alert alert-info">
+        <div class="alert alert-danger">
             <fmt:message key="local.message.item.edit.error"/>
             <c:set var="error_message" value="false" scope="session"/>
+        </div>
+    </c:if>
+    <c:if test="${sessionScope.success_message_delete}">
+        <div class="alert alert-success">
+            <span>
+                <fmt:message key="local.message.item.deleted"/>
+            </span>
+            <c:set var="success_message_delete" value="false" scope="session"/>
+        </div>
+    </c:if>
+    <c:if test="${sessionScope.error_message_delete}">
+        <div class="alert alert-danger">
+            <fmt:message key="local.message.item.not.deleted"/>
+            <c:set var="error_message_delete" value="false" scope="session"/>
         </div>
     </c:if>
     <form role="form" action="Controller" method="post" enctype="multipart/form-data">

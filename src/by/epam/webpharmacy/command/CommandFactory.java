@@ -1,22 +1,19 @@
 package by.epam.webpharmacy.command;
 
 import by.epam.webpharmacy.command.impl.*;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This class based on factory design pattern and provides all possible commands on demand.
  */
 public class CommandFactory {
 
-    private static CommandFactory instance;
-    private static AtomicBoolean isNull = new AtomicBoolean(true);
-    private static ReentrantLock lock = new ReentrantLock();
     private static HashMap<CommandName, Command> commands = new HashMap<>();
+
+    private static final CommandFactory instance = new CommandFactory();
 
 
     private CommandFactory() {
@@ -42,14 +39,6 @@ public class CommandFactory {
     }
 
     public static CommandFactory getInstance() {
-        if (isNull.get()) {
-            lock.lock();
-            if (isNull.get()) {
-                instance = new CommandFactory();
-                isNull.set(false);
-            }
-            lock.unlock();
-        }
         return instance;
     }
 

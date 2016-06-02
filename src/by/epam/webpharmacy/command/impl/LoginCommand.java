@@ -3,16 +3,16 @@ package by.epam.webpharmacy.command.impl;
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.entity.User;
-import by.epam.webpharmacy.service.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
-import by.epam.webpharmacy.service.UserService;
-import by.epam.webpharmacy.service.impl.OrderServiceImpl;
-import by.epam.webpharmacy.service.impl.UserServiceImpl;
-import by.epam.webpharmacy.util.JspPage;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.service.user.UserService;
+import by.epam.webpharmacy.service.user.UserServiceFactory;
+import by.epam.webpharmacy.service.user.UserServiceName;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * Class {@code LoginCommand} is a guest-only implementation of {@see Command}
@@ -21,8 +21,7 @@ import javax.servlet.http.HttpSession;
  */
 public class LoginCommand implements Command {
 
-    private static UserService userService = UserServiceImpl.getInstance();
-    private static OrderService orderService = OrderServiceImpl.getInstance();
+    private static UserService userService = UserServiceFactory.getInstance().getService(UserServiceName.USER_SERVICE);
 
     /**
      * Handles request to the servlet by trying to log in a user with given credentials
@@ -32,7 +31,7 @@ public class LoginCommand implements Command {
      * @throws CommandException
      */
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         User user;
         String login = request.getParameter(Parameter.LOGIN.getName());
         String password = request.getParameter(Parameter.PASSWORD.getName());
@@ -48,9 +47,12 @@ public class LoginCommand implements Command {
             session.setAttribute(Parameter.LOGIN_FAILED.getName(), Boolean.FALSE);
         } else {
             session.setAttribute(Parameter.LOGIN_FAILED.getName(), Boolean.TRUE);
-
         }
-        return JspPage.ROOT.getPath();
+        try {
+            response.sendRedirect(request.getHeader(Parameter.REFERER.getName()));
+        } catch (IOException e) {
+            throw new CommandException(e);
+        }
 
     }
 }

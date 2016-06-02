@@ -1,7 +1,5 @@
 package by.epam.webpharmacy.command.util;
 
-import by.epam.webpharmacy.util.Parameter;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
@@ -14,7 +12,7 @@ import java.util.Calendar;
  */
 public class FileHelper {
 
-    private static FileHelper instance = new FileHelper();
+    private static final FileHelper instance = new FileHelper();
     private static final String SAVE_DIR = "images\\items";
 
 

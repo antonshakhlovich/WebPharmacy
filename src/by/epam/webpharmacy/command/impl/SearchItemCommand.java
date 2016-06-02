@@ -3,14 +3,18 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.command.util.JspPage;
 import by.epam.webpharmacy.entity.Item;
-import by.epam.webpharmacy.service.ItemService;
+import by.epam.webpharmacy.service.item.ItemService;
 import by.epam.webpharmacy.service.ServiceException;
-import by.epam.webpharmacy.service.impl.ItemServiceImpl;
-import by.epam.webpharmacy.util.JspPage;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.service.item.ItemServiceFactory;
+import by.epam.webpharmacy.service.item.ItemServiceName;
+import by.epam.webpharmacy.command.util.Parameter;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,10 +22,10 @@ import java.util.List;
  * for searching items.
  */
 public class SearchItemCommand implements Command {
-    private static ItemService itemService = ItemServiceImpl.getInstance();
+    private static final ItemService itemService = ItemServiceFactory.getInstance().getService(ItemServiceName.ITEM_SERVICE);
 
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         int limit = Integer.parseInt(request.getParameter(Parameter.LIMIT.getName()));
         String pageNumber = request.getParameter(Parameter.PAGE_NUMBER.getName());
         int offset = 0;
@@ -49,6 +53,10 @@ public class SearchItemCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return ViewPageCommand.VIEW_PAGE + JspPage.SEARCH_ITEM;
+        try {
+            request.getRequestDispatcher(JspPage.SEARCH_ITEM.getPath()).forward(request,response);
+        } catch (ServletException | IOException e) {
+            throw new CommandException(e);
+        }
     }
 }

@@ -2,9 +2,8 @@ package by.epam.webpharmacy.tag;
 
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.entity.UserRole;
-import by.epam.webpharmacy.util.JspPage;
-import by.epam.webpharmacy.util.Parameter;
-import org.apache.log4j.Logger;
+import by.epam.webpharmacy.command.util.JspPage;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;

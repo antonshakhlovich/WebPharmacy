@@ -20,6 +20,20 @@
 <c:set var="count" value="0" scope="page"/>
 <c:set var="total_quantity" value="0" scope="page"/>
 <c:set var="total_amount" value="0" scope="page"/>
+<c:if test="${sessionScope.success_message}">
+    <div class="alert alert-success">
+            <span>
+                <fmt:message key="local.message.quantity.change.success"/>
+             </span>
+        <c:set var="success_message" value="false" scope="session"/>
+    </div>
+</c:if>
+<c:if test="${sessionScope.error_message}">
+    <div class="alert alert-danger">
+        <fmt:message key="local.message.quantity.change.error"/>
+        <c:set var="error_message" value="false" scope="session"/>
+    </div>
+</c:if>
 <table class="table">
     <thead>
     <tr>
@@ -115,8 +129,8 @@
 <form action="Controller" method="post">
     <input type="hidden" name="command" value="submit-order"/>
     <input type="hidden" name="order_id" value="${sessionScope.shopping_cart.id}"/>
-    <div style="text-align: center">
-        <input type="submit" style="padding: 10px" class ="btn btn-success" value="<fmt:message key="local.button.order.submit"/> "/>
+    <div class="col-sm-offset-4 col-sm-4">
+        <input type="submit" style="padding: 10px" class ="btn btn-success btn-lg btn-block btn-huge" value="<fmt:message key="local.button.order.submit"/> "/>
     </div>
 </form>
 

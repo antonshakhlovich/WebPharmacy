@@ -3,12 +3,13 @@ package by.epam.webpharmacy.command.impl;
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.service.ServiceException;
-import by.epam.webpharmacy.service.UserService;
-import by.epam.webpharmacy.service.impl.UserServiceImpl;
-import by.epam.webpharmacy.util.JspPage;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.service.user.UserService;
+import by.epam.webpharmacy.service.user.UserServiceFactory;
+import by.epam.webpharmacy.service.user.UserServiceName;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Class {@code BanUserCommand} is an admin-only implementation of {@see Command}
@@ -16,10 +17,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class BanUserCommand implements Command {
 
-    private static UserService userService = UserServiceImpl.getInstance();
+    private static UserService userService = UserServiceFactory.getInstance().getService(UserServiceName.USER_SERVICE);
 
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         long id = Long.parseLong(request.getParameter(Parameter.ID.getName()));
         boolean banStatus = Boolean.parseBoolean(request.getParameter(Parameter.BAN_STATUS.getName()));
         try {
@@ -27,6 +28,5 @@ public class BanUserCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return JspPage.ROOT.getPath();
     }
 }

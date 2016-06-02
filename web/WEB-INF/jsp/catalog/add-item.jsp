@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/css/bootstrap-filestyle.min.js"> </script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/css/bootstrap-filestyle.min.js"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css"/>
     <title><fmt:message key="local.title.additem"/></title>
 </head>
@@ -20,19 +20,21 @@
 <ctg:header/>
 <div class="col-sm-2"></div>
 <div class="col-sm-8">
-    <div class="alert alert-info">
-        <c:if test="${sessionScope.success_message}">
+    <c:if test="${sessionScope.success_message}">
+        <div class="alert alert-info">
             <span>
                 <fmt:message key="local.message.item.add.success"/> :<a
                     href="${pageContext.request.contextPath}/Controller?command=view_item&id=${sessionScope.item.id}">${sessionScope.item.label}</a>
              </span>
             <c:set var="success_message" value="false" scope="session"/>
-        </c:if>
-        <c:if test="${sessionScope.error_message}">
+        </div>
+    </c:if>
+    <c:if test="${sessionScope.error_message}">
+        <div class="alert alert-info">
             <fmt:message key="local.message.item.add.error"/>
             <c:set var="error_message" value="false" scope="session"/>
-        </c:if>
-    </div>
+        </div>
+    </c:if>
     <form role="form" action="Controller" method="post" enctype="multipart/form-data">
         <input type="hidden" name="command" value="add-item"/>
         <input type="hidden" name="from" value="${pageContext.request.requestURI}"/>
@@ -95,7 +97,7 @@
                data-classIcon="icon-plus" data-buttonText="<fmt:message key="local.button.picture.add" />"
                name="image_file" accept="image/*"/>
         <div style="padding: 10px 10px 0 0">
-        <input type="submit" class="btn btn-primary" placeholder="<fmt:message key="local.button.item.add"/>"/>
+            <input type="submit" class="btn btn-primary" placeholder="<fmt:message key="local.button.item.add"/>"/>
         </div>
     </form>
 </div>

@@ -2,9 +2,10 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
-import by.epam.webpharmacy.util.JspPage;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Class {@code UnknownCommand} will be used when {@see CommandFactory} can't return
@@ -12,7 +13,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class UnknownCommand implements Command{
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
-        return JspPage.ROOT.getPath();
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+        try {
+            response.sendRedirect(request.getContextPath());
+        } catch (IOException e) {
+            throw new CommandException(e);
+        }
     }
 }

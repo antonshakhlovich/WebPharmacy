@@ -19,14 +19,14 @@
 <body>
 <ctg:header/>
 <c:if test="${sessionScope.error_message}">
-    <div class="alert alert-info">
-        <fmt:message key="local.message.item.not.deleted"/>
+    <div class="alert alert-danger">
+        <fmt:message key="local.message.item.add.error"/>
         <c:set var="error_message" scope="session" value="false"/>
     </div>
 </c:if>
 <c:if test="${sessionScope.success_message}">
-    <div class="alert alert-info">
-        <fmt:message key="local.message.item.deleted"/>
+    <div class="alert alert-success">
+        <fmt:message key="local.message.item.add.success"/>
         <c:set var="success_message" scope="session" value="false"/>
     </div>
 </c:if>
@@ -91,7 +91,7 @@
         </c:otherwise>
     </c:choose>
 </div>
-<table class="table">
+<table class="table table-striped table-condensed">
     <thead>
     <tr>
         <th>
@@ -159,7 +159,7 @@
                 </c:if>
             </td>
             <td>
-                <form  action="Controller" method="post">
+                <form class="inline" action="Controller" method="post">
                     <input type="hidden" name="command" value="add-item-to-order"/>
                     <input type="hidden" name="item_id" value="${item.id}"/>
                     <input type="hidden" name="page_number" value="${param.page_number}"/>
@@ -168,7 +168,7 @@
                     <input type="submit" class="btn btn-warning" value="<fmt:message key="local.button.item.buy"/>"/>
                 </form>
                 <c:if test="${sessionScope.user.role eq 'ADMIN' or sessionScope.user.role eq 'MANAGER'}">
-                    <form  action="Controller" method="get">
+                    <form class="inline" action="Controller" method="get">
                         <input type="hidden" name="command" value="view-edit-item"/>
                         <input type="hidden" name="id" value="${item.id}"/>
                         <input type="submit" class="btn btn-success" value="<fmt:message key="local.button.change"/>"/>

@@ -2,11 +2,13 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
-import by.epam.webpharmacy.util.JspPage;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.command.util.JspPage;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * Class {@code LoginCommand} is an authorized-only implementation of {@see Command}
@@ -22,9 +24,13 @@ public class LogoutCommand implements Command{
      * @throws CommandException
      */
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         HttpSession session = request.getSession();
         session.removeAttribute(Parameter.USER.getName());
-        return JspPage.ROOT.getPath();
+        try {
+            response.sendRedirect(JspPage.INDEX.getPath());
+        } catch (IOException e) {
+            throw new CommandException(e);
+        }
     }
 }

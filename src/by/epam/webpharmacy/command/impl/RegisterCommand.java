@@ -2,17 +2,18 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.command.util.JspPage;
 import by.epam.webpharmacy.entity.User;
-import by.epam.webpharmacy.service.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
-import by.epam.webpharmacy.service.UserService;
-import by.epam.webpharmacy.service.impl.OrderServiceImpl;
-import by.epam.webpharmacy.service.impl.UserServiceImpl;
-import by.epam.webpharmacy.util.JspPage;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.service.user.UserService;
+import by.epam.webpharmacy.service.user.UserServiceFactory;
+import by.epam.webpharmacy.service.user.UserServiceName;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * Class {@code RegisterCommand} is a guest-only implementation of {@see Command}
@@ -20,11 +21,10 @@ import javax.servlet.http.HttpSession;
  */
 public class RegisterCommand implements Command{
 
-    private static UserService userService = UserServiceImpl.getInstance();
-    private static OrderService orderService = OrderServiceImpl.getInstance();
+    private static UserService userService = UserServiceFactory.getInstance().getService(UserServiceName.USER_SERVICE);
 
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         boolean result;
         User user = new User();
         user.setLogin(request.getParameter(Parameter.LOGIN.getName()));
@@ -40,20 +40,32 @@ public class RegisterCommand implements Command{
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
+        HttpSession session = request.getSession();
         if (result) {
             try {
-                HttpSession session = request.getSession();
                 User registeredUser = userService.loginUser(user.getLogin(), user.getPassword());
-                if (session.getAttribute(Parameter.USER.getName()) == null) {
-                    session.setAttribute(Parameter.USER.getName(),registeredUser);
+                User currentUser = (User) session.getAttribute(Parameter.USER.getName());
+                if (currentUser == null) {
+                    session.setAttribute(Parameter.USER.getName(), registeredUser);
+                    try {
+                        response.sendRedirect(JspPage.INDEX.getPath());
+                    } catch (IOException e) {
+                        throw new CommandException(e);
+                    }
+                } else {
+                    session.setAttribute(Parameter.SUCCESS_MESSAGE.getName(),Boolean.TRUE);
+                    session.setAttribute(Parameter.USER_NAME.getName(),registeredUser.getLogin());
                 }
             } catch (ServiceException e) {
                 throw new CommandException(e);
             }
-            return JspPage.ROOT.getPath();
         } else {
-            request.getSession().setAttribute(Parameter.ERROR_MESSAGE.getName(),Boolean.TRUE);
-            return JspPage.REGISTER.getPath();
+            session.setAttribute(Parameter.ERROR_MESSAGE.getName(),Boolean.TRUE);
+        }
+        try {
+            response.sendRedirect(JspPage.REGISTER.getPath());
+        } catch (IOException e) {
+            throw new CommandException(e);
         }
     }
 }

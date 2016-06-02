@@ -2,13 +2,15 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
-import by.epam.webpharmacy.command.CommandName;
-import by.epam.webpharmacy.service.OrderService;
+import by.epam.webpharmacy.service.order.OrderService;
 import by.epam.webpharmacy.service.ServiceException;
-import by.epam.webpharmacy.service.impl.OrderServiceImpl;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.service.order.OrderServiceFactory;
+import by.epam.webpharmacy.service.order.OrderServiceName;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Class {@code RemoveItemFromOrderCommand} is animplementation of {@see Command}
@@ -16,10 +18,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RemoveItemFromOrderCommand implements Command {
 
-    private static OrderService orderService = OrderServiceImpl.getInstance();
+    private static OrderService orderService = OrderServiceFactory.getInstance().getService(OrderServiceName.ORDER_SERVICE);
+
 
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         long orderId = Long.parseLong(request.getParameter(Parameter.ORDER_ID.getName()));
         long itemId = Long.parseLong(request.getParameter(Parameter.ITEM_ID.getName()));
         try {
@@ -27,8 +30,11 @@ public class RemoveItemFromOrderCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return ViewPageCommand.VIEW_COMMAND + CommandName.VIEW_SHOPPING_CART;
-
+        try {
+            response.sendRedirect(request.getHeader(Parameter.REFERER.getName()));
+        } catch (IOException e) {
+            throw new CommandException("Can't get referer header from request", e);
+        }
 
     }
 }

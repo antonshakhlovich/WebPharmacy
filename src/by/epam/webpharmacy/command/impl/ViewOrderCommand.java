@@ -4,6 +4,7 @@ import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public class ViewOrderCommand implements Command {
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
-        return null;
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
     }
 }

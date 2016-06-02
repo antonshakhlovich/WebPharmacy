@@ -3,10 +3,8 @@ package by.epam.webpharmacy.controller;
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.command.CommandFactory;
-import by.epam.webpharmacy.command.CommandName;
 import by.epam.webpharmacy.dao.util.ConnectionPool;
 import by.epam.webpharmacy.dao.util.ConnectionPoolException;
-import by.epam.webpharmacy.util.Parameter;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -29,30 +27,22 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = processRequest(request, response);
-        if (page != null) {
-            getServletContext().getRequestDispatcher(page).forward(request, response);
-        }
-
+        processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = processRequest(request, response);
-        if (page != null) {
-            response.sendRedirect(page);
-        }
+        processRequest(request, response);
     }
 
-    private String processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             Command command = CommandFactory.getInstance().getCommand(request);
             LOG.debug("executing " + command);
-            return command.execute(request);
+             command.execute(request,response);
         } catch (CommandException e) {
             LOG.error("Command execution failed", e);
             response.sendError(500);
-            return null;
         }
     }
 

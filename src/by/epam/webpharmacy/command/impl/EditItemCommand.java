@@ -2,16 +2,17 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
-import by.epam.webpharmacy.command.CommandName;
 import by.epam.webpharmacy.command.util.FileHelper;
 import by.epam.webpharmacy.entity.Item;
-import by.epam.webpharmacy.service.ItemService;
+import by.epam.webpharmacy.service.item.ItemService;
 import by.epam.webpharmacy.service.ServiceException;
-import by.epam.webpharmacy.service.impl.ItemServiceImpl;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.service.item.ItemServiceFactory;
+import by.epam.webpharmacy.service.item.ItemServiceName;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,10 +25,10 @@ import java.math.BigDecimal;
 public class EditItemCommand implements Command {
 
     private static FileHelper fileHelper = FileHelper.getInstance();
-    private static final ItemService itemService = ItemServiceImpl.getInstance();
+    private static final ItemService itemService = ItemServiceFactory.getInstance().getService(ItemServiceName.ITEM_SERVICE);
 
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         Item item = new Item();
         try {
             request.setCharacterEncoding("UTF-8");
@@ -61,8 +62,12 @@ public class EditItemCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException("Failed to add new item to database", e);
         }
+        try {
+            response.sendRedirect(request.getHeader(Parameter.REFERER.getName()));
+        } catch (IOException e) {
+            throw new CommandException("Can't get referer header from request", e);
+        }
 
-        return ViewPageCommand.VIEW_COMMAND + CommandName.VIEW_EDIT_ITEM;
     }
 
 }

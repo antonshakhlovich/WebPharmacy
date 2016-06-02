@@ -4,10 +4,11 @@ import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.entity.UserRole;
-import by.epam.webpharmacy.util.JspPage;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.command.util.JspPage;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Checks security rights and defines the page path to forward to
@@ -23,7 +24,7 @@ public class ViewPageCommand implements Command {
     public static final String VIEW_COMMAND = "/Controller?command=";
 
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         String result = JspPage.ROOT.getPath();
         String requestedPage = request.getParameter(Parameter.PAGE.getName()).replace("-", "_").toUpperCase();
         JspPage jspPage = JspPage.valueOf(requestedPage);
@@ -33,8 +34,6 @@ public class ViewPageCommand implements Command {
             user.setRole(UserRole.GUEST);
         }
         if (jspPage.isRoleAllowed(user.getRole())) {
-            return jspPage.getPath();
         }
-        return result;
     }
 }

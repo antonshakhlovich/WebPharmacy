@@ -1,11 +1,10 @@
 package by.epam.webpharmacy.filter;
 
-import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandName;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.entity.UserRole;
-import by.epam.webpharmacy.util.JspPage;
-import by.epam.webpharmacy.util.Parameter;
+import by.epam.webpharmacy.command.util.JspPage;
+import by.epam.webpharmacy.command.util.Parameter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -20,6 +19,7 @@ import java.io.IOException;
  */
 @WebFilter(urlPatterns = {"/Controller"})
 public class SecurityFilter implements Filter {
+
 
     private static final String GET = "get";
 

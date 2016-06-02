@@ -17,7 +17,7 @@ public enum CommandName {
     UNKNOWN(true,UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     LOGIN(false, UserRole.GUEST),
     CHANGE_LOCALE(true, UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER,UserRole.DOCTOR),
-    REGISTER(false, UserRole.GUEST),
+    REGISTER(false, UserRole.GUEST, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER,UserRole.DOCTOR),
     LOGOUT(true, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     REMOVE_ITEM_FROM_ORDER(false,UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
     SEARCH_ITEM(true, UserRole.USER, UserRole.ADMIN, UserRole.MANAGER, UserRole.DOCTOR),
