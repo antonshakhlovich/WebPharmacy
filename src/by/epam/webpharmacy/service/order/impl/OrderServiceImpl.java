@@ -31,11 +31,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> selectOrdersByUser(long userId, boolean isCanceled) throws ServiceException {
-        try {
-            return orderDao.selectOrdersByUserId(userId, isCanceled);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
+    public List<Order> selectOrdersByUserId(User user, long userId, boolean isCanceled) throws ServiceException {
+        if (user.getId() == userId || user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.MANAGER) {
+            try {
+                return orderDao.selectOrdersByUserId(userId, isCanceled);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        } else {
+            return null;
         }
     }
 
@@ -44,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             Order order = orderDao.selectOrderByOrderId(orderId);
             if (user.getId() != order.getOwner().getId()) {
-                if (user.getRole() != UserRole.ADMIN || user.getRole() != UserRole.MANAGER) {
+                if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.MANAGER) {
                     order.setStatus(Parameter.ACCESS_DENIED.getName());
                 }
             }
@@ -55,14 +59,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> selectAllOrders() throws ServiceException {
-        return null;
+    public List<Order> selectAllOrdersByStatus(List<String> statusList, boolean isCanceled, int limit, int offset) throws ServiceException {
+        try {
+            return orderDao.selectAllOrdersByStatus(statusList, isCanceled, limit, offset);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public List<Order> selectAllOrdersByStatus(OrderStatus orderStatus) throws ServiceException {
-        return null;
+    public int countOrdersByStatus(List<String> statusList, boolean isCanceled) throws ServiceException {
+        try {
+            return orderDao.countOrdersByStatus(statusList, isCanceled);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
+
 
     @Override
     public boolean submitOrder(long orderId) throws ServiceException {
@@ -72,6 +85,29 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public boolean cancelOrder(User user, long orderId, boolean setCanceled) throws ServiceException {
+        try {
+            Order order = orderDao.selectOrderByOrderId(orderId);
+            if (setCanceled == order.isCanceled()) {
+                return false;
+            }
+            if (user.getId() != order.getOwner().getId()) {
+                if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.MANAGER) {
+                    return false;
+                }
+            }
+            if (!order.getStatus().equalsIgnoreCase(OrderStatus.COMPLETED.getStatus())) { //dont allow user to cancel orders that have status completed
+                return orderDao.cancelOrder(orderId, setCanceled);
+            } else {
+                return false;
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
 
     @Override
     public boolean addItemToOrder(long itemId, int quantity, long orderId) throws ServiceException {

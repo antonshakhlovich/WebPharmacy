@@ -66,6 +66,16 @@ public class OrderDaoSQLImpl implements OrderDao {
             "  LEFT JOIN drugs d ON dro.drug_id = d.id\n" +
             "  WHERE o.id = ?" +
             "  ORDER BY d.label";
+    private static final String SELECT_ALL_ORDERS = "SELECT o.id, o.customer_id, u.first_name, u.last_name, u.login, u.phone_number, u.city, u.address, o.date, o.amount, o.status, o.is_canceled\n" +
+            "FROM orders o\n" +
+            "  JOIN  users u ON o.customer_id = u.id\n" +
+            "  WHERE o.is_canceled = ? AND o.status IN(?,?,?,?)\n" +
+            "  ORDER BY o.date DESC\n" +
+            "  LIMIT ?,?";
+    private static final String COUNT_ALL_ORDERS = "SELECT COUNT(o.id) AS count\n" +
+            "FROM orders o\n" +
+            "  WHERE o.is_canceled = ? AND o.status IN(?,?,?,?)";
+    private static final String CANCEL_RESTORE_ORDER = "UPDATE orders SET is_canceled = ? WHERE id = ?";
 
     @Override
     public List<Order> selectOrdersByUserId(long userId, boolean isCanceled) throws DaoException {
@@ -138,6 +148,76 @@ public class OrderDaoSQLImpl implements OrderDao {
                 order.getItems().put(item, resultSet.getInt(Parameter.QUANTITY.getName()));
             } while (resultSet.next());
             return order;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
+    }
+
+    @Override
+    public List<Order> selectAllOrdersByStatus(List<String> statusList, boolean isCanceled, int limit, int offset) throws DaoException {
+        List<Order> orderList = new ArrayList<>();
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(SELECT_ALL_ORDERS);
+            preparedStatement.setBoolean(1, isCanceled);
+            for (int i = 2; i < statusList.size() + 2; i++) {
+                preparedStatement.setString(i, statusList.get(i - 2));
+            }
+            preparedStatement.setInt(6, offset);
+            preparedStatement.setInt(7, limit);
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            while (resultSet.next()) {
+                Order order = new Order();
+                User user = new User();
+                user.setId(resultSet.getLong(Parameter.CUSTOMER_ID.getName()));
+                user.setFirstName(resultSet.getString(Parameter.FIRST_NAME.getName()));
+                user.setLastName(resultSet.getString(Parameter.LAST_NAME.getName()));
+                user.setLogin(resultSet.getString(Parameter.LOGIN.getName()));
+                user.setPhoneNumber(resultSet.getString(Parameter.PHONE_NUMBER.getName()));
+                user.setCity(resultSet.getString(Parameter.CITY.getName()));
+                user.setAddress(resultSet.getString(Parameter.ADDRESS.getName()));
+                order.setOwner(user);
+                order.setId(resultSet.getLong(Parameter.ID.getName()));
+                order.setDate(resultSet.getDate(Parameter.DATE.getName()));
+                order.setAmount(resultSet.getBigDecimal(Parameter.AMOUNT.getName()));
+                order.setStatus(resultSet.getString(Parameter.STATUS.getName()));
+                order.setCanceled(resultSet.getBoolean(Parameter.IS_CANCELED.getName()));
+                orderList.add(order);
+            }
+            return orderList;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
+    }
+
+    @Override
+    public int countOrdersByStatus(List<String> statusList, boolean isCanceled) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(COUNT_ALL_ORDERS);
+            preparedStatement.setBoolean(1, isCanceled);
+            for (int i = 2; i < statusList.size() + 2; i++) {
+                preparedStatement.setString(i, statusList.get(i - 2));
+            }
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return 0;
+            }
+            resultSet.next();
+            return resultSet.getInt(1);
         } catch (ConnectionPoolException | SQLException e) {
             throw new DaoException(e);
         } finally {
@@ -246,8 +326,22 @@ public class OrderDaoSQLImpl implements OrderDao {
     }
 
     @Override
-    public boolean cancelOrder(long orderId) throws DaoException {
-        return false;
+    public boolean cancelOrder(long orderId, boolean setCanceled) throws DaoException {
+
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(CANCEL_RESTORE_ORDER);
+            preparedStatement.setBoolean(1, setCanceled);
+            preparedStatement.setLong(2, orderId);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement);
+        }
     }
 
     @Override
@@ -306,7 +400,7 @@ public class OrderDaoSQLImpl implements OrderDao {
     }
 
     @Override
-    public boolean updateOrderStatus(OrderStatus orderStatus, long orderId) throws DaoException {
+    public boolean updateOrderStatus(String orderStatus, long orderId) throws DaoException {
         return false;
     }
 

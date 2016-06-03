@@ -32,6 +32,7 @@ public class CommandFactory {
         commandMap.put(CommandName.SEARCH_ITEM, new SearchItemCommand());
         commandMap.put(CommandName.VIEW_ORDER, new ViewOrderCommand());
         commandMap.put(CommandName.VIEW_ORDERS, new ViewOrdersCommand());
+        commandMap.put(CommandName.VIEW_ALL_ORDERS, new ViewAllOrdersCommand());
         commandMap.put(CommandName.VIEW_SHOPPING_CART, new ViewShoppingCartCommand());
         commandMap.put(CommandName.REMOVE_ITEM_FROM_ORDER, new RemoveItemFromOrderCommand());
         commandMap.put(CommandName.ADD_ITEM_TO_ORDER, new AddItemToOrderCommand());

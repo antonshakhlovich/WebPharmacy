@@ -25,6 +25,7 @@ public enum JspPage {
     VIEW_CATALOG("/WEB-INF/jsp/catalog/view-catalog.jsp"),
     VIEW_ORDER("/WEB-INF/jsp/orders/view-order.jsp"),
     VIEW_ORDERS("/WEB-INF/jsp/orders/view-orders.jsp"),
+    VIEW_ALL_ORDERS("/WEB-INF/jsp/orders/view-all-orders.jsp"),
     VIEW_SHOPPING_CART("/WEB-INF/jsp/orders/view-shopping-cart.jsp");
 
     private String path;

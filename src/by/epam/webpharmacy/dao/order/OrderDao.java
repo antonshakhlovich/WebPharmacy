@@ -32,6 +32,28 @@ public interface OrderDao {
     Order selectOrderByOrderId(long orderId) throws DaoException;
 
     /**
+     * Selects a list of all orders with given status by all users
+     *
+     * @param statusList is a String list of statuses which orders could be
+     * @param isCanceled defines whether to show canceled orders
+     * @param limit parameters for pagination
+     * @param offset parameters for pagination
+     * @return a list of orders
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    List<Order> selectAllOrdersByStatus(List<String> statusList, boolean isCanceled, int limit, int offset) throws DaoException;
+
+    /**
+     * Selects a list of all orders with given status by all users
+     *
+     * @param statusList is a String list of statuses which orders could be
+     * @param isCanceled defines whether to show canceled orders
+     * @return a list of orders
+     * @throws DaoException  if failed to retrieve data from the storage due to technical problems
+     */
+    int countOrdersByStatus(List<String> statusList, boolean isCanceled) throws DaoException;
+
+    /**
      * Create new shopping cart if user doesn't have one.
      *
      * @param userId id of the user, owning the shopping cart
@@ -71,13 +93,13 @@ public interface OrderDao {
     boolean insertItemToOrder(long itemId, int quantity, long orderId) throws DaoException;
 
     /**
-     * Mark a specified order as canceled
+     * Mark a specified order as canceled or restore previously canceled order
      *
      * @param orderId id of the order to cancel
-     * @return {@code true} if canceled successfully, {@code false} if cancel failed
+     * @return {@code true} if operation was successful
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
-    boolean cancelOrder(long orderId) throws DaoException;
+    boolean cancelOrder(long orderId, boolean setCanceled) throws DaoException;
 
     /**
      * Submit order based on shopping cart
@@ -97,7 +119,7 @@ public interface OrderDao {
      * @return {@code true} if updated successfully, {@code false} if update failed
      * @throws DaoException if failed to retrieve data from the storage due to technical problems
      */
-    boolean updateOrderStatus(OrderStatus orderStatus, long orderId) throws DaoException;
+    boolean updateOrderStatus(String orderStatus, long orderId) throws DaoException;
 
     /**
      * Update prices in order based on current prices from storage

@@ -53,7 +53,7 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/"><fmt:message
+                        <a href="${pageContext.request.contextPath}/Controller?command=view-all-orders&is_canceled=false&limit=20&page_number=1&processing=true&shipping=true&completed=true"><fmt:message
                                 key="local.link.orders.view.all"/></a>
                     </li>
                 </ul>

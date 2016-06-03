@@ -11,6 +11,7 @@ import by.epam.webpharmacy.service.order.OrderService;
 import by.epam.webpharmacy.service.order.OrderServiceFactory;
 import by.epam.webpharmacy.service.order.OrderServiceName;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,10 +32,17 @@ public class ViewOrdersCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
 
         User user = (User)request.getSession().getAttribute(Parameter.USER.getName());
+        String userIdString = request.getParameter(Parameter.USER_ID.getName());
+        long userId;
+        if (userIdString == null) {
+            userId = user.getId();
+        } else {
+            userId = Long.parseLong(request.getParameter(Parameter.USER_ID.getName()));
+        }
         boolean isCanceled = Boolean.parseBoolean(request.getParameter(Parameter.IS_CANCELED.getName()));
         List<Order> orderList;
         try {
-            orderList = orderService.selectOrdersByUser(user.getId(), isCanceled);
+            orderList = orderService.selectOrdersByUserId(user, userId, isCanceled);
             request.setAttribute(Parameter.ORDERS.getName(),orderList);
         } catch (ServiceException e) {
             throw new CommandException(e);

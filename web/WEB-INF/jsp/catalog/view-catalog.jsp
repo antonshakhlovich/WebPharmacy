@@ -31,7 +31,7 @@
             <c:set var="success_message" scope="session" value="false"/>
         </div>
     </c:if>
-    <c:set var="number_of_pages" value="${number_of_items div param.limit + 1}"/>
+    <c:set var="number_of_pages" value="${requestScope.number_of_items div param.limit + 1}"/>
     <div style="padding: 10px;">
         <span><fmt:message key="local.text.number.of.items.on.page"/>:</span>
         <form style="display: inline-block" role="form" action="Controller" method="get">

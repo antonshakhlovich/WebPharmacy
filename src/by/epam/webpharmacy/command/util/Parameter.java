@@ -46,6 +46,7 @@ public enum Parameter {
     MANUFACTURER_ID,
     NAME,
     NUMBER_OF_ITEMS,
+    NUMBER_OF_ORDERS,
     OLD_QUANTITY,
     ORDER,
     ORDER_ID,
