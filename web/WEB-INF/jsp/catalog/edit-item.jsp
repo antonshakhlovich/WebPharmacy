@@ -121,7 +121,7 @@
         </form>
         <form action="Controller" method="post">
             <input type="hidden" name="command" value="delete-item"/>
-            <input type="hidden" name="id" value="${item.id}"/>
+            <input type="hidden" name="id" value="${requestScope.item.id}"/>
             <input type="submit" class="btn btn-danger" value="<fmt:message key="local.button.delete"/>"/>
         </form>
     </div>

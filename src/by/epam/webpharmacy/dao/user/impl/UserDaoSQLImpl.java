@@ -13,12 +13,20 @@ import java.sql.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is an implementation of the {@see UserDao} interface.
  */
 public class UserDaoSQLImpl implements UserDao {
 
+    private final static String SELECT_ALL_USERS = "SELECT id, login, password_md5, role, salt, " +
+            "email, ban_status, first_name, last_name, phone_number, city, address" +
+            " FROM users" +
+            " ORDER BY id DESC" +
+            " LIMIT ?,?";
+    private final static String COUNT_ALL_USERS = "SELECT COUNT(id) FROM users";
     private final static String SELECT_USER_BY_LOGIN = "SELECT id, login, password_md5, role, salt, " +
             "email, ban_status, first_name, last_name, phone_number, city, address" +
             " FROM users WHERE login = ?";
@@ -32,6 +40,9 @@ public class UserDaoSQLImpl implements UserDao {
             ", salt, email, ban_status, first_name, last_name, phone_number, city, address)" +
             "  VALUES (0 ,?, ?, 'user',?, ?, 0, ?, ?, ? , ?, ?);";
     private final static String UPDATE_USER_STATUS = "UPDATE users SET ban_status=? WHERE id=?";
+    private final static String UPDATE_USER = "UPDATE users SET  password_md5 = ?,email = ?,first_name = ?," +
+            "last_name = ?,phone_number = ?,city = ?,address = ?" +
+            "  WHERE id = ?";
 
     @Override
     public User selectUserByLogin(String login) throws DaoException {
@@ -46,6 +57,56 @@ public class UserDaoSQLImpl implements UserDao {
     @Override
     public User selectUserByEmail(String email) throws DaoException {
         return selectUserBy(SELECT_USER_BY_EMAIL, email);
+    }
+
+    @Override
+    public List<User> selectAllUsers(int offset, int limit) throws DaoException {
+        List<User> userList = new ArrayList<>();
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(SELECT_ALL_USERS);
+            preparedStatement.setInt(1, offset);
+            preparedStatement.setInt(2, limit);
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            while (resultSet.next()) {
+                User user = new User();
+                setUserParameters(user, resultSet);
+                userList.add(user);
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("Can't get connection from Connection Pool", e);
+        } catch (SQLException e) {
+            throw new DaoException("Can't make prepared statement", e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
+        return userList;
+    }
+
+    @Override
+    public int countAllUsers() throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(COUNT_ALL_USERS);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("Can't get connection from Connection Pool", e);
+        } catch (SQLException e) {
+            throw new DaoException("Can't make prepared statement", e);
+        } finally {
+            closeResources(cn, preparedStatement, resultSet);
+        }
     }
 
     @Override
@@ -73,7 +134,7 @@ public class UserDaoSQLImpl implements UserDao {
         } catch (SQLException e) {
             throw new DaoException(e.getMessage(), e);
         } finally {
-            closeResources(cn,preparedStatement);
+            closeResources(cn, preparedStatement);
         }
     }
 
@@ -92,7 +153,35 @@ public class UserDaoSQLImpl implements UserDao {
         } catch (SQLException e) {
             throw new DaoException("Request to database failed", e);
         } catch (ConnectionPoolException e) {
-            throw new DaoException("Can't get connection from connection pool",e);
+            throw new DaoException("Can't get connection from connection pool", e);
+        } finally {
+            closeResources(cn, preparedStatement);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateUser(User user) throws DaoException {
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(UPDATE_USER);
+            preparedStatement.setString(1, user.getHashedPassword());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getFirstName());
+            preparedStatement.setString(4, user.getLastName());
+            preparedStatement.setString(5, user.getPhoneNumber());
+            preparedStatement.setString(6, user.getCity());
+            preparedStatement.setString(7, user.getAddress());
+            preparedStatement.setLong(8, user.getId());
+            if (preparedStatement.executeUpdate() == 0) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Request to database failed", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("Can't get connection from connection pool", e);
         } finally {
             closeResources(cn, preparedStatement);
         }
@@ -130,7 +219,7 @@ public class UserDaoSQLImpl implements UserDao {
         user.setHashedPassword(resultSet.getString(Parameter.PASSWORD_MD5.getName()));
         user.setRole(UserRole.valueOf(resultSet.getString(Parameter.ROLE.getName()).toUpperCase()));
         user.setSalt(resultSet.getString(Parameter.SALT.getName()));
-        user.setBanned(resultSet.getBoolean(Parameter.SALT.getName()));
+        user.setBanned(resultSet.getBoolean(Parameter.BAN_STATUS.getName()));
         user.setEmail(resultSet.getString(Parameter.EMAIL.getName()));
         user.setFirstName(resultSet.getString(Parameter.FIRST_NAME.getName()));
         user.setLastName(resultSet.getString(Parameter.LAST_NAME.getName()));

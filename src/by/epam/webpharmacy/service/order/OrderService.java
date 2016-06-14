@@ -87,6 +87,16 @@ public interface OrderService {
     boolean cancelOrder(User user, long orderId, boolean setCanceled) throws ServiceException;
 
     /**
+     * Update status of given order
+     * @param user user that requests the command
+     * @param orderStatus is orderStatus to update
+     * @param orderId     is id of order
+     * @return {@code true} if updated successfully, {@code false} if update failed
+     * @throws ServiceException  if exception occurred on an underlying level
+     */
+    boolean updateOrderStatus(User user, String orderStatus, long orderId) throws ServiceException;
+
+    /**
      * Adds a specified quantity of items with a given id to the order, identified by id
      *
      * @param itemId   id of the item to add

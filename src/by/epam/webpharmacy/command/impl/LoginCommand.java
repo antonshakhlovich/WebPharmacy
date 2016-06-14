@@ -2,6 +2,7 @@ package by.epam.webpharmacy.command.impl;
 
 import by.epam.webpharmacy.command.Command;
 import by.epam.webpharmacy.command.CommandException;
+import by.epam.webpharmacy.entity.OrderStatus;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.user.UserService;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class {@code LoginCommand} is a guest-only implementation of {@see Command}
@@ -43,8 +46,17 @@ public class LoginCommand implements Command {
         }
         HttpSession session = request.getSession();
         if (user != null) {
-            session.setAttribute(Parameter.USER.getName(), user);
-            session.setAttribute(Parameter.LOGIN_FAILED.getName(), Boolean.FALSE);
+            if (!user.isBanned()) {
+                session.setAttribute(Parameter.USER.getName(), user);
+                List<String> statusList = new ArrayList<>();
+                for (OrderStatus orderStatus : OrderStatus.values()) {
+                    statusList.add(orderStatus.getStatus());
+                }
+                session.setAttribute(Parameter.STATUS_LIST.getName(), statusList);
+                session.setAttribute(Parameter.LOGIN_FAILED.getName(), Boolean.FALSE);
+            } else {
+                session.setAttribute(Parameter.BANNED.getName(),Boolean.TRUE);
+            }
         } else {
             session.setAttribute(Parameter.LOGIN_FAILED.getName(), Boolean.TRUE);
         }

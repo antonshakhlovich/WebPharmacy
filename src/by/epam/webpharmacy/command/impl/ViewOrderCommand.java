@@ -5,6 +5,7 @@ import by.epam.webpharmacy.command.CommandException;
 import by.epam.webpharmacy.command.util.JspPage;
 import by.epam.webpharmacy.command.util.Parameter;
 import by.epam.webpharmacy.entity.Order;
+import by.epam.webpharmacy.entity.OrderStatus;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.ServiceException;
 import by.epam.webpharmacy.service.order.OrderService;
@@ -15,6 +16,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -32,6 +37,7 @@ public class ViewOrderCommand implements Command {
         long orderId = Long.parseLong(request.getParameter(Parameter.ID.getName()));
         User user = (User) request.getSession().getAttribute(Parameter.USER.getName());
         String isCanceled = request.getParameter(Parameter.IS_CANCELED.getName());
+
         if (isCanceled == null) {
             isCanceled = Boolean.FALSE.toString();
         }

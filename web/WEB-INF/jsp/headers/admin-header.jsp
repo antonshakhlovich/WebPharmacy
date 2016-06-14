@@ -72,7 +72,7 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="#"><fmt:message key="local.link.manage.users"/> </a>
+                        <a href="${pageContext.request.contextPath}/Controller?command=view-all-users&page_number=1&limit=20"><fmt:message key="local.link.manage.users"/> </a>
                     </li>
                 </ul>
             </li>
@@ -99,6 +99,14 @@
             </div>
             <button type="submit" class="btn btn-link"><fmt:message
                     key="local.link.logout"/></button>
+        </form>
+        <form class="navbar-form navbar-right" action="Controller" method="get">
+            <div class="form-group">
+                <input type="hidden" name="command" value="view-user"/>
+                <input type="hidden" name="user_id" value="${sessionScope.user.id}"/>
+            </div>
+            <button type="submit" class="btn btn-link"><fmt:message
+                    key="local.link.profile"/></button>
         </form>
         <form class="navbar-form navbar-right" role="search" action="Controller" method="get">
             <input type="hidden" name="command" value="search-item">

@@ -17,7 +17,7 @@ public class User implements Serializable{
     private String password;
     private String hashedPassword;
     private UserRole role;
-    private Boolean banned;
+    private boolean isBanned;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -33,14 +33,14 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    public User(long id, String email, String login, String salt, UserRole role, Boolean banned, String firstName,
+    public User(long id, String email, String login, String salt, UserRole role, boolean banned, String firstName,
                 String lastName, String phoneNumber, String city, String address, String hashedPassword) {
         this.id = id;
         this.email = email;
         this.login = login;
         this.salt = salt;
         this.role = role;
-        this.banned = banned;
+        this.isBanned = banned;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
@@ -112,13 +112,12 @@ public class User implements Serializable{
         return this;
     }
 
-    public Boolean getBanned() {
-        return banned;
+    public boolean isBanned() {
+        return isBanned;
     }
 
-    public User setBanned(Boolean banned) {
-        this.banned = banned;
-        return this;
+    public void setBanned(boolean banned) {
+        isBanned = banned;
     }
 
     public String getFirstName() {
@@ -174,6 +173,7 @@ public class User implements Serializable{
         User user = (User) o;
 
         if (id != user.id) return false;
+        if (isBanned != user.isBanned) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
         if (salt != null ? !salt.equals(user.salt) : user.salt != null) return false;
@@ -181,7 +181,6 @@ public class User implements Serializable{
         if (hashedPassword != null ? !hashedPassword.equals(user.hashedPassword) : user.hashedPassword != null)
             return false;
         if (role != user.role) return false;
-        if (banned != null ? !banned.equals(user.banned) : user.banned != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
         if (phoneNumber != null ? !phoneNumber.equals(user.phoneNumber) : user.phoneNumber != null) return false;
@@ -199,7 +198,7 @@ public class User implements Serializable{
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (hashedPassword != null ? hashedPassword.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
-        result = 31 * result + (banned != null ? banned.hashCode() : 0);
+        result = 31 * result + (isBanned ? 1 : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);

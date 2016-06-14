@@ -55,12 +55,13 @@
             <input type="hidden" name="is_canceled" value="${param.is_canceled}"/>
             <input type="hidden" name="page_number" value="1"/>
             <input type="hidden" name="limit" value="${param.limit}"/>
-            <input type="submit" class="btn btn-warning" style="padding: 7px 35px 7px 35px" value="<fmt:message key="local.button.filter"/> "/>
+            <input type="submit" class="btn btn-warning" style="padding: 7px 35px 7px 35px"
+                   value="<fmt:message key="local.button.filter"/> "/>
         </form>
     </div>
     <c:set var="number_of_pages" value="${requestScope.number_of_orders div param.limit + 1}"/>
     <div style="padding: 10px;">
-        <span><fmt:message key="local.text.number.of.orders"/>:</span>
+        <span><fmt:message key="local.text.number.of.orders.on.page"/>:</span>
         <form style="display: inline-block" role="form" action="Controller" method="get">
             <input type="hidden" name="command" value="view-all-orders">
             <input type="hidden" name="is_canceled" value="${param.is_canceled}"/>
@@ -180,7 +181,12 @@
                     <c:out value="${order.id}"/>
                 </td>
                 <td class="col-sm-2">
-                    <c:out value="#${order.owner.id},${order.owner.firstName} ${order.owner.lastName} (${order.owner.login})"/>
+                    <a href="${pageContext.request.contextPath}/Controller?command=view-user&user_id=${order.owner.id}"
+                       style="display: block">
+                        <div style="width: 100%; height: 100%">
+                            <c:out value="#${order.owner.id},${order.owner.firstName} ${order.owner.lastName} (${order.owner.login})"/>
+                        </div>
+                    </a>
                 </td>
                 <td class="col-sm-1">
                     <c:out value="${order.owner.phoneNumber}"/>
@@ -189,7 +195,7 @@
                     <c:out value="${order.owner.address}, ${order.owner.city}"/>
                 </td>
                 <td class="col-sm-1">
-                    <fmt:formatDate dateStyle="full" value="${order.date}"/>
+                    <fmt:formatDate type="both" value="${order.date}"/>
                 </td>
                 <td class="col-sm-1">
                     <c:out value="${order.amount}"/>

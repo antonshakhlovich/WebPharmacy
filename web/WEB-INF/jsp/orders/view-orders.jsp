@@ -44,18 +44,26 @@
     <div style="padding-bottom: 10px">
         <c:choose>
             <c:when test="${param.is_canceled eq false}">
-                <a href="${pageContext.request.contextPath}/Controller?command=view-orders&is_canceled=true"
-                   class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> <fmt:message
-                        key="local.button.orders.show.canceled"/> </a>
+                <form role="form" class="inline" action="Controller" method="get">
+                    <input type="hidden" name="command" value="view-orders"/>
+                    <input type="hidden" name="user_id" value="${param.user_id}"/>
+                    <input type="hidden" name="is_canceled" value="true"/>
+                    <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
+                        <fmt:message key="local.button.orders.show.canceled"/></button>
+                </form>
             </c:when>
             <c:otherwise>
-                <a href="${pageContext.request.contextPath}/Controller?command=view-orders&is_canceled=false"
-                   class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> <fmt:message
-                        key="local.button.orders.show.all"/> </a>
+                <form role="form" class="inline" action="Controller" method="get">
+                    <input type="hidden" name="command" value="view-orders"/>
+                    <input type="hidden" name="user_id" value="${param.user_id}"/>
+                    <input type="hidden" name="is_canceled" value="false"/>
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>
+                        <fmt:message key="local.button.orders.show.all"/></button>
+                </form>
             </c:otherwise>
         </c:choose>
     </div>
-    <table  class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered">
         <thead>
         <th class="col-sm-1">
             #
@@ -78,7 +86,7 @@
                     <c:out value="${order.id}"/>
                 </td>
                 <td class="col-sm-3">
-                    <fmt:formatDate dateStyle="full" value="${order.date}"/>
+                    <fmt:formatDate type="both" value="${order.date}"/>
                 </td>
                 <td class="col-sm-3">
                     <c:out value="${order.amount}"/>

@@ -34,7 +34,7 @@ public class ViewOrdersCommand implements Command {
         User user = (User)request.getSession().getAttribute(Parameter.USER.getName());
         String userIdString = request.getParameter(Parameter.USER_ID.getName());
         long userId;
-        if (userIdString == null) {
+        if (userIdString == null || userIdString.isEmpty()) {
             userId = user.getId();
         } else {
             userId = Long.parseLong(request.getParameter(Parameter.USER_ID.getName()));

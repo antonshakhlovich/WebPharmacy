@@ -3,6 +3,8 @@ package by.epam.webpharmacy.service.user;
 import by.epam.webpharmacy.entity.User;
 import by.epam.webpharmacy.service.ServiceException;
 
+import java.util.List;
+
 /**
  * Represents an interface of a service for user-related actions
  */
@@ -34,4 +36,52 @@ public interface UserService {
      * @throws ServiceException if DaoException occurred
      */
     boolean changeUserBanStatus(long userId, boolean banned) throws ServiceException;
+    /**
+     * Updates user data
+     * @param user is user with updated data
+     * @return true if status successfully changed
+     * @throws ServiceException if DaoException occurred
+     */
+    boolean updateUser(User user) throws ServiceException;
+
+    /**
+     * Returns a list of users with pagination
+     * @param limit is a number of users on the page
+     * @return null if no users were found
+     * @throws ServiceException if DaoException occurred
+     */
+    List<User> selectAllUsers(int offset, int limit) throws ServiceException;
+
+    /**
+     * Returns a list of users with pagination
+     * @return number of users in storage
+     * @throws ServiceException if DaoException occurred
+     */
+    int countAllUsers() throws ServiceException;
+
+    /**
+     * Returns a User with given id
+     * @param user is user that requests
+     * @param userId is id of requested user
+     * @return null if no such user in the storage
+     * @throws ServiceException if DaoException occurred
+     */
+    User selectUserById(User user, long userId) throws ServiceException;
+    /**
+     * Returns a User with given email
+     * @param user is user that requests
+     * @param email is email of requested user
+     * @return null if no such user in the storage
+     * @throws ServiceException if DaoException occurred
+     */
+    User selectUserByEmail(User user, String email) throws ServiceException;
+
+    /**
+     * Returns a User with given login
+     * @param user is user that requests
+     * @param login is login of requested user
+     * @return null if no such user in the storage
+     * @throws ServiceException if DaoException occurred
+     */
+    User selectUserByLogin(User user, String login) throws ServiceException;
 }

@@ -2,6 +2,7 @@ package by.epam.webpharmacy.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Date;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class Order implements Serializable{
     private long id;
     private User owner;
     private Timestamp timestamp;
-    private Date date;
+    private Timestamp date;
     private BigDecimal amount;
     private String status;
     private boolean isCanceled;
@@ -48,11 +49,11 @@ public class Order implements Serializable{
         this.timestamp = timestamp;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 

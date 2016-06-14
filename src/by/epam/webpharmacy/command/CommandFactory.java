@@ -17,26 +17,34 @@ public class CommandFactory {
 
 
     private CommandFactory() {
-        commandMap.put(CommandName.UNKNOWN, new UnknownCommand());
+        commandMap.put(CommandName.ADD_ITEM, new AddItemCommand());
+        commandMap.put(CommandName.ADD_ITEM_TO_ORDER, new AddItemToOrderCommand());
+        commandMap.put(CommandName.BAN_USER, new BanUserCommand());
+        commandMap.put(CommandName.CANCEL_ORDER, new CancelOrderCommand());
         commandMap.put(CommandName.CHANGE_LOCALE, new ChangeLocaleCommand());
+        commandMap.put(CommandName.CHANGE_ORDER_STATUS, new ChangeOrderStatusCommand());
+        commandMap.put(CommandName.DELETE_ITEM, new DeleteItemCommand());
+        commandMap.put(CommandName.EDIT_ITEM, new EditItemCommand());
+        commandMap.put(CommandName.EDIT_USER, new EditUserCommand());
         commandMap.put(CommandName.LOGIN, new LoginCommand());
         commandMap.put(CommandName.LOGOUT, new LogoutCommand());
         commandMap.put(CommandName.REGISTER, new RegisterCommand());
-        commandMap.put(CommandName.BAN_USER, new BanUserCommand());
-        commandMap.put(CommandName.VIEW_ADD_ITEM, new ViewAddItemCommand());
-        commandMap.put(CommandName.ADD_ITEM, new AddItemCommand());
-        commandMap.put(CommandName.DELETE_ITEM, new DeleteItemCommand());
-        commandMap.put(CommandName.VIEW_EDIT_ITEM, new ViewEditItemCommand());
-        commandMap.put(CommandName.VIEW_ITEM, new ViewItemCommand());
-        commandMap.put(CommandName.VIEW_CATALOG, new ViewCatalogCommand());
+        commandMap.put(CommandName.REMOVE_ITEM_FROM_ORDER, new RemoveItemFromOrderCommand());
         commandMap.put(CommandName.SEARCH_ITEM, new SearchItemCommand());
+        commandMap.put(CommandName.SUBMIT_ORDER, new SubmitOrderCommand());
+        commandMap.put(CommandName.UNKNOWN, new UnknownCommand());
+        commandMap.put(CommandName.VIEW_ADD_ITEM, new ViewAddItemCommand());
+        commandMap.put(CommandName.VIEW_ALL_ORDERS, new ViewAllOrdersCommand());
+        commandMap.put(CommandName.VIEW_ALL_USERS, new ViewUsersCommand());
+        commandMap.put(CommandName.VIEW_CATALOG, new ViewCatalogCommand());
+        commandMap.put(CommandName.VIEW_EDIT_ITEM, new ViewEditItemCommand());
+        commandMap.put(CommandName.VIEW_EDIT_USER, new ViewEditUserCommand());
+        commandMap.put(CommandName.VIEW_ITEM, new ViewItemCommand());
         commandMap.put(CommandName.VIEW_ORDER, new ViewOrderCommand());
         commandMap.put(CommandName.VIEW_ORDERS, new ViewOrdersCommand());
-        commandMap.put(CommandName.VIEW_ALL_ORDERS, new ViewAllOrdersCommand());
         commandMap.put(CommandName.VIEW_SHOPPING_CART, new ViewShoppingCartCommand());
-        commandMap.put(CommandName.REMOVE_ITEM_FROM_ORDER, new RemoveItemFromOrderCommand());
-        commandMap.put(CommandName.ADD_ITEM_TO_ORDER, new AddItemToOrderCommand());
-        commandMap.put(CommandName.SUBMIT_ORDER, new SubmitOrderCommand());
+        commandMap.put(CommandName.VIEW_USER, new ViewUserCommand());
+
     }
 
     public static CommandFactory getInstance() {

@@ -3,6 +3,8 @@ package by.epam.webpharmacy.dao.user;
 import by.epam.webpharmacy.dao.DaoException;
 import by.epam.webpharmacy.entity.User;
 
+import java.util.List;
+
 /**
  * Represents an interface for retrieving user-related data from data storage, such as database.
  */
@@ -33,6 +35,21 @@ public interface UserDao {
     User selectUserByEmail(String email) throws DaoException;
 
     /**
+     * Returns a list of users with pagination
+     * @param limit is a number of users on the page
+     * @return null if no users were found
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    List<User> selectAllUsers(int offset, int limit) throws DaoException;
+
+    /**
+     * Returns number of users in storage
+     * @return number of users in storage
+     * @throws DaoException if failed to retrieve data from the storage due to technical problems
+     */
+    int countAllUsers() throws DaoException;
+
+    /**
      * Add a new user to the storage, e.g. database with
      * @param user is user bean that should be stored in database
      * @return true if user was added and false if user with such parameters already exists
@@ -48,5 +65,7 @@ public interface UserDao {
      * @throws DaoException if failed to update data from the storage due to technical problems
      */
     boolean updateUserBannedStatus(long userId, boolean banStatus) throws DaoException;
+
+    boolean updateUser(User user) throws DaoException;
 
 }

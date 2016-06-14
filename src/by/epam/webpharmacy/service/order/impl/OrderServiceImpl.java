@@ -47,9 +47,13 @@ public class OrderServiceImpl implements OrderService {
     public Order selectOrderByOrderId(long orderId, User user) throws ServiceException {
         try {
             Order order = orderDao.selectOrderByOrderId(orderId);
-            if (user.getId() != order.getOwner().getId()) {
-                if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.MANAGER) {
-                    order.setStatus(Parameter.ACCESS_DENIED.getName());
+            if (order == null) {
+                return null;
+            } else {
+                if (user.getId() != order.getOwner().getId()) {
+                    if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.MANAGER) {
+                        order.setStatus(Parameter.ACCESS_DENIED.getName());
+                    }
                 }
             }
             return order;
@@ -106,6 +110,22 @@ public class OrderServiceImpl implements OrderService {
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public boolean updateOrderStatus(User user, String orderStatus, long orderId) throws ServiceException {
+        if (user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.MANAGER) {
+            try {
+                Order order = orderDao.selectOrderByOrderId(orderId);
+                if (order.getStatus().equalsIgnoreCase(orderStatus)) {
+                    return false;
+                }
+                return orderDao.updateOrderStatus(orderStatus, orderId);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        }
+        return false;
     }
 
 

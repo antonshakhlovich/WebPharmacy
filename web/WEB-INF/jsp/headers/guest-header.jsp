@@ -29,6 +29,10 @@
             <span style="color:red"><fmt:message key="local.message.login.error"/></span>
             <c:set var="login_failed" scope="session" value="false"/>
         </c:if>
+        <c:if test="${sessionScope.banned}">
+            <span style="color:red"><fmt:message key="local.message.banned"/></span>
+            <c:set var="banned" scope="session" value="false"/>
+        </c:if>
     </div>
 </div>
 <nav class="navbar navbar-default" role="navigation">

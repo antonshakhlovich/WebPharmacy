@@ -76,6 +76,7 @@ public class OrderDaoSQLImpl implements OrderDao {
             "FROM orders o\n" +
             "  WHERE o.is_canceled = ? AND o.status IN(?,?,?,?)";
     private static final String CANCEL_RESTORE_ORDER = "UPDATE orders SET is_canceled = ? WHERE id = ?";
+    private static final String UPDATE_ORDER_STATUS = "UPDATE orders SET status = ? WHERE id = ?";
 
     @Override
     public List<Order> selectOrdersByUserId(long userId, boolean isCanceled) throws DaoException {
@@ -95,7 +96,7 @@ public class OrderDaoSQLImpl implements OrderDao {
             while (resultSet.next()) {
                 Order order = new Order();
                 order.setId(resultSet.getLong(Parameter.ID.getName()));
-                order.setDate(resultSet.getDate(Parameter.DATE.getName()));
+                order.setDate(resultSet.getTimestamp(Parameter.DATE.getName()));
                 order.setAmount(resultSet.getBigDecimal(Parameter.AMOUNT.getName()));
                 order.setStatus(resultSet.getString(Parameter.STATUS.getName()));
                 order.setCanceled(resultSet.getBoolean(Parameter.IS_CANCELED.getName()));
@@ -128,7 +129,7 @@ public class OrderDaoSQLImpl implements OrderDao {
             Order order = new Order();
             order.setOwner(owner);
             order.setId(resultSet.getLong(Parameter.ID.getName()));
-            order.setDate(resultSet.getDate(Parameter.DATE.getName()));
+            order.setDate(resultSet.getTimestamp(Parameter.DATE.getName()));
             order.setAmount(resultSet.getBigDecimal(Parameter.AMOUNT.getName()));
             order.setStatus(resultSet.getString(Parameter.STATUS.getName()));
             order.setCanceled(resultSet.getBoolean(Parameter.IS_CANCELED.getName()));
@@ -186,7 +187,7 @@ public class OrderDaoSQLImpl implements OrderDao {
                 user.setAddress(resultSet.getString(Parameter.ADDRESS.getName()));
                 order.setOwner(user);
                 order.setId(resultSet.getLong(Parameter.ID.getName()));
-                order.setDate(resultSet.getDate(Parameter.DATE.getName()));
+                order.setDate(resultSet.getTimestamp(Parameter.DATE.getName()));
                 order.setAmount(resultSet.getBigDecimal(Parameter.AMOUNT.getName()));
                 order.setStatus(resultSet.getString(Parameter.STATUS.getName()));
                 order.setCanceled(resultSet.getBoolean(Parameter.IS_CANCELED.getName()));
@@ -401,7 +402,20 @@ public class OrderDaoSQLImpl implements OrderDao {
 
     @Override
     public boolean updateOrderStatus(String orderStatus, long orderId) throws DaoException {
-        return false;
+        Connection cn = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            cn = ConnectionPool.getInstance().getConnection();
+            preparedStatement = cn.prepareStatement(UPDATE_ORDER_STATUS);
+            preparedStatement.setString(1, orderStatus);
+            preparedStatement.setLong(2, orderId);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeResources(cn, preparedStatement);
+        }
     }
 
     @Override
